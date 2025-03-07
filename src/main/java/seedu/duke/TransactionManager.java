@@ -2,7 +2,7 @@ package seedu.duke;
 
 import java.util.ArrayList;
 import java.time.LocalDate;
-import Exceptions.*;
+import exceptions.NullException;
 
 public class TransactionManager {
     private ArrayList<Transaction> transactions;
@@ -17,6 +17,12 @@ public class TransactionManager {
         transactions.add(transaction);
     }
 
+    public void addTransaction(int id, int amount) {
+        LocalDate date = LocalDate.now();
+        Transaction transaction = new Transaction(id,amount,defaultCurrency,date, Status.PENDING);
+        transactions.add(transaction);
+    }
+
     public ArrayList<Transaction> getTransactions() {
         ArrayList<Transaction> printTransactions = new ArrayList<>();
         for (Transaction transaction : transactions) {
@@ -25,11 +31,6 @@ public class TransactionManager {
             }
         }
         return printTransactions;
-    }
-
-    public void addTransaction(int id, int amount) {
-        LocalDate date = LocalDate.now();
-        Transaction transaction = new Transaction(id,amount,defaultCurrency,date, Status.PENDING);
     }
 
     public Transaction searchTransaction(int id) {
