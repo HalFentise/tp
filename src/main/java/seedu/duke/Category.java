@@ -1,3 +1,5 @@
+package seedu.duke;
+
 public enum Category {
     FOOD,
     EDUCATION,

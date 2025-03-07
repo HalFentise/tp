@@ -1,3 +1,5 @@
+package seedu.duke;
+
 public enum Currency {
     USD("United States Dollar"),
     SGD("Singapore Dollar"),

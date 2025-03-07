@@ -1,3 +1,5 @@
+package seedu.duke;
+
 import java.util.ArrayList;
 import java.time.LocalDate;
 import Exceptions.*;
@@ -27,7 +29,7 @@ public class TransactionManager {
 
     public void addTransaction(int id, int amount) {
         LocalDate date = LocalDate.now();
-        Transaction transaction = new Transaction(id,amount,defaultCurrency,date,Status.PENDING);
+        Transaction transaction = new Transaction(id,amount,defaultCurrency,date, Status.PENDING);
     }
 
     public Transaction searchTransaction(int id) {
@@ -37,7 +39,7 @@ public class TransactionManager {
                     return transaction;
                 }
             }
-            throw new NullException("Transaction not found");
+            throw new NullException("seedu.duke.Transaction not found");
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;

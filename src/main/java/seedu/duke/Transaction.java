@@ -1,3 +1,5 @@
+package seedu.duke;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -37,7 +39,7 @@ public class Transaction {
     }
 
     public String toString() {
-        return "Transaction id: " + id + "\namount: " + amount + "\ndescription: " + description;
+        return "seedu.duke.Transaction id: " + id + "\namount: " + amount + "\ndescription: " + description;
     }
 
     //get method
