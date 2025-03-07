@@ -12,6 +12,7 @@ public class Transaction {
     private String description;
     private Category category;
     private ArrayList<String> tags;
+    private boolean isDeleted = false;
 
     //Constructor
     Transaction(int id, int amount, String description, Currency currency,
@@ -24,6 +25,14 @@ public class Transaction {
         this.date = date;
         this.status = status;
         tags = new ArrayList<>();
+    }
+
+    Transaction(int id, int amount, Currency currency, LocalDate date, Status status) {
+        this.id = id;
+        this.amount = amount;
+        this.currency = currency;
+        this.date = date;
+        this.status = status;
     }
 
     public String toString() {
@@ -63,6 +72,10 @@ public class Transaction {
         return status;
     }
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
     //set method
     public void setDescription(String description) {
         this.description = description;
@@ -74,5 +87,13 @@ public class Transaction {
 
     public void addTag(String tag) {
         tags.add(tag);
+    }
+
+    public void delete() {
+        isDeleted = true;
+    }
+
+    public void recover() {
+        isDeleted = false;
     }
 }
