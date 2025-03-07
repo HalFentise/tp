@@ -33,6 +33,7 @@ public class Transaction {
         this.currency = currency;
         this.date = date;
         this.status = status;
+        this.tags = new ArrayList<>();
     }
 
     public String toString() {
