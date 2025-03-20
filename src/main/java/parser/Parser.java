@@ -110,6 +110,10 @@ public class Parser {
                     new NotifyCommand(description, amountValue, categoryString, date);
                 }
                 break;
+            case COMMAND_EXIT:
+                System.out.println("Goodbye! Hope to see you again!");
+                System.exit(0);
+                break;
             default:
                 throw new InvalidCommand(INVALID_INPUT);
             }

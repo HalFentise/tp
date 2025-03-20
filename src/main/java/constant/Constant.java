@@ -47,6 +47,11 @@ public class Constant {
     public static final String COMMAND_DELETE = "delete";
 
     /**
+     * Command keyword for exit the program
+     */
+    public static final String COMMAND_EXIT = "exit";
+
+    /**
      * Represents an invalid input exception.
      */
     public static final String INVALID_INPUT = "OOPS!!! I'm sorry, but I don't know what that means :-(";
