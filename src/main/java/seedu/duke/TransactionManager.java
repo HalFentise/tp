@@ -35,6 +35,7 @@ public class TransactionManager {
         }
         return printTransactions;
     }
+  
     /*
     function to record and trace the total budget limit
      */
@@ -65,6 +66,20 @@ public class TransactionManager {
         }
     }
 
+    public Transaction searchTransaction(String description) {
+        try {
+            for (Transaction transaction : transactions) {
+                if (transaction.getDescription().contains(description)) {
+                    return transaction;
+                }
+            }
+            throw new NullException("seedu.duke.Transaction not found");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+  
     /*
      * Function for setting the expense limit for a specific time duration?
      * The type default is expense

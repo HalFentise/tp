@@ -5,7 +5,7 @@ public enum Currency {
     SGD("Singapore Dollar"),
     CNY("Chinese Yuan"),
     EUR("Euro"),
-    JPY("Japanese Yuan"),
+    JPY("Japanese Yen"),
     GBP("British Pound");
 
     private final String fullName; // full name

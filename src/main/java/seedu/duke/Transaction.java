@@ -15,6 +15,7 @@ public class Transaction {
     private Category category;
     private ArrayList<String> tags;
     private boolean isDeleted = false;
+    private int recurringPeriod; // Repeated every recurringPeriod days, one-time if 0
     private boolean isCompleted = false;
 
     //Constructor
@@ -28,6 +29,7 @@ public class Transaction {
         this.date = date;
         this.status = status;
         tags = new ArrayList<>();
+        recurringPeriod = 0;
     }
 
     Transaction(int id, String description, int amount, Currency currency, LocalDate date, Status status) {
@@ -38,6 +40,7 @@ public class Transaction {
         this.date = date;
         this.status = status;
         this.tags = new ArrayList<>();
+        recurringPeriod = 0;
     }
 
 
@@ -82,6 +85,8 @@ public class Transaction {
     public boolean isDeleted() {
         return isDeleted;
     }
+
+    public int getRecurringPeriod() { return recurringPeriod; }
 
     public boolean isCompleted() {
         return isCompleted;
@@ -131,4 +136,6 @@ public class Transaction {
     public void recover() {
         isDeleted = false;
     }
+
+    public void setRecurringPeriod(int recurringPeriod) { this.recurringPeriod = recurringPeriod; }
 }
