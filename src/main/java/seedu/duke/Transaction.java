@@ -49,7 +49,9 @@ public class Transaction {
 
 
     public String toString() {
-        return "Transaction id: " + id + "\namount: " + amount + "\ndescription: " + description;
+        String tick = isCompleted ? "[\u2713]" : "[ ]";
+        return "Transaction id: " + id + "   "+ tick + "\namount: " +
+                amount + "\ndescription: " + description + "\ncategory: " + category;
     }
 
     //get method

@@ -92,4 +92,11 @@ public class Ui {
         }
         showLine();
     }
+
+    public void printTransactions(ArrayList<Transaction> transactions) {
+        showLine();
+        for (Transaction transaction : transactions) {
+            System.out.println(transaction);
+        }
+    }
 }

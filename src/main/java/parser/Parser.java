@@ -20,12 +20,14 @@ public class Parser {
      * @throws NullException If the input is invalid or missing required details.
      */
     public static void parser(String userInput, Ui ui, TransactionManager transactions) {
-        String[] parts = userInput.split(" ");
+        String[] parts = userInput.split(" ",2);
         String commandType = parts[0];
         String[] details;
 
         try {
             switch (commandType) {
+            default:
+                throw new InvalidCommand("This is a invalid command");
             case COMMAND_ADD:
                 String[] fields = {"description", "amount", "category"};
                 String[] patterns = {
@@ -49,6 +51,12 @@ public class Parser {
                 int amount = Integer.parseInt(results[1]);
                 Category category = Category.valueOf(results[2].toUpperCase());
                 transactions.addTransaction(transactions.getNum() + 1,results[0],amount,category);
+                break;
+            case COMMAND_LIST:
+                if (parts.length > 1) {
+                    throw new InvalidCommand("Invalid command");
+                }
+                ui.printTransactions(transactions.getTransactions());
             }
         } catch (Exception e) {
             ui.showError(e.getMessage());
