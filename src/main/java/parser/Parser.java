@@ -43,15 +43,6 @@ public class Parser {
         String commandType = parts[0];
         String[] details;
 
-        // Check for exit and list commands before processing further.
-        /*if (type.equals(COMMAND_SET_BUDGET)) {
-            return new SetBudgetCommand();
-        } else if (type.equals(COMMAND_LIST)) {
-            return new ListCommand();
-        }
-        // Handle error message for empty description.
-        else if (parts.length < 2 || parts[1].isEmpty()) {
-            throw new HandleException(MISSING_INPUT);*/
         if (commandType.equals(COMMAND_SET_BUDGET)) {
             details = parts[1].split(IDENTIFIER_AMOUNT, 2);
             int amount = Integer.parseInt(details[1]);
@@ -73,19 +64,7 @@ public class Parser {
             String date = dateParts[1].trim(); // DATE after 'd/'
 
             return new NotifyCommand(description, amount, category, date);
-        }
-        /*} else if (type.equals(COMMAND_MARK)) {
-            return processMarkCommand(userInput);
-        } else if (type.equals(COMMAND_UNMARK)) {
-            return processUnmarkCommand(userInput);
-        } else if (type.equals(COMMAND_DELETE)) {
-            return processDeleteCommand(userInput);
-        } else if (type.equals(COMMAND_FIND)) {
-            return processFindCommand(userInput);
-        } else if (type.equals(COMMAND_CHECK_DATE)) {
-            return processCheckDateCommand(userInput);
-        } */
-        else {
+        } else {
             throw new NullException(INVALID_INPUT);
         }
     }
