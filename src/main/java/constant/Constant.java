@@ -24,7 +24,7 @@ public class Constant {
     /**
      * Command keyword for setting a spending budget limit.
      */
-    public static final String COMMAND_SET_BUDGET = "setBudget";
+    public static final String COMMAND_SET_BUDGET = "setbudget";
 
     /**
      * Command keyword for setting reminders for upcoming expenses.
@@ -54,7 +54,7 @@ public class Constant {
     /**
      * Identifier for setting a budget amount in user input.
      */
-    public static final String IDENTIFIER_AMOUNT = " a/";
+    public static final String IDENTIFIER_AMOUNT = "a/";
 
     /**
      * Identifier for specifying a description in user input.

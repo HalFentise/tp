@@ -72,12 +72,12 @@ public class Parser {
                 break;
             case COMMAND_DELETE:
                 int index = Integer.parseInt(parts[1]);
-                new DeleteCommand(index - 1,transactions,ui);
+                new DeleteCommand(index - 1, transactions, ui);
                 break;
             case COMMAND_SET_BUDGET:
                 details = parts[1].split(IDENTIFIER_AMOUNT, 2);
                 amount = Integer.parseInt(details[1]);
-                new SetBudgetCommand(amount);
+                new SetBudgetCommand(amount, transactions, ui);
                 break;
             case COMMAND_NOTIFY:
                 /*details = parts[1].split(IDENTIFIER_DESCRIPTION, 2);
@@ -93,7 +93,7 @@ public class Parser {
                 // Extract DATE (the part after 't/')
                 String[] dateParts = parts[4].split(IDENTIFIER_DATE, 2);
                 String date = dateParts[1].trim(); // DATE after 'd/'*/
-                String regex = "d/(.*)\\s+a/(\\d+)\\s+c/(.*)\\s+t/(.*)";
+                /*String regex = "d/(.*)\\s+a/(\\d+)\\s+c/(.*)\\s+t/(.*)";
 
                 // Compile the pattern
                 Pattern pattern = Pattern.compile(regex);
@@ -106,9 +106,32 @@ public class Parser {
                     int amountValue = Integer.parseInt(matcher.group(1).trim()); // Group 2: AMOUNT (converted to int)
                     String categoryString = matcher.group(2).trim(); // Group 3: CATEGORY
                     String date = matcher.group(3).trim(); // Group 4: DATE
+*/
+                String[] detail = {"description", "amount", "category", "date"};
+                String[] patterns1 = {
+                        "d/(.*?)(?:\\s+[ac]/|$)", // d/
+                        "a/(.*?)(?:\\s+[dc]/|$)", // a/
+                        "c/(.*?)(?:\\s+[da]/|$)",  // c/
+                        "t/(.*?)(?:\\s+[da]/|$)"  // t/
+                };
 
-                    new NotifyCommand(description, amountValue, categoryString, date);
+                String[] result = new String[detail.length];
+                //match pattern
+                for (int i = 0; i < detail.length; i++) {
+                    Pattern pattern = Pattern.compile(patterns1[i]);
+                    Matcher matcher = pattern.matcher(parts[1]);
+
+                    if (matcher.find()) {
+                        result[i] = matcher.group(1).trim();
+                    } else {
+                        throw new InvalidCommand("No " + detail[i] + " found");
+                    }
                 }
+
+                amount = Integer.parseInt(result[1]);
+                String categoryString = result[2].toUpperCase();
+                String date = result[3];
+                new NotifyCommand(result[0], amount, categoryString, date, transactions, ui);
                 break;
             default:
                 throw new InvalidCommand(INVALID_INPUT);
