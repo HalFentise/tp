@@ -15,6 +15,11 @@ public class Constant {
     public static final String COMMAND_ADD = "add";
 
     /**
+     * Command keyword for add new expense
+     */
+    public static final String COMMAND_SEARCH = "search";
+
+    /**
      * Command keyword for setting a spending budget limit.
      */
     public static final String COMMAND_SET_BUDGET = "setBudget";

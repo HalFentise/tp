@@ -72,14 +72,18 @@ public class TransactionManager {
         }
     }
 
-    public Transaction searchTransaction(String description) {
+    public ArrayList<Transaction> searchTransaction(String description) {
         try {
+            ArrayList<Transaction> printTransactions = new ArrayList<>();
             for (Transaction transaction : transactions) {
                 if (transaction.getDescription().contains(description)) {
-                    return transaction;
+                    printTransactions.add(transaction);
                 }
             }
-            throw new NullException("seedu.duke.Transaction not found");
+            if (printTransactions.isEmpty()) {
+                throw new NullException("Transaction is invalid");
+            }
+            return printTransactions;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;

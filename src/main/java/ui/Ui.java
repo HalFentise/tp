@@ -95,8 +95,29 @@ public class Ui {
 
     public void printTransactions(ArrayList<Transaction> transactions) {
         showLine();
+        System.out.println("Here is the list of transactions:");
         for (Transaction transaction : transactions) {
             System.out.println(transaction);
         }
+    }
+
+    public void printTransaction(Transaction transaction) {
+        showLine();
+        System.out.println(transaction);
+    }
+
+    public void tickTransaction(Transaction transaction) {
+        showLine();
+        System.out.println("I have ticked the following transaction:");
+        System.out.println(transaction);
+    }
+
+    public void add() {
+        showLine();
+        System.out.println("I have added the following transactions:");
+    }
+
+    public void search() {
+        System.out.println("I have searched the transactions containing the keywords.");
     }
 }
