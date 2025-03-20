@@ -17,17 +17,19 @@ public class SetBudgetCommand extends Command {
      * @param amount The int representing the budget to set.
      * @throws NullException If the date format is invalid.
      */
-    public SetBudgetCommand(int amount) throws NullException {
+    public SetBudgetCommand(int amount, TransactionManager transcations, Ui ui) throws NullException {
+
         try {
-            //this.budgetLimit = amount;
             if (amount > 0) {
                 this.budgetLimit = amount;
+                transcations.checkBudgetLimit();
             } else {
                 throw new NullException("Invalid input amount, amount can not be negative!");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        ui.PrintBudgetLimit(transcations.getTransactions(), budgetLimit);
     }
 
     /**
