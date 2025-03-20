@@ -3,6 +3,8 @@ package constant;
 public class Constant {
     public static final String LINE_SEPARATOR = "____________________________________________________________";
 
+    public static final String INDENT = "%s";
+
     // Command keywords
     /**
      * Command keyword for listing tasks.

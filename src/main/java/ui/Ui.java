@@ -5,7 +5,7 @@ import seedu.duke.Transaction;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static constant.Constant.LINE_SEPARATOR;
+import static constant.Constant.*;
 
 public class Ui {
     /**
@@ -69,6 +69,21 @@ public class Ui {
      * The type default is expense
      * Can keep the amount as for the all-time spend limit first
      */
+
+    /**
+     * Prints a message indicating that a task has been deleted.
+     *
+     * @param transaction      the task that was deleted.
+     * @param Count the new total number of tasks in the list.
+     */
+    public static void printDeleteTask(Transaction transaction, int Count) {
+        showLine();
+        System.out.printf(INDENT + "Noted. I've removed this transaction:\n", "");
+        System.out.printf(INDENT + "%s\n", "", transaction.toString());
+        System.out.printf(INDENT + "Now you have %d transactions in the list.%n", "", Count);
+        showLine();
+    }
+
     public void PrintBudgetLimit(ArrayList<Transaction> transaction, int amount) {
         showLine();
         System.out.println("Budget limit set to " + amount + " " + transaction.get(0).getCurrency());
@@ -76,7 +91,7 @@ public class Ui {
     }
 
     // Lists all upcoming notifications
-    public void listNotifications(ArrayList<Transaction> upcomingTransactions, String description) {
+    public void listNotification(ArrayList<Transaction> upcomingTransactions, String description) {
         showLine();
         if (upcomingTransactions.isEmpty()) {
             System.out.println("No upcoming expenses.");
