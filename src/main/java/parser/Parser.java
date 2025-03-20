@@ -66,9 +66,10 @@ public class Parser {
                 ui.tickTransaction(transactions.searchTransaction(id));
                 break;
             case COMMAND_SEARCH:
-                String keyWord = parts[1];
-                ui.search();
-                ui.printTransactions(transactions.searchTransaction(keyWord));
+                boolean isIndex = parts[1].startsWith("id-");
+                String keyWord = isIndex ? parts[1].substring(3) : parts[1];
+                ui.search(isIndex);
+                ui.printTransactions(transactions.searchTransactionList(isIndex, keyWord, ui));
                 break;
             case COMMAND_DELETE:
                 int index = Integer.parseInt(parts[1]);

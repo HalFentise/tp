@@ -7,6 +7,7 @@ import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
 import exceptions.NullException;
+import ui.Ui;
 
 public class TransactionManager {
     private ArrayList<Transaction> transactions;
@@ -80,12 +81,19 @@ public class TransactionManager {
         }
     }
 
-    public ArrayList<Transaction> searchTransaction(String description) {
+    public ArrayList<Transaction> searchTransactionList(boolean isIndex, String searchTerm, Ui ui) {
         try {
             ArrayList<Transaction> printTransactions = new ArrayList<>();
-            for (Transaction transaction : transactions) {
-                if (transaction.getDescription().contains(description)) {
+            if (isIndex) {
+                Transaction transaction = searchTransaction(Integer.parseInt(searchTerm));
+                if (transaction != null) {
                     printTransactions.add(transaction);
+                }
+            } else {
+                for (Transaction transaction : transactions) {
+                    if (transaction.getDescription().contains(searchTerm)) {
+                        printTransactions.add(transaction);
+                    }
                 }
             }
             if (printTransactions.isEmpty()) {

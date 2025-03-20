@@ -64,6 +64,7 @@ public class Ui {
     public void showError(String message) {
         showLine();
         System.out.println("Error: " + message); // Display the error
+        showLine();
     }
 
     /*
@@ -114,7 +115,8 @@ public class Ui {
         showLine();
         System.out.println("Here is the list of transactions:");
         for (Transaction transaction : transactions) {
-            System.out.println(transaction);
+            printTransaction(transaction);
+            showLine();
         }
     }
 
@@ -125,16 +127,22 @@ public class Ui {
     public void tickTransaction(Transaction transaction) {
         showLine();
         System.out.println("I have ticked the following transaction:");
-        System.out.println(transaction);
+        printTransaction(transaction);
+        showLine();
     }
 
     public void add(Transaction transaction) {
         showLine();
         System.out.println("I have added the following transactions:");
         printTransaction(transaction);
+        showLine();
     }
 
-    public void search() {
-        System.out.println("I have searched the transactions containing the keywords.");
+    public void search(boolean isIndex) {
+        if (isIndex) {
+            System.out.println("I have searched the transaction with the given index.");
+        } else {
+            System.out.println("I have searched the transactions containing the keywords.");
+        }
     }
 }
