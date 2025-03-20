@@ -4,14 +4,14 @@ import seedu.duke.TransactionManager;
 import ui.Ui;
 
 public class DeleteCommand extends Command{
-    int ExpenseIndex;
+    int expenseIndex;
     /**
      * Creates a DeleteCommand with the specified translation index.
      *
      * @param ExpenseIndex The index of the task to be deleted (zero-based).
      */
     public DeleteCommand(int ExpenseIndex,TransactionManager transactions, Ui ui) {
-        this.ExpenseIndex = ExpenseIndex;
+        this.expenseIndex = ExpenseIndex;
         Ui.printDeleteTask(transactions.getTransactions().get(ExpenseIndex), transactions.getNum() - 1);
         transactions.deleteExpense(ExpenseIndex);
     }
@@ -26,7 +26,7 @@ public class DeleteCommand extends Command{
      */
     @Override
     public void execute(TransactionManager transactions, Ui ui) {
-        Ui.printDeleteTask(transactions.getTransactions().get(ExpenseIndex), transactions.getNum() - 1);
-        transactions.deleteExpense(ExpenseIndex);
+        Ui.printDeleteTask(transactions.getTransactions().get(expenseIndex), transactions.getNum() - 1);
+        transactions.deleteExpense(expenseIndex);
     }
 }

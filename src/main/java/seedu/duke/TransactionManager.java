@@ -55,13 +55,13 @@ public class TransactionManager {
      */
 
     public void checkBudgetLimit() {
-        int TotalAmount = 0;
+        int totalAmount = 0;
         for (Transaction transaction : transactions) {
             if (!transaction.isDeleted()) {
-                TotalAmount += transaction.getAmount();
+                totalAmount += transaction.getAmount();
             }
         }
-        if (TotalAmount > budgetLimit) {
+        if (totalAmount > budgetLimit) {
             System.out.println("Warning: You have exceeded your budget limit!");
         }
     }

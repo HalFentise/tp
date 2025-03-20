@@ -92,7 +92,9 @@ public class Transaction {
         return isDeleted;
     }
 
-    public int getRecurringPeriod() { return recurringPeriod; }
+    public int getRecurringPeriod() {
+        return recurringPeriod;
+    }
 
     public boolean isCompleted() {
         return isCompleted;
@@ -143,5 +145,7 @@ public class Transaction {
         isDeleted = false;
     }
 
-    public void setRecurringPeriod(int recurringPeriod) { this.recurringPeriod = recurringPeriod; }
+    public void setRecurringPeriod(int recurringPeriod) {
+        this.recurringPeriod = recurringPeriod;
+    }
 }

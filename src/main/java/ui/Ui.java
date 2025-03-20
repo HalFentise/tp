@@ -26,8 +26,9 @@ public class Ui {
      * @return the user's input as a string.
      */
     public String readCommand() {
-        System.out.println("\nEnter your command:");
-        return scanner.nextLine();
+        System.out.println("Enter your command:");
+        String input = scanner.nextLine();
+        return input;
     }
 
     /**
