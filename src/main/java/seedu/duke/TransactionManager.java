@@ -16,6 +16,15 @@ public class TransactionManager {
         transactions = new ArrayList<>();
     }
 
+    /**
+     * Returns the number of tasks in the task list.
+     *
+     * @return the total number of tasks.
+     */
+    public int getTransactionsCount() {
+        return transactions.size();
+    }
+
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
     }
@@ -35,7 +44,15 @@ public class TransactionManager {
         }
         return printTransactions;
     }
-  
+
+    /**
+     * Deletes a translation from the task list.
+     *
+     * @param index the index of the task to be removed.
+     */
+    public void deleteExpense(int index) {
+        transactions.remove(index);
+    }
     /*
     function to record and trace the total budget limit
      */
@@ -79,7 +96,7 @@ public class TransactionManager {
             return null;
         }
     }
-  
+
     /*
      * Function for setting the expense limit for a specific time duration?
      * The type default is expense
@@ -104,8 +121,8 @@ public class TransactionManager {
         LocalDate dueDate = LocalDate.parse(date);
 
         // Add a notification for the specified upcoming expense
-        String notification = "Reminder: " + description + " of " + amount + " " + defaultCurrency + " in category "
-                + categoryString + " is due on " + dueDate;
+        /*String notification = "Reminder: " + description + " of " + amount + " " + defaultCurrency + " in category "
+                + categoryString + " is due on " + dueDate;*/
 
         Category category = Category.valueOf(categoryString);
         Transaction upcomingTransaction = new Transaction(
@@ -120,7 +137,7 @@ public class TransactionManager {
 
         upcomingTransactions.add(upcomingTransaction);
 
-        System.out.println(notification);
+        //System.out.println(notification);
     }
 
     // Lists all upcoming notifications
@@ -139,7 +156,7 @@ public class TransactionManager {
         }
     }
 
-    public void addTag(int id,String tag) {
+    public void addTag(int id, String tag) {
         Transaction transaction = searchTransaction(id);
         if (transaction == null) {
             return;
