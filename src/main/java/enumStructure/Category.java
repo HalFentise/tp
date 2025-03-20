@@ -1,4 +1,4 @@
-package seedu.duke;
+package enumStructure;
 
 public enum Category {
     FOOD,

@@ -3,6 +3,9 @@ package seedu.duke;
 import java.util.ArrayList;
 import java.time.LocalDate;
 
+import enumStructure.Category;
+import enumStructure.Currency;
+import enumStructure.Status;
 import exceptions.NullException;
 
 public class TransactionManager {
@@ -10,18 +13,12 @@ public class TransactionManager {
     private ArrayList<Transaction> upcomingTransactions;
     private int budgetLimit = 0;
     private Currency defaultCurrency = Currency.USD;
-    private Category defaultCategory = Category.OTHER;
 
     public TransactionManager() {
         transactions = new ArrayList<>();
     }
 
-    /**
-     * Returns the number of tasks in the task list.
-     *
-     * @return the total number of tasks.
-     */
-    public int getTransactionsCount() {
+    public int getNum() {
         return transactions.size();
     }
 
@@ -29,9 +26,9 @@ public class TransactionManager {
         transactions.add(transaction);
     }
 
-    public void addTransaction(int id, String description, int amount) {
+    public void addTransaction(int id, String description, int amount, Category category) {
         LocalDate date = LocalDate.now();
-        Transaction transaction = new Transaction(id, description, amount, defaultCurrency, date, Status.PENDING);
+        Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
         transactions.add(transaction);
     }
 
@@ -83,14 +80,18 @@ public class TransactionManager {
         }
     }
 
-    public Transaction searchTransaction(String description) {
+    public ArrayList<Transaction> searchTransaction(String description) {
         try {
+            ArrayList<Transaction> printTransactions = new ArrayList<>();
             for (Transaction transaction : transactions) {
                 if (transaction.getDescription().contains(description)) {
-                    return transaction;
+                    printTransactions.add(transaction);
                 }
             }
-            throw new NullException("seedu.duke.Transaction not found");
+            if (printTransactions.isEmpty()) {
+                throw new NullException("Transaction is invalid");
+            }
+            return printTransactions;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -127,8 +128,8 @@ public class TransactionManager {
         Category category = Category.valueOf(categoryString);
         Transaction upcomingTransaction = new Transaction(
                 transactions.size() + 1,
-                amount,
                 description,
+                amount,
                 defaultCurrency,
                 category,
                 dueDate,
