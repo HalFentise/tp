@@ -40,10 +40,42 @@ public class TransactionManager {
                     return transaction;
                 }
             }
-            throw new NullException("seedu.duke.Transaction not found");
+            throw new NullException("Transaction is invalid");
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
+    }
+
+    public void addTag(int id, String tag) {
+        Transaction transaction = searchTransaction(id);
+        if (transaction == null) {
+            return;
+        }
+        transaction.addTag(tag);
+    }
+
+    public void removeTag(int id, String tag) {
+        Transaction transaction = searchTransaction(id);
+        if (transaction == null) {
+            return;
+        }
+        transaction.removeTag(tag);
+    }
+
+    public void tickTransaction(int id) {
+        Transaction transaction = searchTransaction(id);
+        if (transaction == null) {
+            return;
+        }
+        transaction.complete();
+    }
+
+    public void unTickTransaction(int id) {
+        Transaction transaction = searchTransaction(id);
+        if (transaction == null) {
+            return;
+        }
+        transaction.notComplete();
     }
 }

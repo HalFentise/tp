@@ -15,6 +15,7 @@ public class Transaction {
     private Category category;
     private ArrayList<String> tags;
     private boolean isDeleted = false;
+    private boolean isCompleted = false;
 
     //Constructor
     Transaction(int id, int amount, String description, Currency currency,
@@ -68,7 +69,7 @@ public class Transaction {
     }
 
     public ArrayList<String> getTags() {
-        return tags;
+        return new ArrayList<>(tags);
     }
 
     public Status getStatus() {
@@ -77,6 +78,10 @@ public class Transaction {
 
     public boolean isDeleted() {
         return isDeleted;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
     }
 
     //set method
@@ -88,8 +93,32 @@ public class Transaction {
         this.category = category;
     }
 
+    public void complete() {
+        isCompleted = true;
+    }
+
+    public void notComplete() {
+        isCompleted = false;
+    }
+
     public void addTag(String tag) {
         tags.add(tag);
+    }
+
+    public void removeTag(String tag) {
+        tags.remove(tag);
+    }
+
+    public boolean containsTag(String tag) {
+        return tags.contains(tag);
+    }
+
+    public boolean isSameTransaction(Transaction otherTransaction) {
+        if (this.id == otherTransaction.id) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void delete() {
