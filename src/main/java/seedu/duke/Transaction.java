@@ -30,14 +30,16 @@ public class Transaction {
         tags = new ArrayList<>();
     }
 
-    Transaction(int id, int amount, Currency currency, LocalDate date, Status status) {
+    Transaction(int id, String description, int amount, Currency currency, LocalDate date, Status status) {
         this.id = id;
+        this.description = description;
         this.amount = amount;
         this.currency = currency;
         this.date = date;
         this.status = status;
         this.tags = new ArrayList<>();
     }
+
 
     public String toString() {
         return "seedu.duke.Transaction id: " + id + "\namount: " + amount + "\ndescription: " + description;
@@ -47,6 +49,7 @@ public class Transaction {
     public int getId() {
         return id;
     }
+
 
     public int getAmount() {
         return amount;
