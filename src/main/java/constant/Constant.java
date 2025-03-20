@@ -7,7 +7,12 @@ public class Constant {
     /**
      * Command keyword for listing tasks.
      */
-    //public static final String COMMAND_LIST = "list";
+    public static final String COMMAND_LIST = "list";
+
+    /**
+     * Command keyword for add new expense
+     */
+    public static final String COMMAND_ADD = "add";
 
     /**
      * Command keyword for setting a spending budget limit.

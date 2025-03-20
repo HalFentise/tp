@@ -1,5 +1,9 @@
 package seedu.duke;
 
+import enumStructure.Category;
+import enumStructure.Currency;
+import enumStructure.Status;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -19,7 +23,7 @@ public class Transaction {
     private boolean isCompleted = false;
 
     //Constructor
-    Transaction(int id, int amount, String description, Currency currency,
+    Transaction(int id, String description, int amount, Currency currency,
                 Category category, LocalDate date, Status status) {
         this.id = id;
         this.amount = amount;

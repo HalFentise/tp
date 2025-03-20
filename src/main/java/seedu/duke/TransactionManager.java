@@ -3,6 +3,9 @@ package seedu.duke;
 import java.util.ArrayList;
 import java.time.LocalDate;
 
+import enumStructure.Category;
+import enumStructure.Currency;
+import enumStructure.Status;
 import exceptions.NullException;
 
 public class TransactionManager {
@@ -10,19 +13,22 @@ public class TransactionManager {
     private ArrayList<Transaction> upcomingTransactions;
     private int budgetLimit = 0;
     private Currency defaultCurrency = Currency.USD;
-    private Category defaultCategory = Category.OTHER;
 
     public TransactionManager() {
         transactions = new ArrayList<>();
+    }
+
+    public int getNum() {
+        return transactions.size();
     }
 
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
     }
 
-    public void addTransaction(int id, String description, int amount) {
+    public void addTransaction(int id, String description, int amount, Category category) {
         LocalDate date = LocalDate.now();
-        Transaction transaction = new Transaction(id, description, amount, defaultCurrency, date, Status.PENDING);
+        Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
         transactions.add(transaction);
     }
 
@@ -110,8 +116,8 @@ public class TransactionManager {
         Category category = Category.valueOf(categoryString);
         Transaction upcomingTransaction = new Transaction(
                 transactions.size() + 1,
-                amount,
                 description,
+                amount,
                 defaultCurrency,
                 category,
                 dueDate,
