@@ -10,8 +10,10 @@ public class DeleteCommand extends Command{
      *
      * @param ExpenseIndex The index of the task to be deleted (zero-based).
      */
-    public DeleteCommand(int ExpenseIndex) {
+    public DeleteCommand(int ExpenseIndex,TransactionManager transactions, Ui ui) {
         this.ExpenseIndex = ExpenseIndex;
+        Ui.printDeleteTask(transactions.getTransactions().get(ExpenseIndex), transactions.getNum() - 1);
+        transactions.deleteExpense(ExpenseIndex);
     }
 
     /**
@@ -24,7 +26,7 @@ public class DeleteCommand extends Command{
      */
     @Override
     public void execute(TransactionManager transactions, Ui ui) {
-        Ui.printDeleteTask(transactions.getTransactions().get(ExpenseIndex), transactions.getTransactionsCount() - 1);
+        Ui.printDeleteTask(transactions.getTransactions().get(ExpenseIndex), transactions.getNum() - 1);
         transactions.deleteExpense(ExpenseIndex);
     }
 }

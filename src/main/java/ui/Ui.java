@@ -61,7 +61,8 @@ public class Ui {
      * @param message the error message to be displayed.
      */
     public void showError(String message) {
-        System.err.println("Error: " + message); // Display the error
+        showLine();
+        System.out.println("Error: " + message); // Display the error
     }
 
     /*
@@ -117,7 +118,6 @@ public class Ui {
     }
 
     public void printTransaction(Transaction transaction) {
-        showLine();
         System.out.println(transaction);
     }
 
@@ -127,9 +127,10 @@ public class Ui {
         System.out.println(transaction);
     }
 
-    public void add() {
+    public void add(Transaction transaction) {
         showLine();
         System.out.println("I have added the following transactions:");
+        printTransaction(transaction);
     }
 
     public void search() {
