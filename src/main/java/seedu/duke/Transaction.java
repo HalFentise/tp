@@ -42,7 +42,7 @@ public class Transaction {
 
 
     public String toString() {
-        return "seedu.duke.Transaction id: " + id + "\namount: " + amount + "\ndescription: " + description;
+        return "Transaction id: " + id + "\namount: " + amount + "\ndescription: " + description;
     }
 
     //get method

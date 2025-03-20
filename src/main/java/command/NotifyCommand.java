@@ -2,7 +2,7 @@ package command;
 
 import exceptions.NullException;
 import seedu.duke.TransactionManager;
-import ui.ui;
+import ui.Ui;
 
 public class NotifyCommand extends Command {
     protected String description;
@@ -19,7 +19,7 @@ public class NotifyCommand extends Command {
 
 
     @Override
-    public void execute(TransactionManager transactions, ui ui) throws NullException {
+    public void execute(TransactionManager transactions, Ui ui) throws NullException {
         // Search for tasks matching the specified date
         try {
             transactions.notify(description, amount, category, date);

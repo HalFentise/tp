@@ -1,8 +1,7 @@
 package command;
 
 import exceptions.NullException;
-import seedu.duke.Transaction;
-import ui.ui;
+import ui.Ui;
 import seedu.duke.TransactionManager;
 
 public class SetBudgetCommand extends Command {
@@ -41,7 +40,7 @@ public class SetBudgetCommand extends Command {
      * @throws NullException If an error occurs while processing the command.
      */
     @Override
-    public void execute(TransactionManager transactions, ui ui) throws NullException {
+    public void execute(TransactionManager transactions, Ui ui) throws NullException {
         // Check for whether exceed the budget limit or not.
         transactions.checkBudgetLimit();
 

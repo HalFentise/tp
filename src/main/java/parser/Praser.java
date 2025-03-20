@@ -1,36 +1,14 @@
 package parser;
 
-import command.Command;
 import command.NotifyCommand;
 import command.SetBudgetCommand;
 import exceptions.NullException;
-import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
-import ui.ui;
+import ui.Ui;
 
 import static constant.Constant.*;
 
-public class Parser {
-    /**
-     * The transaction list that holds the current tasks.
-     */
-    private final TransactionManager transactions;
-    /**
-     * The user interface component for interaction with the user.
-     */
-    private final ui ui;
-
-    /**
-     * Constructs a {@code Parser} object that takes in a task list and user interface.
-     *
-     * @param transactions The list of transactions to be managed.
-     * @param ui           The user interface for displaying messages.
-     */
-    public Parser(TransactionManager transactions, ui ui) {
-        this.transactions = transactions;
-        this.ui = ui;
-    }
-
+public class Praser {
     /**
      * Parses the user input and returns the corresponding command.
      *
@@ -38,7 +16,7 @@ public class Parser {
      * @return A {@code Command} object corresponding to the input.
      * @throws NullException If the input is invalid or missing required details.
      */
-    public Command parse(String userInput) throws NullException {
+    public static void praser(String userInput, Ui ui, TransactionManager transaction) {
         String[] parts = userInput.split(" ");
         String commandType = parts[0];
         String[] details;
