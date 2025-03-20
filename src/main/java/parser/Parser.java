@@ -5,6 +5,7 @@ import command.NotifyCommand;
 import command.SetBudgetCommand;
 import exceptions.NullException;
 import exceptions.InvalidCommand;
+import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
 import enumStructure.Category;
 import ui.Ui;
@@ -133,6 +134,17 @@ public class Parser {
                 String categoryString = result[2].toUpperCase();
                 String date = result[3];
                 new NotifyCommand(result[0], amount, categoryString, date, transactions, ui);
+                break;
+            case COMMAND_RECUR:
+                int slashIndex = parts[1].indexOf("/");
+                try {
+                    int transactionId = Integer.parseInt(parts[1].substring(0, slashIndex).trim());
+                    int recurringPeriod = Integer.parseInt(parts[1].substring(slashIndex + 1).trim());
+                    transactions.setRecur(transactionId, recurringPeriod);
+                    ui.setPeriod(transactions.searchTransaction(transactionId), recurringPeriod);
+                } catch (Exception e) {
+                    throw new InvalidCommand("Format invalid, try again! (recur [id]/[period])");
+                }
                 break;
             case COMMAND_EXIT:
                 System.out.println("Goodbye! Hope to see you again!");

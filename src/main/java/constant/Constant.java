@@ -12,12 +12,12 @@ public class Constant {
     public static final String COMMAND_LIST = "list";
 
     /**
-     * Command keyword for add new expense
+     * Command keyword for adding a new expense
      */
     public static final String COMMAND_ADD = "add";
 
     /**
-     * Command keyword for add new expense
+     * Command keyword for searching transactions
      */
     public static final String COMMAND_SEARCH = "search";
 
@@ -47,9 +47,14 @@ public class Constant {
     public static final String COMMAND_DELETE = "delete";
 
     /**
-     * Command keyword for exit the program
+     * Command keyword for exiting the program
      */
     public static final String COMMAND_EXIT = "exit";
+
+    /**
+     * Command keyword for setting a period for a transaction to be recurring
+     */
+    public static final String COMMAND_RECUR = "recur";
 
     /**
      * Represents an invalid input exception.
