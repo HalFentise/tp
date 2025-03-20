@@ -26,7 +26,7 @@ public class NotifyCommand extends Command {
         } catch (NullException e) {
             ui.showError(e.getMessage());
             // Display the all notifications
-            ui.listNotifications(transactions.getTransactions(), description);
         }
+        ui.listNotification(transactions.getTransactions(), description);
     }
 }
