@@ -16,6 +16,7 @@ public class Transaction {
     private ArrayList<String> tags;
     private boolean isDeleted = false;
     private int recurringPeriod; // Repeated every recurringPeriod days, one-time if 0
+    private boolean isCompleted = false;
 
     //Constructor
     Transaction(int id, int amount, String description, Currency currency,
@@ -31,8 +32,9 @@ public class Transaction {
         recurringPeriod = 0;
     }
 
-    Transaction(int id, int amount, Currency currency, LocalDate date, Status status) {
+    Transaction(int id, String description, int amount, Currency currency, LocalDate date, Status status) {
         this.id = id;
+        this.description = description;
         this.amount = amount;
         this.currency = currency;
         this.date = date;
@@ -40,6 +42,7 @@ public class Transaction {
         this.tags = new ArrayList<>();
         recurringPeriod = 0;
     }
+
 
     public String toString() {
         return "seedu.duke.Transaction id: " + id + "\namount: " + amount + "\ndescription: " + description;
@@ -49,6 +52,7 @@ public class Transaction {
     public int getId() {
         return id;
     }
+
 
     public int getAmount() {
         return amount;
@@ -71,7 +75,7 @@ public class Transaction {
     }
 
     public ArrayList<String> getTags() {
-        return tags;
+        return new ArrayList<>(tags);
     }
 
     public Status getStatus() {
@@ -84,6 +88,10 @@ public class Transaction {
 
     public int getRecurringPeriod() { return recurringPeriod; }
 
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
     //set method
     public void setDescription(String description) {
         this.description = description;
@@ -93,8 +101,32 @@ public class Transaction {
         this.category = category;
     }
 
+    public void complete() {
+        isCompleted = true;
+    }
+
+    public void notComplete() {
+        isCompleted = false;
+    }
+
     public void addTag(String tag) {
         tags.add(tag);
+    }
+
+    public void removeTag(String tag) {
+        tags.remove(tag);
+    }
+
+    public boolean containsTag(String tag) {
+        return tags.contains(tag);
+    }
+
+    public boolean isSameTransaction(Transaction otherTransaction) {
+        if (this.id == otherTransaction.id) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void delete() {
