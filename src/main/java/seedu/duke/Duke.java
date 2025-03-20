@@ -1,6 +1,6 @@
 package seedu.duke;
 import ui.Ui;
-import parser.Praser;
+import parser.Parser;
 
 public class Duke {
     private TransactionManager transactions;
@@ -15,7 +15,7 @@ public class Duke {
         ui.printWelcomeMessage();
         while (true) {
             String command = ui.readCommand();
-            Praser.praser(command,ui,transactions);
+            Parser.parser(command,ui,transactions);
         }
     }
 

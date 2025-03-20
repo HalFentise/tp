@@ -8,7 +8,7 @@ import ui.Ui;
 
 import static constant.Constant.*;
 
-public class Praser {
+public class Parser {
     /**
      * Parses the user input and returns the corresponding command.
      *
@@ -16,7 +16,7 @@ public class Praser {
      * @return A {@code Command} object corresponding to the input.
      * @throws NullException If the input is invalid or missing required details.
      */
-    public static void praser(String userInput, Ui ui, TransactionManager transaction) {
+    public static void parser(String userInput, Ui ui, TransactionManager transaction) {
         String[] parts = userInput.split(" ");
         String commandType = parts[0];
         String[] details;
