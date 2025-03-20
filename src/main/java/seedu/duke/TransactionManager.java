@@ -46,4 +46,18 @@ public class TransactionManager {
             return null;
         }
     }
+
+    public Transaction searchTransaction(String description) {
+        try {
+            for (Transaction transaction : transactions) {
+                if (transaction.getDescription().contains(description)) {
+                    return transaction;
+                }
+            }
+            throw new NullException("seedu.duke.Transaction not found");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 }
