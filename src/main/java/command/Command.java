@@ -1,7 +1,7 @@
 package command;
 
 import exceptions.NullException;
-import ui.ui;
+import ui.Ui;
 import seedu.duke.TransactionManager;
 
 public abstract class Command {
@@ -13,7 +13,7 @@ public abstract class Command {
      //* @param storage  The storage for saving the updated task list.
      * @throws NullException If an error occurs during execution.
      */
-    public abstract void execute(TransactionManager transactions, ui ui) throws NullException;
+    public abstract void execute(TransactionManager transactions, Ui ui) throws NullException;
 
     /**
      * Determines if this command exits the Luke application.

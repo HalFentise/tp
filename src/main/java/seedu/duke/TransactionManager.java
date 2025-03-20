@@ -137,7 +137,9 @@ public class TransactionManager {
                 }
             }
         }
-    public void addTag(int id, String tag) {
+    }
+
+    public void addTag(int id,String tag) {
         Transaction transaction = searchTransaction(id);
         if (transaction == null) {
             return;

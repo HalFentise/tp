@@ -22,12 +22,17 @@ public class Constant {
     /**
      * Command keyword for unmarking a task (marking it as incomplete).
      */
-    //public static final String COMMAND_UNMARK = "unmark";
+    public static final String COMMAND_UNTICK = "untick";
+
+    /**
+     * Command keyword for unmarking a task (marking it as incomplete).
+     */
+    public static final String COMMAND_TICK = "tick";
 
     /**
      * Command keyword for deleting a task.
      */
-    //public static final String COMMAND_DELETE = "delete";
+    public static final String COMMAND_DELETE = "delete";
 
     /**
      * Represents an invalid input exception.

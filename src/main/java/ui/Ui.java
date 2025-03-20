@@ -1,16 +1,13 @@
 package ui;
 
-import exceptions.NullException;
 import seedu.duke.Transaction;
-import seedu.duke.TransactionManager;
-import seedu.duke.TransactionManager.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import static constant.Constant.LINE_SEPARATOR;
 
-public class ui {
+public class Ui {
     /**
      * Scanner for reading user input.
      */
@@ -19,7 +16,7 @@ public class ui {
     /**
      * Constructs a {@code Ui} instance and initializes the input scanner.
      */
-    public ui() {
+    public Ui() {
         scanner = new Scanner(System.in);
     }
 

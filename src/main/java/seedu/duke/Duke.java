@@ -1,16 +1,25 @@
 package seedu.duke;
-
-import java.util.Scanner;
+import ui.Ui;
+import parser.Parser;
 
 public class Duke {
-    private TransactionManager transactions = new TransactionManager();
-    private static Scanner scanner = new Scanner(System.in);
+    private TransactionManager transactions;
+    private Ui ui;
+
+    public Duke() {
+        transactions = new TransactionManager();
+        ui = new Ui();
+    }
+
+    public void run() {
+        ui.printWelcomeMessage();
+        while (true) {
+            String command = ui.readCommand();
+            Parser.parser(command,ui,transactions);
+        }
+    }
 
     public static void main(String[] args) {
-        Praser praser = new Praser();
-        System.out.println("Welcome to Duke");
-        while (true) {
-            String input = scanner.nextLine();
-        }
+        new Duke().run();
     }
 }
