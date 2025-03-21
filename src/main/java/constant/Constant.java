@@ -57,6 +57,11 @@ public class Constant {
     public static final String COMMAND_RECUR = "recur";
 
     /**
+     * Command keyword for setting a period for a transaction to be recurring
+     */
+    public static final String COMMAND_CHANGECATE = "changecate";
+
+    /**
      * Represents an invalid input exception.
      */
     public static final String INVALID_INPUT = "OOPS!!! I'm sorry, but I don't know what that means :-(";

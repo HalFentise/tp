@@ -66,6 +66,11 @@ public class Parser {
                 transactions.tickTransaction(id);
                 ui.tickTransaction(transactions.searchTransaction(id));
                 break;
+            case COMMAND_UNTICK:
+                id = Integer.parseInt(parts[1]);
+                transactions.unTickTransaction(id);
+                ui.unTickTransaction(transactions.searchTransaction(id));
+                break;
             case COMMAND_SEARCH:
                 boolean isIndex = parts[1].startsWith("id-");
                 String keyWord = isIndex ? parts[1].substring(3) : parts[1];
@@ -121,7 +126,7 @@ public class Parser {
                 }
                 break;
             case COMMAND_EXIT:
-                System.out.println("Goodbye! Hope to see you again!");
+                ui.printExit();
                 System.exit(0);
                 break;
             default:

@@ -40,6 +40,11 @@ public class Ui {
         showLine();
     }
 
+    public void printExit() {
+        showLine();
+        System.out.println("Goodbye! Hope to see you again!");
+    }
+
     /**
      * Prints a given message to the console.
      *
@@ -120,8 +125,9 @@ public class Ui {
         System.out.println("Here is the list of transactions:");
         for (Transaction transaction : transactions) {
             printTransaction(transaction);
-            showLine();
+            System.out.println(" ");
         }
+        showLine();
     }
 
     public void printTransaction(Transaction transaction) {
@@ -131,6 +137,13 @@ public class Ui {
     public void tickTransaction(Transaction transaction) {
         showLine();
         System.out.println("I have ticked the following transaction:");
+        printTransaction(transaction);
+        showLine();
+    }
+
+    public void unTickTransaction(Transaction transaction) {
+        showLine();
+        System.out.println("I untick the following transaction:");
         printTransaction(transaction);
         showLine();
     }
