@@ -1,5 +1,7 @@
 package seedu.duke;
 
+import ui.Ui;
+
 import java.util.Scanner;
 
 public class FinancialGoal {
@@ -107,19 +109,20 @@ public class FinancialGoal {
     public FinancialGoal createNewGoal() {
         Scanner sc = new Scanner(System.in);
         int amount;
-        System.out.print("Want to set a new goal (Y/N)? ");
+        Ui.createGoalConfirm();
 
         if (!sc.nextLine().equals("Y")) {
+            Ui.createGoalAborted();
             return this;
         }
-        System.out.println("Name of new goal:");
+        Ui.createGoalName();
         setGoal(sc.nextLine());
-        System.out.println("Target amount of new goal:");
+        Ui.createGoalTarget();
         amount = Integer.parseInt(sc.nextLine());
         setTargetAmount(amount);
-        System.out.println("Description of new goal:");
+        Ui.createGoalDescription();
         setDescription(sc.nextLine());
-        System.out.println("New goal created! \n" + this);
+        Ui.createGoalSuccess();
         return this;
     }
 

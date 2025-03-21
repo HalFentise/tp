@@ -183,4 +183,38 @@ public class Ui {
         System.out.println("I have updated your goal to:\n" + goal.getGoal());
         showLine();
     }
+
+    public static void createGoalConfirm() {
+        showLine();
+        System.out.println("Want to set a new goal (Y/N)? ");
+        showLine();
+    }
+
+    public static void createGoalName() {
+        System.out.println("Name of new goal:");
+        showLine();
+    }
+
+    public static void createGoalTarget() {
+        System.out.println("Target amount of new goal:");
+        showLine();
+    }
+
+    public static void createGoalDescription() {
+        showLine();
+        System.out.println("Description of new goal:");
+        showLine();
+    }
+
+    public static void createGoalSuccess() {
+        showLine();
+        System.out.println("Goal successfully created\nRun \'goal\' to see it!");
+        showLine();
+    }
+
+    public static void createGoalAborted() {
+        showLine();
+        System.out.println("Goal creation cancelled by user.");
+        showLine();
+    }
 }
