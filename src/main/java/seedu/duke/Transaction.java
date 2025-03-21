@@ -49,9 +49,10 @@ public class Transaction {
 
 
     public String toString() {
-        String tick = isCompleted ? "[\u2713]" : "[ ]";
-        return "Transaction id: " + id + "   "+ tick + "\namount: " +
-                amount + "\ndescription: " + description + "\ncategory: " + category;
+        String checkBox = (recurringPeriod > 0) ? "[R]" : (isCompleted ? "[\u2713]" : "[ ]");
+        return "Transaction id: " + id + "   "+ checkBox + "\namount: "
+                + amount + "\ndescription: " + description + "\ncategory: " + category
+                + (recurringPeriod > 0 ? "\nperiod: " + recurringPeriod : "");
     }
 
     //get method

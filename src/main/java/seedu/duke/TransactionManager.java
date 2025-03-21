@@ -196,5 +196,13 @@ public class TransactionManager {
         }
         transaction.notComplete();
     }
+
+    public void setRecur(int id, int recurringPeriod) {
+        Transaction transaction = searchTransaction(id);
+        if (transaction == null) {
+            return;
+        }
+        transaction.setRecurringPeriod(recurringPeriod);
+    }
 }
 

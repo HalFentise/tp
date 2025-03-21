@@ -145,4 +145,17 @@ public class Ui {
             System.out.println("I have searched the transactions containing the keywords.");
         }
     }
+
+    public void setPeriod(Transaction transaction, int recurringPeriod) {
+        showLine();
+        if (recurringPeriod > 0) {
+            System.out.println("I have set the given transaction to recur every"
+                    + (recurringPeriod == 1 ? "day." : " " + recurringPeriod + " days."));
+        }
+        else {
+            System.out.println("I have disabled this transaction from recurring.");
+        }
+        printTransaction(transaction);
+        showLine();
+    }
 }
