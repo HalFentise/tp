@@ -90,6 +90,10 @@ public class Constant {
      * Command tag for creating a new goal
      */
     public static final String GOAL_NEW = "new";
+    /**
+     * Command keyword for setting a period for a transaction to be recurring
+     */
+    public static final String COMMAND_CHANGECATE = "changecate";
 
     /**
      * Represents an invalid input exception.

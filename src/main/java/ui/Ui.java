@@ -41,6 +41,11 @@ public class Ui {
         showLine();
     }
 
+    public void printExit() {
+        showLine();
+        System.out.println("Goodbye! Hope to see you again!");
+    }
+
     /**
      * Prints a given message to the console.
      *
@@ -77,8 +82,8 @@ public class Ui {
     /**
      * Prints a message indicating that a task has been deleted.
      *
-     * @param transaction      the task that was deleted.
-     * @param Count the new total number of tasks in the list.
+     * @param transaction the task that was deleted.
+     * @param Count       the new total number of tasks in the list.
      */
     public static void printDeleteTask(Transaction transaction, int Count) {
         showLine();
@@ -90,7 +95,11 @@ public class Ui {
 
     public void PrintBudgetLimit(ArrayList<Transaction> transaction, int amount) {
         showLine();
-        System.out.println("Budget limit set to " + amount + " " + transaction.get(0).getCurrency());
+        if (transaction.isEmpty()) {
+            System.out.println("Please add a translation first before you set the budget!");
+        } else {
+            System.out.println("Budget limit set to " + amount + " " + transaction.get(0).getCurrency());
+        }
         showLine();
     }
 
@@ -102,7 +111,7 @@ public class Ui {
         } else {
             System.out.println("Upcoming Expenses:");
             for (Transaction transaction : upcomingTransactions) {
-                if (transaction.getDescription().equals(description)) {
+                if (transaction.getDescription().equals(description) && transaction.getDate() != null) {
                     System.out.println("- " + transaction.getDescription() + " of " + transaction.getAmount() + " "
                             + transaction.getCurrency() + " in category " + transaction.getCategory() + " is due on "
                             + transaction.getDate().toString());
@@ -117,8 +126,9 @@ public class Ui {
         System.out.println("Here is the list of transactions:");
         for (Transaction transaction : transactions) {
             printTransaction(transaction);
-            showLine();
+            System.out.println(" ");
         }
+        showLine();
     }
 
     public void printTransaction(Transaction transaction) {
@@ -128,6 +138,13 @@ public class Ui {
     public void tickTransaction(Transaction transaction) {
         showLine();
         System.out.println("I have ticked the following transaction:");
+        printTransaction(transaction);
+        showLine();
+    }
+
+    public void unTickTransaction(Transaction transaction) {
+        showLine();
+        System.out.println("I untick the following transaction:");
         printTransaction(transaction);
         showLine();
     }
@@ -152,8 +169,7 @@ public class Ui {
         if (recurringPeriod > 0) {
             System.out.println("I have set the given transaction to recur every"
                     + (recurringPeriod == 1 ? "day." : " " + recurringPeriod + " days."));
-        }
-        else {
+        } else {
             System.out.println("I have disabled this transaction from recurring.");
         }
         printTransaction(transaction);

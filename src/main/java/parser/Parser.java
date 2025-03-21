@@ -67,6 +67,11 @@ public class Parser {
                 transactions.tickTransaction(id);
                 ui.tickTransaction(transactions.searchTransaction(id));
                 break;
+            case COMMAND_UNTICK:
+                id = Integer.parseInt(parts[1]);
+                transactions.unTickTransaction(id);
+                ui.unTickTransaction(transactions.searchTransaction(id));
+                break;
             case COMMAND_SEARCH:
                 boolean isIndex = parts[1].startsWith("id-");
                 String keyWord = isIndex ? parts[1].substring(3) : parts[1];
@@ -83,38 +88,11 @@ public class Parser {
                 new SetBudgetCommand(amount, transactions, ui);
                 break;
             case COMMAND_NOTIFY:
-                /*details = parts[1].split(IDENTIFIER_DESCRIPTION, 2);
-                String description = details[1].trim();
-
-                String[] amountParts = parts[2].split(IDENTIFIER_AMOUNT, 2);
-                int amountValue = Integer.parseInt(amountParts[1].trim());  // Convert AMOUNT to integer
-
-                // Extract CATEGORY (the part after 'c/')
-                String[] categoryParts = parts[3].split(IDENTIFIER_CATEGORY, 2);
-                String category = categoryParts[1].trim();  // CATEGORY after 'c/'
-
-                // Extract DATE (the part after 't/')
-                String[] dateParts = parts[4].split(IDENTIFIER_DATE, 2);
-                String date = dateParts[1].trim(); // DATE after 'd/'*/
-                /*String regex = "d/(.*)\\s+a/(\\d+)\\s+c/(.*)\\s+t/(.*)";
-
-                // Compile the pattern
-                Pattern pattern = Pattern.compile(regex);
-                Matcher matcher = pattern.matcher(parts[1]);
-
-                // Check if the input matches the pattern
-                if (matcher.matches()) {
-                    // Extract the values from the matched groups
-                    String description = matcher.group(0).trim(); // Group 1: DESCRIPTION
-                    int amountValue = Integer.parseInt(matcher.group(1).trim()); // Group 2: AMOUNT (converted to int)
-                    String categoryString = matcher.group(2).trim(); // Group 3: CATEGORY
-                    String date = matcher.group(3).trim(); // Group 4: DATE
-*/
                 String[] detail = {"description", "amount", "category", "date"};
                 String[] patterns1 = {
                         "d/(.*?)(?:\\s+[ac]/|$)", // d/
                         "a/(.*?)(?:\\s+[dc]/|$)", // a/
-                        "c/(.*?)(?:\\s+[da]/|$)",  // c/
+                        "c/(.*?)(?:\\s+[at]/|$)",  // c/
                         "t/(.*?)(?:\\s+[da]/|$)"  // t/
                 };
 
@@ -134,6 +112,7 @@ public class Parser {
                 amount = Integer.parseInt(result[1]);
                 String categoryString = result[2].toUpperCase();
                 String date = result[3];
+
                 new NotifyCommand(result[0], amount, categoryString, date, transactions, ui);
                 break;
             case COMMAND_RECUR:
@@ -148,7 +127,7 @@ public class Parser {
                 }
                 break;
             case COMMAND_EXIT:
-                System.out.println("Goodbye! Hope to see you again!");
+                ui.printExit();
                 System.exit(0);
                 break;
             case COMMAND_SAVE:
