@@ -217,4 +217,28 @@ public class Ui {
         System.out.println("Goal creation cancelled by user.");
         showLine();
     }
+
+    public static void addToSavings() {
+
+    }
+
+    public static void subFromSavings(int amount, int currentAmount) {
+        showLine();
+        System.out.println("Subtracted " + amount + " from your savings.");
+        if (currentAmount < 0){
+            System.out.println("Warning. You currently have a negative balance.");
+        }
+        showLine();
+    }
+
+    public static boolean printGoalStatus(int currentAmount, int targetAmount) {
+        showLine();
+        if (currentAmount >= targetAmount) {
+            System.out.println("You have achieved the goal! Congratulations!");
+            return true;
+        }
+        System.out.println("You're " + currentAmount + " out of " + targetAmount + ". Good luck!");
+        showLine();
+        return false;
+    }
 }

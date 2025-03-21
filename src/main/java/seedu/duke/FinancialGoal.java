@@ -89,19 +89,11 @@ public class FinancialGoal {
     public void subFromSavings(int amount) {
         isBlank = false;
         currentAmount -= amount;
-        if (currentAmount < 0){
-            System.out.println("Warning. You have gone into negative.");
-        }
+        Ui.subFromSavings(amount, currentAmount);
     }
 
     public void checkGoalStatus() {
-        if (currentAmount >= targetAmount) {
-            isAchieved = true;
-            System.out.println("You have achieved the goal! Congratulations!");
-        } else {
-            System.out.println("You're " + currentAmount +
-                    " out of " + targetAmount + ". Good luck!");
-        }
+        isAchieved = Ui.printGoalStatus(currentAmount, targetAmount);
     }
 
     // Goal setting
