@@ -5,10 +5,6 @@ import ui.Ui;
 import seedu.duke.TransactionManager;
 
 public class SetBudgetCommand extends Command {
-    /**
-     * The date for which tasks should be searched.
-     */
-    protected int budgetLimit;
 
     /**
      * Constructs a {@code CheckDateCommand} with the specified date string.
@@ -21,15 +17,14 @@ public class SetBudgetCommand extends Command {
 
         try {
             if (amount > 0) {
-                this.budgetLimit = amount;
-                transcations.checkBudgetLimit();
+                transcations.checkBudgetLimit(amount);
             } else {
                 throw new NullException("Invalid input amount, amount can not be negative!");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        ui.PrintBudgetLimit(transcations.getTransactions(), budgetLimit);
+        ui.PrintBudgetLimit(transcations.getTransactions(), amount);
     }
 
     /**
@@ -44,9 +39,9 @@ public class SetBudgetCommand extends Command {
     @Override
     public void execute(TransactionManager transactions, Ui ui) throws NullException {
         // Check for whether exceed the budget limit or not.
-        transactions.checkBudgetLimit();
+        //transactions.checkBudgetLimit();
 
         // Display the budget limit
-        ui.PrintBudgetLimit(transactions.getTransactions(), budgetLimit);
+        //ui.PrintBudgetLimit(transactions.getTransactions(), budgetLimit);
     }
 }
