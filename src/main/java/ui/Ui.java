@@ -1,5 +1,6 @@
 package ui;
 
+import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 
 import java.util.ArrayList;
@@ -156,6 +157,30 @@ public class Ui {
             System.out.println("I have disabled this transaction from recurring.");
         }
         printTransaction(transaction);
+        showLine();
+    }
+
+    public void printGoal(FinancialGoal goal) {
+        showLine();
+        System.out.println(goal);
+        showLine();
+    }
+
+    public void setGoalTarget(FinancialGoal goal) {
+        showLine();
+        System.out.println("I have updated your target to: " + goal.getTargetAmount());
+        showLine();
+    }
+
+    public void setGoalDescription(FinancialGoal goal) {
+        showLine();
+        System.out.println("I have updated your description to:\n" + goal.getDescription());
+        showLine();
+    }
+
+    public void setGoalTitle(FinancialGoal goal) {
+        showLine();
+        System.out.println("I have updated your goal to:\n" + goal.getGoal());
         showLine();
     }
 }

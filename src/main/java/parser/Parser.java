@@ -167,7 +167,8 @@ public class Parser {
                 break;
             case COMMAND_GOAL:
                 try {
-                    parseGoalCommands(parts[1], goal);
+                    String goalTag = parts.length < 2 ? "placeholder" : parts[1];
+                    parseGoalCommands(goalTag, ui, goal);
                 } catch (Exception e) {
                     throw new InvalidCommand("Format invalid, try again!");
                 }
@@ -180,17 +181,20 @@ public class Parser {
         }
     }
 
-    public static void parseGoalCommands(String command, FinancialGoal goal) throws Exception {
-        String[] parts = command.toLowerCase().split(" ", 3);
-        switch (parts[1]) {
+    public static void parseGoalCommands(String command, Ui ui, FinancialGoal goal) throws Exception {
+        String[] parts = command.toLowerCase().split(" ", 2);
+        switch (parts[0]) {
         case GOAL_TARGET:
-            goal.setTargetAmount(Integer.parseInt(parts[2]));
+            goal.setTargetAmount(Integer.parseInt(parts[1]));
+            ui.setGoalTarget(goal);
             break;
         case GOAL_DESC:
-            goal.setDescription(parts[2]);
+            goal.setDescription(parts[1]);
+            ui.setGoalDescription(goal);
             break;
         case GOAL_TITLE:
-            goal.setGoal(parts[2]);
+            goal.setGoal(parts[1]);
+            ui.setGoalTitle(goal);
             break;
         case GOAL_STATUS:
             if (goal.isBlank()) {
@@ -206,9 +210,8 @@ public class Parser {
             if (goal.isBlank()) {
                 goal.createNewGoal();
             } else {
-                printGoal(goal);
+                ui.printGoal(goal);
             }
-            // Print goal info / create new goal if empty
         }
     }
 }
