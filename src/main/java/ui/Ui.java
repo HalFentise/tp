@@ -1,5 +1,6 @@
 package ui;
 
+import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 
 import java.util.ArrayList;
@@ -173,5 +174,87 @@ public class Ui {
         }
         printTransaction(transaction);
         showLine();
+    }
+
+    public void printGoal(FinancialGoal goal) {
+        showLine();
+        System.out.println(goal);
+        showLine();
+    }
+
+    public void setGoalTarget(FinancialGoal goal) {
+        showLine();
+        System.out.println("I have updated your target to: " + goal.getTargetAmount());
+        showLine();
+    }
+
+    public void setGoalDescription(FinancialGoal goal) {
+        showLine();
+        System.out.println("I have updated your description to:\n" + goal.getDescription());
+        showLine();
+    }
+
+    public void setGoalTitle(FinancialGoal goal) {
+        showLine();
+        System.out.println("I have updated your goal to:\n" + goal.getGoal());
+        showLine();
+    }
+
+    public static void createGoalConfirm() {
+        showLine();
+        System.out.println("Want to set a new goal (Y/N)? ");
+        showLine();
+    }
+
+    public static void createGoalName() {
+        System.out.println("Name of new goal:");
+        showLine();
+    }
+
+    public static void createGoalTarget() {
+        System.out.println("Target amount of new goal:");
+        showLine();
+    }
+
+    public static void createGoalDescription() {
+        showLine();
+        System.out.println("Description of new goal:");
+        showLine();
+    }
+
+    public static void createGoalSuccess() {
+        showLine();
+        System.out.println("Goal successfully created\nRun \'goal\' to see it!");
+        showLine();
+    }
+
+    public static void createGoalAborted() {
+        showLine();
+        System.out.println("Goal creation cancelled by user.");
+        showLine();
+    }
+
+    public static void addToSavings() {
+
+    }
+
+    public static void subFromSavings(int amount, int currentAmount) {
+        showLine();
+        System.out.println("Subtracted " + amount + " from your savings.");
+        if (currentAmount < 0){
+            System.out.println("Warning. You currently have a negative balance.");
+        }
+        showLine();
+    }
+
+    public static boolean printGoalStatus(int currentAmount, int targetAmount) {
+        showLine();
+        if (currentAmount >= targetAmount) {
+            System.out.println("You have achieved the goal! Congratulations!");
+            return true;
+        }
+        System.out.println("You're " + currentAmount + " out of " + targetAmount + ". Good luck!");
+        showLine();
+        return false;
     }
 }
