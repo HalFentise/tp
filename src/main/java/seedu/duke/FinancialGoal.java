@@ -12,6 +12,7 @@ public class FinancialGoal {
 
     private boolean isAchieved;
     private int currentAmount;
+    private boolean isBlank;
 
     // Constructors
 
@@ -20,6 +21,7 @@ public class FinancialGoal {
         this.targetAmount = targetAmount;
         this.description = description;
         this.isAchieved = false;
+        isBlank = false;
     }
 
     public FinancialGoal() {
@@ -28,6 +30,7 @@ public class FinancialGoal {
         this.description = "General Savings - Use comamnd to add goal";
         this.isAchieved = false;
         this.currentAmount = 0;
+        isBlank = true;
     }
 
     //get method
@@ -52,28 +55,37 @@ public class FinancialGoal {
         return this.currentGoal;
     }
 
+    public boolean isBlank() {
+        return this.isBlank;
+    }
+
     // set method
 
-    private void setDescription(String description) {
+    public void setDescription(String description) {
+        isBlank = false;
         this.description = description;
     }
 
-    private void setTargetAmount(int targetAmount) {
+    public void setTargetAmount(int targetAmount) {
+        isBlank = false;
         this.targetAmount = targetAmount;
     }
 
-    private void setGoal(String goal) {
+    public void setGoal(String goal) {
+        isBlank = false;
         this.currentGoal = goal;
     }
 
     // Saving methods
 
     public void addToSavings(int amount) {
+        isBlank = false;
         currentAmount += amount;
         checkGoalStatus();
     }
 
     public void subFromSavings(int amount) {
+        isBlank = false;
         currentAmount -= amount;
         if (currentAmount < 0){
             System.out.println("Warning. You have gone into negative.");
@@ -92,7 +104,7 @@ public class FinancialGoal {
 
     // Goal setting
 
-    public FinancialGoal setGoal(){
+    public FinancialGoal createNewGoal() {
         Scanner sc = new Scanner(System.in);
         int amount;
         System.out.print("Want to set a new goal (Y/N)? ");

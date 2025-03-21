@@ -5,6 +5,7 @@ import command.NotifyCommand;
 import command.SetBudgetCommand;
 import exceptions.NullException;
 import exceptions.InvalidCommand;
+import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
 import enumStructure.Category;
@@ -22,7 +23,7 @@ public class Parser {
      * @param userInput The raw user input string.
      * @throws NullException If the input is invalid or missing required details.
      */
-    public static void parser(String userInput, Ui ui, TransactionManager transactions) {
+    public static void parser(String userInput, Ui ui, TransactionManager transactions, FinancialGoal goal) {
         String[] parts = userInput.toLowerCase().split(" ", 2);
         String commandType = parts[0];
         String[] details;
@@ -150,11 +151,64 @@ public class Parser {
                 System.out.println("Goodbye! Hope to see you again!");
                 System.exit(0);
                 break;
+            case COMMAND_SAVE:
+                try {
+                    int change = Integer.parseInt(parts[1].substring(1).trim());
+                    if (parts[1].startsWith("+")) {
+                        goal.addToSavings(change);
+                    } else if (parts[1].startsWith("-")) {
+                        goal.subFromSavings(change);
+                    } else {
+                        throw new Exception();
+                    }
+                } catch (Exception e) {
+                    throw new InvalidCommand("Format invalid, try again! (save [+/-][amount])");
+                }
+                break;
+            case COMMAND_GOAL:
+                try {
+                    parseGoalCommands(parts[1], goal);
+                } catch (Exception e) {
+                    throw new InvalidCommand("Format invalid, try again!");
+                }
+                break;
             default:
                 throw new InvalidCommand(INVALID_INPUT);
             }
         } catch (Exception e) {
             ui.showError(e.getMessage());
+        }
+    }
+
+    public static void parseGoalCommands(String command, FinancialGoal goal) throws Exception {
+        String[] parts = command.toLowerCase().split(" ", 3);
+        switch (parts[1]) {
+        case GOAL_TARGET:
+            goal.setTargetAmount(Integer.parseInt(parts[2]));
+            break;
+        case GOAL_DESC:
+            goal.setDescription(parts[2]);
+            break;
+        case GOAL_TITLE:
+            goal.setGoal(parts[2]);
+            break;
+        case GOAL_STATUS:
+            if (goal.isBlank()) {
+                throw new InvalidCommand("Empty goal.");
+            } else {
+                goal.checkGoalStatus();
+            }
+            break;
+        case GOAL_NEW:
+            goal.createNewGoal();
+            break;
+        default:
+            if (goal.isBlank()) {
+                goal.createNewGoal();
+            } else {
+                printGoal(goal);
+            }
+            // Print goal info / create new goal if empty
         }
     }
 }

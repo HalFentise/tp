@@ -57,6 +57,41 @@ public class Constant {
     public static final String COMMAND_RECUR = "recur";
 
     /**
+     * Command keyword for modifying savings
+     */
+    public static final String COMMAND_SAVE = "save";
+
+    /**
+     * Command prefix for goal-related actions
+     */
+    public static final String COMMAND_GOAL = "goal";
+
+    /**
+     * Command tag for modifying the target amount
+     */
+    public static final String GOAL_TARGET = "target";
+
+    /**
+     * Command tag for modifying the goal description
+     */
+    public static final String GOAL_DESC = "desc";
+
+    /**
+     * Command tag for modifying the goal title
+     */
+    public static final String GOAL_TITLE = "title";
+
+    /**
+     * Command tag for checking whether the goal is met
+     */
+    public static final String GOAL_STATUS = "status";
+
+    /**
+     * Command tag for creating a new goal
+     */
+    public static final String GOAL_NEW = "new";
+
+    /**
      * Represents an invalid input exception.
      */
     public static final String INVALID_INPUT = "OOPS!!! I'm sorry, but I don't know what that means :-(";
