@@ -12,11 +12,11 @@ import ui.Ui;
 public class TransactionManager {
     private ArrayList<Transaction> transactions;
     private ArrayList<Transaction> upcomingTransactions;
-    private int budgetLimit = 0;
     private Currency defaultCurrency = Currency.USD;
 
     public TransactionManager() {
         transactions = new ArrayList<>();
+        upcomingTransactions = new ArrayList<>();
     }
 
     public int getNum() {
@@ -51,11 +51,11 @@ public class TransactionManager {
     public void deleteExpense(int index) {
         transactions.remove(index);
     }
+
     /*
     function to record and trace the total budget limit
      */
-
-    public void checkBudgetLimit() {
+    public void checkBudgetLimit(int budgetLimit) {
         int totalAmount = 0;
         for (Transaction transaction : transactions) {
             if (!transaction.isDeleted()) {
@@ -106,47 +106,17 @@ public class TransactionManager {
         }
     }
 
-    /*
-     * Function for setting the expense limit for a specific time duration?
-     * The type default is expense
-     * Can keep the amount as for the all-time spend limit first
-     */
-    public void setBudgetLimit(int amount) {
-        try {
-            if (amount > 0) {
-                budgetLimit = amount;
-                //System.out.println("Budget limit set to " + amount + " " + defaultCurrency);
-                checkBudgetLimit();  // Check if the new budget limit has been exceeded
-            } else {
-                throw new NullException("Invalid input amount, amount can not be negative!");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     // Sets a notification for an upcoming transaction
     public void notify(String description, int amount, String categoryString, String date) {
         LocalDate dueDate = LocalDate.parse(date);
 
-        // Add a notification for the specified upcoming expense
-        /*String notification = "Reminder: " + description + " of " + amount + " " + defaultCurrency + " in category "
-                + categoryString + " is due on " + dueDate;*/
-
         Category category = Category.valueOf(categoryString);
-        Transaction upcomingTransaction = new Transaction(
-                transactions.size() + 1,
-                description,
-                amount,
-                defaultCurrency,
-                category,
-                dueDate,
-                Status.PENDING
-        );
 
-        upcomingTransactions.add(upcomingTransaction);
-
-        //System.out.println(notification);
+        for (Transaction transaction : transactions) {
+            if (transaction.getDescription().equals(description) && transaction.getCategory().equals(category)) {
+                transaction.setDate(dueDate);
+            }
+        }
     }
 
     // Lists all upcoming notifications
