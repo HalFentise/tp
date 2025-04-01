@@ -9,14 +9,14 @@ import java.util.ArrayList;
 
 public class Transaction {
     private final int id;
-    private final int amount;
-    private final Currency currency;
-    private LocalDate date;
     private final Status status;
 
     // changeable fields
+    private int amount;
+    private Currency currency;
     private String description;
     private Category category;
+    private LocalDate date;
     private ArrayList<String> tags;
     private boolean isDeleted = false;
     private int recurringPeriod; // Repeated every recurringPeriod days, one-time if 0
@@ -59,7 +59,6 @@ public class Transaction {
     public int getId() {
         return id;
     }
-
 
     public int getAmount() {
         return amount;
@@ -111,6 +110,18 @@ public class Transaction {
         this.category = category;
     }
 
+    public void setRecurringPeriod(int recurringPeriod) {
+        this.recurringPeriod = recurringPeriod;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
     public void setDate(LocalDate date) {
         this.date = date;
     }
@@ -150,9 +161,5 @@ public class Transaction {
 
     public void recover() {
         isDeleted = false;
-    }
-
-    public void setRecurringPeriod(int recurringPeriod) {
-        this.recurringPeriod = recurringPeriod;
     }
 }

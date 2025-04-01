@@ -3,6 +3,7 @@ package seedu.duke;
 import java.util.ArrayList;
 import java.time.LocalDate;
 
+import constant.Constant;
 import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
@@ -44,12 +45,15 @@ public class TransactionManager {
     }
 
     /**
-     * Deletes a translation from the task list.
+     * Deletes a transaction from the task list.
      *
-     * @param index the index of the task to be removed.
+     * @param id the index of the task to be removed.
      */
-    public void deleteExpense(int index) {
-        transactions.remove(index);
+    public void deleteExpense(int id) {
+        if (checkIdEmpty(id)) {
+            return;
+        }
+        transactions.remove(id);
     }
 
     /*
@@ -173,6 +177,42 @@ public class TransactionManager {
             return;
         }
         transaction.setRecurringPeriod(recurringPeriod);
+    }
+
+    public void editDescription(int id, String newDescription) {
+        if (checkIdEmpty(id)) {
+            return;
+        }
+        transactions.get(id).setDescription(newDescription);
+    }
+
+    public void editCategory(int id, String newCategory) {
+        if (checkIdEmpty(id)) {
+            return;
+        }
+        transactions.get(id).setCategory(Category.valueOf(newCategory));
+    }
+
+    public void editAmount(int id, int newAmount) {
+        if (checkIdEmpty(id)) {
+            return;
+        }
+        transactions.get(id).setAmount(newAmount);
+    }
+
+    public void editCurrency(int id, String newCurrency) {
+        if (checkIdEmpty(id)) {
+            return;
+        }
+        transactions.get(id).setCurrency(Currency.valueOf(newCurrency));
+    }
+
+    public boolean checkIdEmpty(int id) {
+        if (transactions.get(id) == null) {
+            System.out.println(Constant.INVALID_TRANSACTION_ID);
+            return true;
+        }
+        return false;
     }
 }
 

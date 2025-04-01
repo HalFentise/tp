@@ -7,7 +7,7 @@ public class Constant {
 
     // Command keywords
     /**
-     * Command keyword for listing tasks.
+     * Command keyword for listing tasks
      */
     public static final String COMMAND_LIST = "list";
 
@@ -22,29 +22,34 @@ public class Constant {
     public static final String COMMAND_SEARCH = "search";
 
     /**
-     * Command keyword for setting a spending budget limit.
+     * Command keyword for setting a spending budget limit
      */
     public static final String COMMAND_SET_BUDGET = "setbudget";
 
     /**
-     * Command keyword for setting reminders for upcoming expenses.
+     * Command keyword for setting reminders for upcoming expenses
      */
     public static final String COMMAND_NOTIFY = "notify";
 
     /**
-     * Command keyword for unmarking a task (marking it as incomplete).
+     * Command keyword for unmarking a task (marking it as incomplete)
      */
     public static final String COMMAND_UNTICK = "untick";
 
     /**
-     * Command keyword for unmarking a task (marking it as incomplete).
+     * Command keyword for unmarking a task (marking it as incomplete)
      */
     public static final String COMMAND_TICK = "tick";
 
     /**
-     * Command keyword for deleting a task.
+     * Command keyword for deleting a task
      */
     public static final String COMMAND_DELETE = "delete";
+
+    /**
+     * Command prefix for editing a task
+     */
+    public static final String COMMAND_EDIT = "edit";
 
     /**
      * Command keyword for exiting the program
@@ -96,27 +101,52 @@ public class Constant {
     public static final String COMMAND_CHANGECATE = "changecate";
 
     /**
-     * Represents an invalid input exception.
+     * Command tag for editing the description of an expense
+     */
+    public static final String EDIT_DESC = "desc";
+
+    /**
+     * Command tag for editing the category of an expense
+     */
+    public static final String EDIT_CAT = "cat";
+
+    /**
+     * Command tag for editing the value of an expense
+     */
+    public static final String EDIT_AM = "am";
+
+    /**
+     * Command tag for editing the currency of an expense
+     */
+    public static final String EDIT_CURR = "curr";
+
+    /**
+     * Represents an invalid input exception
      */
     public static final String INVALID_INPUT = "OOPS!!! I'm sorry, but I don't know what that means :-(";
 
     /**
-     * Identifier for setting a budget amount in user input.
+     *
+     */
+    public static final String INVALID_TRANSACTION_ID = "No transaction found at given id! Try again?";
+
+    /**
+     * Identifier for setting a budget amount in user input
      */
     public static final String IDENTIFIER_AMOUNT = "a/";
 
     /**
-     * Identifier for specifying a description in user input.
+     * Identifier for specifying a description in user input
      */
     public static final String IDENTIFIER_DESCRIPTION = " d/";
 
     /**
-     * Identifier for specifying a category type in user input.
+     * Identifier for specifying a category type in user input
      */
     public static final String IDENTIFIER_CATEGORY = " c/";
 
     /**
-     * Identifier for specifying a category type in user input.
+     * Identifier for specifying a category type in user input
      */
     public static final String IDENTIFIER_DATE = " t/";
 }
