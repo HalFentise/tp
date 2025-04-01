@@ -69,7 +69,7 @@ public class Storage {
     // Parse a CSV line into a Transaction object
     private Transaction parseTransaction(String line) {
         try {
-            String[] parts = line.toUpperCase().split(",");
+            String[] parts = line.split(",");
             if (parts.length != 10) {
                 throw new IllegalArgumentException("Invalid number of fields in transaction: " + line);
             }
@@ -80,7 +80,7 @@ public class Storage {
             Currency currency = Currency.valueOf(parts[3]);
             Category category = Category.valueOf(parts[4]);
             LocalDate date = LocalDate.parse(parts[5]);
-            Status status = Status.valueOf(parts[6]);
+            Status status = Status.valueOf(parts[6].toUpperCase());
             int recurringPeriod = Integer.parseInt(parts[7]);
             boolean isDeleted = Boolean.parseBoolean(parts[8]);
             boolean isCompleted = Boolean.parseBoolean(parts[9]);
