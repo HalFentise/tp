@@ -8,6 +8,7 @@ import exceptions.InvalidCommand;
 import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
+import seedu.duke.Storage;
 import enumStructure.Category;
 import ui.Ui;
 
@@ -23,7 +24,7 @@ public class Parser {
      * @param userInput The raw user input string.
      * @throws NullException If the input is invalid or missing required details.
      */
-    public static void parser(String userInput, Ui ui, TransactionManager transactions, FinancialGoal goal) {
+    public static void parser(String userInput, Ui ui, TransactionManager transactions, FinancialGoal goal, Storage storage) {
         String[] parts = userInput.toLowerCase().split(" ", 2);
         String commandType = parts[0];
         String[] details;
@@ -55,6 +56,7 @@ public class Parser {
                 Category category = Category.valueOf(results[2].toUpperCase());
                 transactions.addTransaction(transactions.getNum() + 1, results[0], amount, category);
                 ui.add(transactions.searchTransaction(transactions.getNum()));
+                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_LIST:
                 if (parts.length > 1) {
@@ -66,11 +68,13 @@ public class Parser {
                 int id = Integer.parseInt(parts[1]);
                 transactions.tickTransaction(id);
                 ui.tickTransaction(transactions.searchTransaction(id));
+                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_UNTICK:
                 id = Integer.parseInt(parts[1]);
                 transactions.unTickTransaction(id);
                 ui.unTickTransaction(transactions.searchTransaction(id));
+                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_SEARCH:
                 boolean isIndex = parts[1].startsWith("id-");
@@ -81,6 +85,7 @@ public class Parser {
             case COMMAND_DELETE:
                 int index = Integer.parseInt(parts[1]);
                 new DeleteCommand(index - 1, transactions, ui);
+                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_SET_BUDGET:
                 details = parts[1].split(IDENTIFIER_AMOUNT, 2);
@@ -128,6 +133,7 @@ public class Parser {
                 break;
             case COMMAND_EXIT:
                 ui.printExit();
+                storage.saveTransactions(transactions.getTransactions());
                 System.exit(0);
                 break;
             case COMMAND_SAVE:
@@ -143,6 +149,7 @@ public class Parser {
                 } catch (Exception e) {
                     throw new InvalidCommand("Format invalid, try again! (save [+/-][amount])");
                 }
+                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_GOAL:
                 try {
