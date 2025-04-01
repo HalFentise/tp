@@ -45,9 +45,9 @@ public class TransactionManager {
     }
 
     /**
-     * Deletes a transaction from the task list.
+     * Deletes a transaction from the transaction list.
      *
-     * @param id the index of the task to be removed.
+     * @param id the index of the transaction to be removed.
      */
     public void deleteExpense(int id) {
         if (checkIdEmpty(id)) {

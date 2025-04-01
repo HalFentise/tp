@@ -19,13 +19,5 @@ public class NotifyCommand extends Command {
 
     @Override
     public void execute(TransactionManager transactions, Ui ui) throws NullException {
-        // Search for tasks matching the specified date
-       /* try {
-            transactions.notify(description, amount, category, date);
-        } catch (NullException e) {
-            ui.showError(e.getMessage());
-            // Display the all notifications
-        }
-        ui.listNotification(transactions.getTransactions(), description);*/
     }
 }
