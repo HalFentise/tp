@@ -104,7 +104,7 @@ public class Ui {
         showLine();
     }
 
-    // Lists all upcoming notifications
+    // Lists current specific upcoming notification
     public void listNotification(ArrayList<Transaction> upcomingTransactions, String description) {
         showLine();
         if (upcomingTransactions.isEmpty()) {
@@ -120,6 +120,53 @@ public class Ui {
             }
         }
         showLine();
+    }
+
+    // Lists all upcoming notifications
+    public void listNotifications(ArrayList<Transaction> upcomingTransactions) {
+        if (upcomingTransactions.isEmpty()) {
+            System.out.println("No upcoming expenses.");
+        } else {
+            System.out.println("Upcoming Expenses:");
+            for (Transaction transaction : upcomingTransactions) {
+                if (transaction.getDate() != null) {
+                    System.out.println("- " + transaction.getDescription() + " of " + transaction.getAmount() + " "
+                            + transaction.getCurrency() + " in category " + transaction.getCategory() + " is due on "
+                            + transaction.getDate().toString());
+                }
+            }
+        }
+    }
+
+    //
+    public void PrintPriority(ArrayList<Transaction> transactions, int index) {
+        showLine();
+        if (transactions.isEmpty()) {
+            System.out.println("Please add a transaction first before you set the priority!");
+        } else {
+            System.out.println("Priority is set to " + transactions.get(index).getPriority() + " for current transaction.");
+        }
+        showLine();
+    }
+
+    // Lists all transactions that have the high priority
+    public void listPriorities(ArrayList<Transaction> upcomingTransactions) {
+        String defaultPriority = "HIGH";
+        boolean hasHighPriority = false;
+
+        for (Transaction transaction : upcomingTransactions) {
+            if (transaction.getPriority() != null && transaction.getPriority().toString().equalsIgnoreCase(defaultPriority)) {
+                if (!hasHighPriority) {
+                    System.out.println("Following transactions have the high priority:");
+                    hasHighPriority = true;
+                }
+                System.out.println("- " + transaction.getDescription() + " " + transaction.getAmount() + " "
+                        + transaction.getCurrency() + " in category " + transaction.getCategory());
+            }
+        }
+        if (!hasHighPriority) {
+            System.out.println("No high priority transactions found.");
+        }
     }
 
     public void printTransactions(ArrayList<Transaction> transactions) {
@@ -247,7 +294,7 @@ public class Ui {
     public static void subFromSavings(int amount, int currentAmount) {
         showLine();
         System.out.println("Subtracted " + amount + " from your savings.");
-        if (currentAmount < 0){
+        if (currentAmount < 0) {
             System.out.println("Warning. You currently have a negative balance.");
         }
         showLine();

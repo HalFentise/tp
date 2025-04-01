@@ -31,8 +31,8 @@ public class Duke {
     }
 
     public static void main(String[] args) {
-        Duke duke = new Duke();
-        duke.run();
+        new Duke().run();
+        //assert false : "dummy assertion set to fail";
     }
 }
 

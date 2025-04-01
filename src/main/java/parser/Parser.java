@@ -1,8 +1,6 @@
 package parser;
 
-import command.DeleteCommand;
-import command.NotifyCommand;
-import command.SetBudgetCommand;
+import command.*;
 import exceptions.NullException;
 import exceptions.InvalidCommand;
 import seedu.duke.FinancialGoal;
@@ -103,7 +101,7 @@ public class Parser {
                 break;
             case COMMAND_NOTIFY:
                 String[] detail = {"description", "amount", "category", "date"};
-                String[] patterns1 = {
+                String[] notifyPatterns = {
                         "d/(.*?)(?:\\s+[ac]/|$)", // d/
                         "a/(.*?)(?:\\s+[dc]/|$)", // a/
                         "c/(.*?)(?:\\s+[at]/|$)",  // c/
@@ -113,7 +111,7 @@ public class Parser {
                 String[] result = new String[detail.length];
                 //match pattern
                 for (int i = 0; i < detail.length; i++) {
-                    Pattern pattern = Pattern.compile(patterns1[i]);
+                    Pattern pattern = Pattern.compile(notifyPatterns[i]);
                     Matcher matcher = pattern.matcher(parts[1]);
 
                     if (matcher.find()) {
@@ -128,6 +126,26 @@ public class Parser {
                 String date = result[3];
 
                 new NotifyCommand(result[0], amount, categoryString, date, transactions, ui);
+                break;
+
+            case COMMAND_ALERT:
+                if (parts.length > 1) {
+                    throw new InvalidCommand("Invalid command");
+                }
+                new AlertCommand(transactions, ui);
+                break;
+
+            case COMMAND_SET_PRIORITY:
+                try {
+                    details = parts[1].split(" ", 2);
+                    index = Integer.parseInt(details[0]);
+                    System.out.println(details[0]);
+                    System.out.println(details[1]);
+
+                    new SetPriorityCommand(index - 1, details[1], transactions, ui);
+                } catch (NullException e) {
+                    throw new InvalidCommand("Invalid input format, should be (priority [id] [priority_level])");
+                }
                 break;
             case COMMAND_RECUR:
                 int slashIndex = parts[1].indexOf("/");

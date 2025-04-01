@@ -2,6 +2,7 @@ package seedu.duke;
 
 import enumStructure.Category;
 import enumStructure.Currency;
+import enumStructure.Priority;
 import enumStructure.Status;
 
 import java.time.LocalDate;
@@ -11,11 +12,13 @@ public class Transaction {
     private final int id;
     private final Status status;
 
+
     // changeable fields
     private int amount;
     private Currency currency;
     private String description;
     private Category category;
+    private Priority priority;
     private LocalDate date;
     private ArrayList<String> tags;
     private boolean isDeleted = false;
@@ -23,8 +26,8 @@ public class Transaction {
     private boolean isCompleted = false;
 
     //Constructor
-    Transaction(int id, String description, int amount, Currency currency,
-                Category category, LocalDate date, Status status) {
+    public Transaction(int id, String description, int amount, Currency currency,
+                       Category category, LocalDate date, Status status) {
         this.id = id;
         this.amount = amount;
         this.description = description;
@@ -36,7 +39,7 @@ public class Transaction {
         recurringPeriod = 0;
     }
 
-    Transaction(int id, String description, int amount, Currency currency, LocalDate date, Status status) {
+    public Transaction(int id, String description, int amount, Currency currency, LocalDate date, Status status) {
         this.id = id;
         this.description = description;
         this.amount = amount;
@@ -80,6 +83,9 @@ public class Transaction {
         return date;
     }
 
+    public Priority getPriority() {
+        return priority;
+    }
 
     public ArrayList<String> getTags() {
         return new ArrayList<>(tags);
@@ -124,6 +130,10 @@ public class Transaction {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
     }
 
     public void complete() {
