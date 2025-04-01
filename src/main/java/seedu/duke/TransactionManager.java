@@ -120,20 +120,20 @@ public class TransactionManager {
     }
 
     // Lists all upcoming notifications
-    public void listNotifications(String description) {
+    /*public void listNotifications() {
         if (upcomingTransactions.isEmpty()) {
             System.out.println("No upcoming expenses.");
         } else {
             System.out.println("Upcoming Expenses:");
             for (Transaction transaction : upcomingTransactions) {
-                if (transaction.getDescription().equals(description)) {
+                if (transaction.getDate() != null) {
                     System.out.println("- " + transaction.getDescription() + " of " + transaction.getAmount() + " "
                             + transaction.getCurrency() + " in category " + transaction.getCategory() + " is due on "
                             + transaction.getDate().toString());
                 }
             }
         }
-    }
+    }*/
 
     public void addTag(int id, String tag) {
         Transaction transaction = searchTransaction(id);

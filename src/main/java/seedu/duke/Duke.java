@@ -1,4 +1,5 @@
 package seedu.duke;
+
 import ui.Ui;
 import parser.Parser;
 
@@ -22,6 +23,8 @@ public class Duke {
     }
 
     public static void main(String[] args) {
+
         new Duke().run();
+        //assert false : "dummy assertion set to fail";
     }
 }

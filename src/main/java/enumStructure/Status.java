@@ -6,7 +6,8 @@ public enum Status {
     FAILED("Failed", "The transaction failed due to some reason"),
     CANCELED("Canceled", "The transaction was canceled by the user or system"),
     REFUNDED("Refunded", "The transaction has been refunded"),
-    IN_PROGRESS("In Progress", "The transaction is being processed");
+    IN_PROGRESS("In Progress", "The transaction is being processed"),
+    PAID("Paid","The transaction is completed ");
 
     private final String displayName; // Display name
     private final String description; // Description

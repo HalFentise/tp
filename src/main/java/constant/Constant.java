@@ -32,6 +32,16 @@ public class Constant {
     public static final String COMMAND_NOTIFY = "notify";
 
     /**
+     * Command keyword for seeing the coming Alert for expenses.
+     */
+    public static final String COMMAND_ALERT = "alert";
+
+    /**
+     * Command keyword for setting priority for expenses.
+     */
+    public static final String COMMAND_SET_PRIORITY = "priority";
+
+    /**
      * Command keyword for unmarking a task (marking it as incomplete).
      */
     public static final String COMMAND_UNTICK = "untick";
