@@ -3,6 +3,7 @@ package ui;
 import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 
+import javax.sound.midi.SysexMessage;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -170,6 +171,11 @@ public class Ui {
 
     public void printTransactions(ArrayList<Transaction> transactions) {
         showLine();
+        if (transactions.isEmpty()) {
+            System.out.println("No transaction found.");
+            showLine();
+            return;
+        }
         System.out.println("Here is the list of transactions:");
         for (Transaction transaction : transactions) {
             printTransaction(transaction);
@@ -303,5 +309,28 @@ public class Ui {
         System.out.println("You're " + currentAmount + " out of " + targetAmount + ". Good luck!");
         showLine();
         return false;
+    }
+
+    public void printEdited(String value, int typeId) {
+        String type = "";
+        switch (typeId) {
+        case 0:
+            type = "description";
+            break;
+        case 1:
+            type = "category";
+            break;
+        case 2:
+            type = "amount";
+            break;
+        case 3:
+            type = "currency";
+            break;
+        }
+
+        showLine();
+        System.out.println("Done! The " + type
+                + " of the target transaction has been updated to:\n" + value);
+        showLine();
     }
 }

@@ -4,8 +4,8 @@ import command.*;
 import exceptions.NullException;
 import exceptions.InvalidCommand;
 import seedu.duke.FinancialGoal;
-import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
+import seedu.duke.Storage;
 import enumStructure.Category;
 import ui.Ui;
 
@@ -21,16 +21,18 @@ public class Parser {
      * @param userInput The raw user input string.
      * @throws NullException If the input is invalid or missing required details.
      */
-    public static void parser(String userInput, Ui ui, TransactionManager transactions, FinancialGoal goal) {
+    public static void parser(String userInput, Ui ui, TransactionManager transactions, FinancialGoal goal, Storage storage) {
         String[] parts = userInput.toLowerCase().split(" ", 2);
         String commandType = parts[0];
         String[] details;
         int amount;
+        int index;
+        String[] fields;
 
         try {
             switch (commandType) {
             case COMMAND_ADD:
-                String[] fields = {"description", "amount", "category"};
+                fields = new String[] {"description", "amount", "category"};
                 String[] patterns = {
                         "d/(.*?)(?:\\s+[ac]/|$)", // d/
                         "a/(.*?)(?:\\s+[dc]/|$)", // a/
@@ -53,6 +55,7 @@ public class Parser {
                 Category category = Category.valueOf(results[2].toUpperCase());
                 transactions.addTransaction(transactions.getNum() + 1, results[0], amount, category);
                 ui.add(transactions.searchTransaction(transactions.getNum()));
+                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_LIST:
                 if (parts.length > 1) {
@@ -64,11 +67,13 @@ public class Parser {
                 int id = Integer.parseInt(parts[1]);
                 transactions.tickTransaction(id);
                 ui.tickTransaction(transactions.searchTransaction(id));
+                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_UNTICK:
                 id = Integer.parseInt(parts[1]);
                 transactions.unTickTransaction(id);
                 ui.unTickTransaction(transactions.searchTransaction(id));
+                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_SEARCH:
                 boolean isIndex = parts[1].startsWith("id-");
@@ -76,9 +81,18 @@ public class Parser {
                 ui.search(isIndex);
                 ui.printTransactions(transactions.searchTransactionList(isIndex, keyWord, ui));
                 break;
+            case COMMAND_EDIT:
+                try {
+                    parseEditCommands(parts[1], ui, transactions);
+                } catch (Exception e) {
+                    throw new InvalidCommand("Format invalid, try again! (edit [attribute] [id] [value])");
+                }
+                storage.saveTransactions(transactions.getTransactions());
+                break;
             case COMMAND_DELETE:
-                int index = Integer.parseInt(parts[1]);
+                index = Integer.parseInt(parts[1]);
                 new DeleteCommand(index - 1, transactions, ui);
+                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_SET_BUDGET:
                 details = parts[1].split(IDENTIFIER_AMOUNT, 2);
@@ -146,6 +160,7 @@ public class Parser {
                 break;
             case COMMAND_EXIT:
                 ui.printExit();
+                storage.saveTransactions(transactions.getTransactions());
                 System.exit(0);
                 break;
             case COMMAND_SAVE:
@@ -161,6 +176,7 @@ public class Parser {
                 } catch (Exception e) {
                     throw new InvalidCommand("Format invalid, try again! (save [+/-][amount])");
                 }
+                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_GOAL:
                 try {
@@ -180,6 +196,7 @@ public class Parser {
 
     public static void parseGoalCommands(String command, Ui ui, FinancialGoal goal) throws Exception {
         String[] parts = command.toLowerCase().split(" ", 2);
+
         switch (parts[0]) {
         case GOAL_TARGET:
             goal.setTargetAmount(Integer.parseInt(parts[1]));
@@ -209,6 +226,54 @@ public class Parser {
             } else {
                 ui.printGoal(goal);
             }
+        }
+    }
+
+    public static void parseEditCommands(String command, Ui ui, TransactionManager transactions) throws Exception {
+        String[] fields = command.toLowerCase().split(" ", 3);
+        String attribute = fields[0];
+        int id = Integer.parseInt(fields[1]);
+        if (id >= transactions.getNum() || id < 0) {
+            throw new InvalidCommand("ID is out of range!");
+        }
+        String value = fields[2];
+
+        switch (attribute) {
+        case EDIT_DESC:
+            transactions.editDescription(id, value);
+            ui.printEdited(value, 0);
+            break;
+        case EDIT_CAT:
+            try {
+                transactions.editCategory(id, value);
+            } catch (Exception e) {
+                throw new InvalidCommand("Unknown category, try again!");
+            }
+            ui.printEdited(value, 1);
+            break;
+        case EDIT_AM:
+            int int_value;
+            try {
+                int_value = Integer.parseInt(value);
+            } catch (Exception e) {
+                throw new InvalidCommand("Invalid amount, try again!");
+            }
+            if (int_value < 0) {
+                throw new InvalidCommand("Expense cannot be negative!");
+            }
+            transactions.editAmount(id, int_value);
+            ui.printEdited(value, 2);
+            break;
+        case EDIT_CURR:
+            try {
+                transactions.editCurrency(id, value);
+            } catch (Exception e) {
+                throw new InvalidCommand("Unknown currency, try again!");
+            }
+            ui.printEdited(value, 3);
+            break;
+        default:
+            throw new InvalidCommand("Unknown attribute!");
         }
     }
 }
