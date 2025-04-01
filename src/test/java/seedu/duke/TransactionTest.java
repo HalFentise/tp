@@ -11,8 +11,8 @@ class TransactionTest {
     void testTransactionCreation() {
         Transaction t = new Transaction(1, "Taxi", 100, Currency.USD, Category.FOOD,
                 LocalDate.parse("2025-04-01"), Status.PENDING);
-        assertEquals(1, t.getId());
-        assertEquals("Taxi", t.getDescription());
-        assertEquals(100, t.getAmount());
+        assert t.getId() == 1 : "ID should be 1";
+        assert t.getDescription().equals("Taxi") : "Description should be 'Taxi'";
+        assert t.getAmount() == 100 : "Amount should be 100";
     }
 }
