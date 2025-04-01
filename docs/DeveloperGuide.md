@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/0cc4692d-b092-4098-8f4d-04ae1142a0e4)th# Developer Guide
+# Developer Guide
 
 ## Acknowledgements
 
