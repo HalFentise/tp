@@ -9,12 +9,12 @@ import java.util.ArrayList;
 
 public class Transaction {
     private final int id;
-    private final int amount;
-    private final Currency currency;
     private final LocalDate date;
     private final Status status;
 
     // changeable fields
+    private int amount;
+    private Currency currency;
     private String description;
     private Category category;
     private ArrayList<String> tags;
@@ -59,7 +59,6 @@ public class Transaction {
     public int getId() {
         return id;
     }
-
 
     public int getAmount() {
         return amount;
@@ -110,6 +109,18 @@ public class Transaction {
         this.category = category;
     }
 
+    public void setRecurringPeriod(int recurringPeriod) {
+        this.recurringPeriod = recurringPeriod;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
     public void complete() {
         isCompleted = true;
     }
@@ -144,9 +155,5 @@ public class Transaction {
 
     public void recover() {
         isDeleted = false;
-    }
-
-    public void setRecurringPeriod(int recurringPeriod) {
-        this.recurringPeriod = recurringPeriod;
     }
 }
