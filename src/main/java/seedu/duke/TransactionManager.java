@@ -100,9 +100,6 @@ public class TransactionManager {
                     }
                 }
             }
-            if (printTransactions.isEmpty()) {
-                throw new NullException("Transaction is invalid");
-            }
             return printTransactions;
         } catch (Exception e) {
             System.out.println(e.getMessage());

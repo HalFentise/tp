@@ -124,6 +124,11 @@ public class Ui {
 
     public void printTransactions(ArrayList<Transaction> transactions) {
         showLine();
+        if (transactions.isEmpty()) {
+            System.out.println("No transaction found.");
+            showLine();
+            return;
+        }
         System.out.println("Here is the list of transactions:");
         for (Transaction transaction : transactions) {
             printTransaction(transaction);

@@ -89,6 +89,7 @@ public class Parser {
                 } catch (Exception e) {
                     throw new InvalidCommand("Format invalid, try again! (edit [attribute] [id] [value])");
                 }
+                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_DELETE:
                 index = Integer.parseInt(parts[1]);
