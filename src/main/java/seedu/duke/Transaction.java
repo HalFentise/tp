@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class Transaction {
     private final int id;
-    private final LocalDate date;
     private final Status status;
 
     // changeable fields
@@ -17,6 +16,7 @@ public class Transaction {
     private Currency currency;
     private String description;
     private Category category;
+    private LocalDate date;
     private ArrayList<String> tags;
     private boolean isDeleted = false;
     private int recurringPeriod; // Repeated every recurringPeriod days, one-time if 0
@@ -50,7 +50,7 @@ public class Transaction {
 
     public String toString() {
         String checkBox = (recurringPeriod > 0) ? "[R]" : (isCompleted ? "[\u2713]" : "[ ]");
-        return "Transaction id: " + id + "   "+ checkBox + "\namount: "
+        return "Transaction id: " + id + "   " + checkBox + "\namount: "
                 + amount + "\ndescription: " + description + "\ncategory: " + category
                 + (recurringPeriod > 0 ? "\nperiod: " + recurringPeriod : "");
     }
@@ -79,6 +79,7 @@ public class Transaction {
     public LocalDate getDate() {
         return date;
     }
+
 
     public ArrayList<String> getTags() {
         return new ArrayList<>(tags);
@@ -121,6 +122,10 @@ public class Transaction {
         this.currency = currency;
     }
 
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     public void complete() {
         isCompleted = true;
     }
@@ -128,6 +133,7 @@ public class Transaction {
     public void notComplete() {
         isCompleted = false;
     }
+
 
     public void addTag(String tag) {
         tags.add(tag);
