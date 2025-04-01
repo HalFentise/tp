@@ -1,4 +1,4 @@
-# Developer Guide
+![image](https://github.com/user-attachments/assets/0cc4692d-b092-4098-8f4d-04ae1142a0e4)th# Developer Guide
 
 ## Acknowledgements
 
@@ -7,7 +7,9 @@ original source as well}
 
 ## Design & implementation
 
-### 1. Transaction Basic Data Structure
+### 1. Transactions
+
+### Transaction Basic Data Structure
 
 **Feature Description:**  
 `Pang Zixi` implemented the `Transaction` class as the basic data structure for transactions. It includes the following
@@ -41,6 +43,8 @@ public class Transaction {
 **Design Consideration:**  
 This data structure provides all the essential information required for a transaction, <br>
 and it supports modifying and querying the transaction status (e.g., Pending, Completed).
+
+---
 
 ### Transaction Management Features: Mark, Add, Exit
 
@@ -128,7 +132,10 @@ Users can monitor their spending relative to a predefined threshold and receive 
 
 These capabilities integrate seamlessly with the transaction management system, enhancing the user experience through automation
 and clear visual cues for overspending or pending transactions.
+
 ---
+
+### Transaction Management Features: Set Recurring Period, Search, and Edit
 
 `Zhu Yangyi` added the following functionalities to manage transactions:
 
