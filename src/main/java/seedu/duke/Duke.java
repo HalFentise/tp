@@ -24,6 +24,7 @@ public class Duke {
         for (Transaction t : savedTransactions) {
             transactions.addTransaction(t);
         }
+        transactions.remindRecurringTransactions();
         while (true) {
             String command = ui.readCommand();
             Parser.parser(command, ui, transactions, goal, storage);

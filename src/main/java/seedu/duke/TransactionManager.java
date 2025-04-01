@@ -1,6 +1,7 @@
 package seedu.duke;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.time.LocalDate;
 
 import constant.Constant;
@@ -105,6 +106,32 @@ public class TransactionManager {
             System.out.println(e.getMessage());
             return null;
         }
+    }
+
+    public void remindRecurringTransactions() {
+        ArrayList<Transaction> nextRecurring = new ArrayList<>();
+        for (Transaction transaction : transactions) {
+            if (!transaction.isDeleted() && transaction.getRecurringPeriod() > 0) {
+                nextRecurring.add(transaction);
+            }
+        }
+        if (nextRecurring.isEmpty()) {
+            return;
+        }
+
+        nextRecurring = sortRecurringTransactions(nextRecurring);
+        Ui.printRecurringTransactions(nextRecurring);
+    }
+
+    public ArrayList<Transaction> sortRecurringTransactions(ArrayList<Transaction> transactions) {
+        for (Transaction transaction : transactions) {
+            int period = transaction.getRecurringPeriod();
+            while (transaction.getDate().isBefore(LocalDate.now())) {
+                transaction.setDate(transaction.getDate().plusDays(period));
+            }
+        }
+        transactions.sort(Comparator.comparing(Transaction::getDate));
+        return transactions;
     }
 
     // Sets a notification for an upcoming transaction

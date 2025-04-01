@@ -6,6 +6,7 @@ import seedu.duke.Transaction;
 import javax.sound.midi.SysexMessage;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.format.DateTimeFormatter;
 
 import static constant.Constant.*;
 
@@ -331,6 +332,19 @@ public class Ui {
         showLine();
         System.out.println("Done! The " + type
                 + " of the target transaction has been updated to:\n" + value);
+        showLine();
+    }
+
+    public static void printRecurringTransactions(ArrayList<Transaction> transactions) {
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("E, dd MMM yyyy");
+        showLine();
+        System.out.println("Here is a list of your upcoming recurring payments:");
+        int count = 1;
+        for (Transaction transaction : transactions) {
+            System.out.println(count + ". " + transaction.getDescription()
+                    + " - " + transaction.getDate().format(df));
+            count++;
+        }
         showLine();
     }
 }
