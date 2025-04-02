@@ -126,16 +126,24 @@ public class Ui {
     // Lists all upcoming notifications
     public void listNotifications(ArrayList<Transaction> upcomingTransactions) {
         if (upcomingTransactions.isEmpty()) {
-            System.out.println("No upcoming expenses.");
-        } else {
-            System.out.println("Upcoming Expenses:");
-            for (Transaction transaction : upcomingTransactions) {
-                if (transaction.getDate() != null) {
-                    System.out.println("- " + transaction.getDescription() + " of " + transaction.getAmount() + " "
-                            + transaction.getCurrency() + " in category " + transaction.getCategory() + " is due on "
-                            + transaction.getDate().toString());
+            System.out.println("There are no upcoming transactions for now.");
+            return;
+        }
+        boolean hasUpcoming = false;
+
+        for (Transaction transaction : upcomingTransactions) {
+            if (transaction.getDate() != null) {
+                if (!hasUpcoming) {
+                    System.out.println("Upcoming Expenses:");
+                    hasUpcoming = true;
                 }
+                System.out.println("- " + transaction.getDescription() + " of " + transaction.getAmount() + " "
+                        + transaction.getCurrency() + " in category " + transaction.getCategory() + " is due on "
+                        + transaction.getDate().toString());
             }
+        }
+        if (!hasUpcoming) {
+            System.out.println("No upcoming expenses for now.");
         }
     }
 

@@ -32,7 +32,7 @@ public class Parser {
         try {
             switch (commandType) {
             case COMMAND_ADD:
-                fields = new String[] {"description", "amount", "category"};
+                fields = new String[]{"description", "amount", "category"};
                 String[] patterns = {
                         "d/(.*?)(?:\\s+[ac]/|$)", // d/
                         "a/(.*?)(?:\\s+[dc]/|$)", // a/
@@ -98,6 +98,7 @@ public class Parser {
                 details = parts[1].split(IDENTIFIER_AMOUNT, 2);
                 amount = Integer.parseInt(details[1]);
                 new SetBudgetCommand(amount, transactions, ui);
+                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_NOTIFY:
                 String[] detail = {"description", "amount", "category", "date"};
@@ -126,6 +127,7 @@ public class Parser {
                 String date = result[3];
 
                 new NotifyCommand(result[0], amount, categoryString, date, transactions, ui);
+                storage.saveTransactions(transactions.getTransactions());
                 break;
 
             case COMMAND_ALERT:
@@ -133,19 +135,19 @@ public class Parser {
                     throw new InvalidCommand("Invalid command");
                 }
                 new AlertCommand(transactions, ui);
+                storage.saveTransactions(transactions.getTransactions());
                 break;
 
             case COMMAND_SET_PRIORITY:
                 try {
                     details = parts[1].split(" ", 2);
                     index = Integer.parseInt(details[0]);
-                    System.out.println(details[0]);
-                    System.out.println(details[1]);
 
                     new SetPriorityCommand(index - 1, details[1], transactions, ui);
                 } catch (NullException e) {
                     throw new InvalidCommand("Invalid input format, should be (priority [id] [priority_level])");
                 }
+                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_RECUR:
                 int slashIndex = parts[1].indexOf("/");

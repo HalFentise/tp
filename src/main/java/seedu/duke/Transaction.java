@@ -35,6 +35,7 @@ public class Transaction {
         this.category = category;
         this.date = date;
         this.status = status;
+        this.priority = Priority.LOW;
         tags = new ArrayList<>();
         recurringPeriod = 0;
     }
@@ -46,6 +47,7 @@ public class Transaction {
         this.currency = currency;
         this.date = date;
         this.status = status;
+        this.priority = Priority.LOW;
         this.tags = new ArrayList<>();
         recurringPeriod = 0;
     }
