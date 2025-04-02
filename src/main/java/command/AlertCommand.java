@@ -1,6 +1,5 @@
 package command;
 
-import enumStructure.Priority;
 import exceptions.NullException;
 import seedu.duke.TransactionManager;
 import ui.Ui;
@@ -13,7 +12,9 @@ public class AlertCommand extends Command{
 
         try {
             ui.listNotifications(transcations.getTransactions());
+            Ui.showLine();
             ui.listPriorities(transcations.getTransactions());
+            Ui.printRecurringTransactions(transcations.getTransactions());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
