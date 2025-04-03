@@ -3,11 +3,13 @@ package seedu.duke;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 import enumStructure.Category;
 import enumStructure.Currency;
+import enumStructure.Priority;
 import enumStructure.Status;
+
+import javax.swing.*;
 
 public class Storage {
     private static final String FOLDER_PATH = "data";  // Folder path
@@ -60,17 +62,17 @@ public class Storage {
 
     // Convert a Transaction object into a CSV format string
     private String formatTransaction(Transaction t) {
-        return String.format("%d,%s,%d,%s,%s,%s,%s,%d,%b,%b",
+        return String.format("%d,%s,%d,%s,%s,%s,%s,%d,%b,%b,%s",
                 t.getId(), t.getDescription(), t.getAmount(), t.getCurrency(),
                 t.getCategory(), t.getDate(), t.getStatus(),
-                t.getRecurringPeriod(), t.isDeleted(), t.isCompleted());
+                t.getRecurringPeriod(), t.isDeleted(), t.isCompleted(), t.getPriority());
     }
 
     // Parse a CSV line into a Transaction object
     private Transaction parseTransaction(String line) {
         try {
             String[] parts = line.split(",");
-            if (parts.length != 10) {
+            if (parts.length != 11) {
                 throw new IllegalArgumentException("Invalid number of fields in transaction: " + line);
             }
 
@@ -84,9 +86,12 @@ public class Storage {
             int recurringPeriod = Integer.parseInt(parts[7]);
             boolean isDeleted = Boolean.parseBoolean(parts[8]);
             boolean isCompleted = Boolean.parseBoolean(parts[9]);
+            Priority priority = Priority.valueOf(parts[10].toUpperCase());
 
             Transaction transaction = new Transaction(id, description, amount, currency, category, date, status);
             transaction.setRecurringPeriod(recurringPeriod);
+            transaction.setPriority(priority);
+
             if (isDeleted) {
                 transaction.delete();
             }
