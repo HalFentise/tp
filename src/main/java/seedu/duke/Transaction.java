@@ -18,8 +18,6 @@ public class Transaction {
     // changeable fields
     private String description;
     private Category category;
-    private Currency currency;
-    private LocalDate date;
     private Priority priority;
     private ArrayList<String> tags;
     private boolean isDeleted = false;

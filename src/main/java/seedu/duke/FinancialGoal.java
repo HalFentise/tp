@@ -19,7 +19,6 @@ public class FinancialGoal {
     private double currentAmount;
     private boolean isBlank;
     private double expenses;
-    private double deposits;
 
     // Constructors
 

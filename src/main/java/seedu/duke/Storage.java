@@ -76,7 +76,7 @@ public class Storage {
 
             int id = Integer.parseInt(parts[0]);
             String description = parts[1];
-            int amount = Integer.parseInt(parts[2]);
+            double amount = Double.parseDouble(parts[2]);
             Currency currency = Currency.valueOf(parts[3]);
             Category category = Category.valueOf(parts[4]);
             LocalDate date = LocalDate.parse(parts[5]);
