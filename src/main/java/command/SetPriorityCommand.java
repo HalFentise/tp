@@ -6,7 +6,6 @@ import seedu.duke.TransactionManager;
 import ui.Ui;
 
 public class SetPriorityCommand extends Command {
-
     /**
      * @param index       The index for the corresponding transaction.
      * @param priorityStr The string representing the priority level want to set.

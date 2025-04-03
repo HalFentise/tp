@@ -80,7 +80,7 @@ persistence.
 * Set Budget Limit (setBudget): Enables users to define a spending cap to avoid overspending. Once the total recorded expenses exceed this limit, a warning is displayed to alert the user.
 * Set Notifications for Upcoming Payments (notify): Allows users to schedule reminders for future expenses based on the transaction's description, amount, category, and due date.
 
-```angular2html
+```java
 /**
      * Deletes a transaction from the transaction list.
      *
@@ -127,11 +127,61 @@ persistence.
 **Design Consideration:**  
 
 
-The deletion, budget limit and notification features are designed to improve financial awareness and discipline.
+The `deletion`, `budget limit` and `notification` features are designed to improve financial awareness and discipline.
 Users can monitor their spending relative to a predefined threshold and receive timely reminders for future payments.
 
 These capabilities integrate seamlessly with the transaction management system, enhancing the user experience through automation
 and clear visual cues for overspending or pending transactions.
+
+---
+
+### Transaction Management Features: Alert and Set Priority
+
+**Feature Description:**  
+`Peng Ziyi` added two main functionalities to view spending alerts, set different priorities for transactions:
+* Set Priority (priority): Allows users to assign a priority level (low, medium, or high) to a transaction. By default, all expenses are low priority. This helps users focus on the most urgent or important expenses.
+
+* View Spending Alerts (alert): Displays an overview of upcoming expenses, recurring payments, current remaining budget, and whether the spending has exceeded the set budget limit. This command combines notification, priority, and budget insights in a single view.
+
+```java
+/**
+ * @throws NullException If the date format is invalid.
+ */
+public AlertCommand(TransactionManager transcations, Ui ui) throws NullException {
+
+    try {
+        ui.listNotifications(transcations.getTransactions());
+        Ui.showLine();
+        ui.listPriorities(transcations.getTransactions());
+        Ui.printRecurringTransactions(transcations.getTransactions());
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+    }
+}
+
+/**
+ * @param index       The index for the corresponding transaction.
+ * @param priorityStr The string representing the priority level want to set.
+ * @throws NullException If the date format is invalid.
+ */
+public SetPriorityCommand(int index, String priorityStr, TransactionManager transcations, Ui ui) throws NullException {
+    Priority priority = Priority.valueOf(priorityStr.toUpperCase());
+
+    try {
+        transcations.getTransactions().get(index).setPriority(priority);
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+    }
+    ui.PrintPriority(transcations.getTransactions(), index);
+}
+```
+
+**Design Consideration:**
+
+Priority levels help users organize and focus on transactions based on importance or urgency.
+
+Spending alerts consolidate relevant financial insights—notifications, recurring transactions, and budget status—into 
+one unified interface for quick decision-making.
 
 ---
 
