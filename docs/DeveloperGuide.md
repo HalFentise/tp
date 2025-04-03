@@ -162,11 +162,12 @@ public ArrayList<Transaction> searchTransactionList(boolean isIndex, String sear
     }
 }
 
-public void editInfo(int id, T info) {
+public void editInfo(int id, String info, int type) {
     if (checkIdEmpty(id)) {
         return;
     }
-    transactions.get(id).setInfo(info);
+    
+    // switch-case to update transaction
 }
 ```
 
@@ -179,6 +180,31 @@ with ease.
 ---
 
 ### 2. Goal:
+
+### Commands
+
+* Target: Update target balance to save up for
+* Desc: Update goal description
+* Title: Update goal title
+* Status: Check progress towards goal
+* New: Create new goal
+> By default, goal commands without a recognized tag print the current goal. <br>
+> If there is not a goal yet, `goal new` is run instead.
+
+**Command Formats**
+
+```angular2html
+goal target [target]
+goal desc [desc]
+goal title [title]
+goal status
+goal new
+goal
+```
+
+---
+
+### Goal Basic Data Structure
 
 **Feature Description:**
 `Zhu Yangyi` integrated the `Goal` class into the program through the `Parser` class.
@@ -203,8 +229,45 @@ public static void parseGoalCommands(String command, Ui ui, FinancialGoal goal) 
 ```
 
 **Design Consideration:**  
-This implementation allows users to update individual parts of the goal, allowing for a more modular approach when only
-minor modifications are required compared to having to set a new goal each time.
+This implementation allows users to update individual parts of the goal, allowing for a more modular approach when only minor modifications are required compared to having to set a new goal each time.
+
+---
+
+### Goal Status Check: Integration with Transactions to Reflect Balance
+
+`Zhu Yangyi` integrated expenses with deposits made to calculate balance to better reflect progress made towards the set goal. `goal.updateExpenses(transactions);` is run each time a goal command is sent to ensure that the progress shown is accurate.
+<br> <br>
+The total expenditure is calculated through adding `getRecurringAmount()` and `getNormalAmount`.
+
+```java
+public int getRecurringAmount() {
+    int sum = 0;
+    for (Transaction transaction : transactions) {
+        if (transaction.getRecurringPeriod() > 0 && !transaction.isDeleted()) {
+            long daysBetween = ChronoUnit.DAYS.between(transaction.getDate(), LocalDate.now());
+            sum += transaction.getAmount() * (int)((double) daysBetween / transaction.getRecurringPeriod() + 1);
+        }
+    }
+    return sum;
+}
+
+public int getNormalAmount() {
+    int sum = 0;
+    for (Transaction transaction : transactions) {
+        if (transaction.getRecurringPeriod() <= 0 && !transaction.isDeleted() && transaction.isCompleted()) {
+            sum += transaction.getAmount();
+        }
+    }
+    return sum;
+}
+```
+
+**Design Consideration:**  
+`getRecurringAmount` returns the sum of all past cycles of the transaction up until the current date. <br>
+`getNormalAmount` returns all completed one-time transactions. <br>
+Both ignore deleted records. 
+<br> <br>
+The total expenditure is calculated before `goal` commands are executed instead of every time `transactions` is updated. This saves both time in processing and lines of code as this implementation only requires a singular instance of this command being called each time the user wishes to check their progress.
 
 ---
 
