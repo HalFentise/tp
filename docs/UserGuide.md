@@ -56,6 +56,11 @@ Format: `delete INDEX`
 Examples:
 * `delete 2` (Deletes the 2nd expense in the list)
 
+### Clearing all expenses: `clear`
+Removes all recorded expenses.
+
+Format: `clear`
+
 ### Setting a budget limit: `setBudget`
 Sets a spending limit to prevent overspending.
 
