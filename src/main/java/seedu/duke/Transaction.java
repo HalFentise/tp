@@ -17,6 +17,8 @@ public class Transaction {
     // changeable fields
     private String description;
     private Category category;
+    private Currency currency;
+    private LocalDate date;
     private Priority priority;
     private ArrayList<String> tags;
     private boolean isDeleted = false;
@@ -24,8 +26,8 @@ public class Transaction {
     private boolean isCompleted = false;
 
     //Constructor
-    Transaction(int id, String description, double amount, Currency currency,
-                Category category, LocalDate date, Status status) {
+    public Transaction(int id, String description, double amount, Currency currency,
+                       Category category, LocalDate date, Status status) {
         this.id = id;
         this.amount = amount;
         this.description = description;
@@ -38,7 +40,7 @@ public class Transaction {
         recurringPeriod = 0;
     }
 
-    Transaction(int id, String description, double amount, Currency currency, LocalDate date, Status status) {
+    public Transaction(int id, String description, double amount, Currency currency, LocalDate date, Status status) {
         this.id = id;
         this.description = description;
         this.amount = amount;

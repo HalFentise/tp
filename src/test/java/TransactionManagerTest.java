@@ -1,5 +1,6 @@
 import enumStructure.Category;
 import enumStructure.Currency;
+import enumStructure.Priority;
 import enumStructure.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ public class TransactionManagerTest {
 
     @BeforeEach
     public void setUp() {
-        Transaction e = new Transaction(1, "Dinner", 100, Currency.USD, Category.FOOD, LocalDate.of(2025, 3, 28), Status.PENDING);
+        Transaction e = new Transaction(1, "Dinner", 100.0, Currency.USD, Category.FOOD, LocalDate.of(2025, 3, 28), Status.PENDING);
     }
 
     @Test
