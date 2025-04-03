@@ -17,12 +17,9 @@ public class Transaction {
 
 
     // changeable fields
-    private int amount;
-    private Currency currency;
     private String description;
     private Category category;
     private Priority priority;
-    private LocalDate date;
     private ArrayList<String> tags;
     private boolean isDeleted = false;
     private int recurringPeriod; // Repeated every recurringPeriod days, one-time if 0
@@ -176,10 +173,6 @@ public class Transaction {
 
     public void recover() {
         isDeleted = false;
-    }
-
-    public void setRecurringPeriod(int recurringPeriod) {
-        this.recurringPeriod = recurringPeriod;
     }
 
     public void convertTo(Currency currency) {
