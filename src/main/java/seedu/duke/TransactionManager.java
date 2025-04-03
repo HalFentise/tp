@@ -12,7 +12,7 @@ import ui.Ui;
 public class TransactionManager {
     private ArrayList<Transaction> transactions;
     private ArrayList<Transaction> upcomingTransactions;
-    private Currency defaultCurrency = Currency.USD;
+    private Currency defaultCurrency = Currency.SGD;
 
     public TransactionManager() {
         transactions = new ArrayList<>();
@@ -29,6 +29,11 @@ public class TransactionManager {
 
     public void addTransaction(int id, String description, int amount, Category category) {
         LocalDate date = LocalDate.now();
+        Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
+        transactions.add(transaction);
+    }
+
+    public void addTransaction(int id, String description, int amount, Category category, LocalDate date) {
         Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
         transactions.add(transaction);
     }
