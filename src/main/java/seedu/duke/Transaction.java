@@ -10,6 +10,9 @@ import java.util.ArrayList;
 
 public class Transaction {
     private final int id;
+    private double amount;
+    private Currency currency;
+    private LocalDate date;
     private final Status status;
 
 
@@ -26,8 +29,8 @@ public class Transaction {
     private boolean isCompleted = false;
 
     //Constructor
-    public Transaction(int id, String description, int amount, Currency currency,
-                       Category category, LocalDate date, Status status) {
+    Transaction(int id, String description, double amount, Currency currency,
+                Category category, LocalDate date, Status status) {
         this.id = id;
         this.amount = amount;
         this.description = description;
@@ -40,7 +43,7 @@ public class Transaction {
         recurringPeriod = 0;
     }
 
-    public Transaction(int id, String description, int amount, Currency currency, LocalDate date, Status status) {
+    Transaction(int id, String description, double amount, Currency currency, LocalDate date, Status status) {
         this.id = id;
         this.description = description;
         this.amount = amount;
@@ -65,7 +68,7 @@ public class Transaction {
         return id;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
@@ -173,5 +176,15 @@ public class Transaction {
 
     public void recover() {
         isDeleted = false;
+    }
+
+    public void setRecurringPeriod(int recurringPeriod) {
+        this.recurringPeriod = recurringPeriod;
+    }
+
+    public void convertTo(Currency currency) {
+        double toSGD = 1/this.currency.getRate();
+        this.amount = currency.getRate() * toSGD;
+        this.currency = currency;
     }
 }

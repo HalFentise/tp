@@ -106,6 +106,10 @@ public class Parser {
                 new SetBudgetCommand(amount, transactions, ui);
                 storage.saveTransactions(transactions.getTransactions());
                 break;
+            case FIND_DATE:
+                String time = parts[1];
+                transactions.getUpcomingTransactions(time);
+                break;
             case COMMAND_NOTIFY:
                 String[] detail = {"description", "amount", "category", "date"};
                 String[] notifyPatterns = {
