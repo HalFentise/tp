@@ -1,9 +1,9 @@
 package enumStructure;
 
 public enum Currency {
-    USD("United States Dollar", 0.74),
-    SGD("Singapore Dollar", 1),
-    CNY("Chinese Yuan", 5.41),
+    USD("USD", 0.74),
+    SGD("SGD", 1),
+    CNY("CNY", 5.41),
     EUR("Euro", 0.69),
     JPY("Japanese Yen", 111.14),
     GBP("British Pound", 0.58);
