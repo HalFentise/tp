@@ -26,8 +26,9 @@ public class Parser {
         String[] parts = userInput.toLowerCase().split(" ", 2);
         String commandType = parts[0];
         String[] details;
-        int amount;
+        double amount;
         int index;
+        int id;
         String[] fields;
 
         try {
@@ -52,7 +53,7 @@ public class Parser {
                         throw new InvalidCommand("No " + fields[i] + " found");
                     }
                 }
-                amount = Integer.parseInt(results[1]);
+                amount = Double.parseDouble(results[1]);
                 Category category = Category.valueOf(results[2].toUpperCase());
                 transactions.addTransaction(transactions.getNum() + 1, results[0], amount, category);
                 ui.add(transactions.searchTransaction(transactions.getNum()));
@@ -65,7 +66,7 @@ public class Parser {
                 ui.printTransactions(transactions.getTransactions());
                 break;
             case COMMAND_TICK:
-                int id = Integer.parseInt(parts[1]);
+                id = Integer.parseInt(parts[1]);
                 transactions.tickTransaction(id);
                 ui.tickTransaction(transactions.searchTransaction(id));
                 storage.saveTransactions(transactions.getTransactions());
@@ -80,7 +81,7 @@ public class Parser {
                 boolean isIndex = parts[1].startsWith("id-");
                 String keyWord = isIndex ? parts[1].substring(3) : parts[1];
                 ui.search(isIndex);
-                ui.printTransactions(transactions.searchTransactionList(isIndex, keyWord, ui));
+                ui.printTransactions(transactions.searchTransactionList(isIndex, keyWord));
                 break;
             case COMMAND_EDIT:
                 try {

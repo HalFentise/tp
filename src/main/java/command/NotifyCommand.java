@@ -6,7 +6,7 @@ import ui.Ui;
 
 public class NotifyCommand extends Command {
 
-    public NotifyCommand(String description, int amount, String categoryString, String date, TransactionManager transactions, Ui ui) {
+    public NotifyCommand(String description, double amount, String categoryString, String date, TransactionManager transactions, Ui ui) {
         try {
             transactions.notify(description, amount, categoryString, date);
         } catch (NullException e) {

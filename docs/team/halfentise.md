@@ -10,7 +10,9 @@ Can view my code contribution from [here](https://nus-cs2113-ay2425s2.github.io/
 
 I implemented the data structure and data saving part, also contribute to the basic functional features of this product.
 ### Enhancements implemented:
+* Fixed the conversion issue caused by decimal values in amounts.
 
+* Improved the functionality for adding and deleting transactions, ensuring better performance and reliability.
 ### Contributions to the UG:
 I contribute the description part of UG. I listed all the features we have and gave a simple description and the using format and examples.
 ### Contributions to the DG:

@@ -3,7 +3,6 @@ package ui;
 import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 
-import javax.sound.midi.SysexMessage;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.format.DateTimeFormatter;
@@ -30,8 +29,7 @@ public class Ui {
      */
     public String readCommand() {
         System.out.println("Enter your command:");
-        String input = scanner.nextLine();
-        return input;
+        return scanner.nextLine();
     }
 
     /**
@@ -48,14 +46,6 @@ public class Ui {
         System.out.println("Goodbye! Hope to see you again!");
     }
 
-    /**
-     * Prints a given message to the console.
-     *
-     * @param message the message to be displayed.
-     */
-    public void printMessage(String message) {
-        System.out.println(message);
-    }
 
     /**
      * Prints a horizontal line separator.
@@ -95,7 +85,7 @@ public class Ui {
         showLine();
     }
 
-    public void PrintBudgetLimit(ArrayList<Transaction> transaction, int amount) {
+    public void PrintBudgetLimit(ArrayList<Transaction> transaction, double amount) {
         showLine();
         if (transaction.isEmpty()) {
             System.out.println("Please add a translation first before you set the budget!");
@@ -212,7 +202,7 @@ public class Ui {
 
     public void unTickTransaction(Transaction transaction) {
         showLine();
-        System.out.println("I untick the following transaction:");
+        System.out.println("I un tick the following transaction:");
         printTransaction(transaction);
         showLine();
     }
@@ -292,7 +282,7 @@ public class Ui {
 
     public static void createGoalSuccess() {
         showLine();
-        System.out.println("Goal successfully created\nRun \'goal\' to see it!");
+        System.out.println("Goal successfully created\nRun 'goal' to see it!");
         showLine();
     }
 
@@ -300,10 +290,6 @@ public class Ui {
         showLine();
         System.out.println("Goal creation cancelled by user.");
         showLine();
-    }
-
-    public static void addToSavings() {
-
     }
 
     public static void subFromSavings(double amount, double currentAmount) {
@@ -327,21 +313,13 @@ public class Ui {
     }
 
     public void printEdited(String value, int typeId) {
-        String type = "";
-        switch (typeId) {
-        case 0:
-            type = "description";
-            break;
-        case 1:
-            type = "category";
-            break;
-        case 2:
-            type = "amount";
-            break;
-        case 3:
-            type = "currency";
-            break;
-        }
+        String type = switch (typeId) {
+            case 0 -> "description";
+            case 1 -> "category";
+            case 2 -> "amount";
+            case 3 -> "currency";
+            default -> "";
+        };
 
         showLine();
         System.out.println("Done! The " + type

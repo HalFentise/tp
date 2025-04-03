@@ -12,7 +12,8 @@ public class Transaction {
     private final int id;
     private double amount;
     private final Status status;
-
+    private Currency currency;
+    private LocalDate date;
 
     // changeable fields
     private String description;
@@ -54,7 +55,7 @@ public class Transaction {
 
 
     public String toString() {
-        String checkBox = (recurringPeriod > 0) ? "[R]" : (isCompleted ? "[\u2713]" : "[ ]");
+        String checkBox = (recurringPeriod > 0) ? "[R]" : (isCompleted ? "[✓]" : "[ ]");
         return "Transaction id: " + id + "   " + checkBox + "\namount: "
                 + amount + "\ndescription: " + description + "\ncategory: " + category
                 + (recurringPeriod > 0 ? "\nperiod: " + recurringPeriod : "");
@@ -160,11 +161,7 @@ public class Transaction {
     }
 
     public boolean isSameTransaction(Transaction otherTransaction) {
-        if (this.id == otherTransaction.id) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.id == otherTransaction.id;
     }
 
     public void delete() {
