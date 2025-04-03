@@ -11,13 +11,10 @@ import java.util.ArrayList;
 public class Transaction {
     private final int id;
     private double amount;
-    private Currency currency;
-    private LocalDate date;
     private final Status status;
 
 
     // changeable fields
-    private int amount;
     private Currency currency;
     private String description;
     private Category category;
@@ -176,10 +173,6 @@ public class Transaction {
 
     public void recover() {
         isDeleted = false;
-    }
-
-    public void setRecurringPeriod(int recurringPeriod) {
-        this.recurringPeriod = recurringPeriod;
     }
 
     public void convertTo(Currency currency) {

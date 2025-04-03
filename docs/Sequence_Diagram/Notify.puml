@@ -1,0 +1,27 @@
+@startuml
+
+hide footbox
+skinparam sequenceReferenceBackgroundColor #f7807c
+
+actor User
+
+participant ":TextUi" as TextUi #EE82EE
+participant ":NotifyCommand" as NotifyCommand #ADD8E6
+participant ":TransactionManager" as TransactionManager #90EE90
+
+User -> TextUi : notify d/DESCRIPTION a/AMOUNT c/CATEGORY t/DATE
+TextUi -> NotifyCommand : new NotifyCommand(desc, amount, category, date, transactions, ui)
+
+NotifyCommand -> TransactionManager : notify(desc, amount, category, date)
+
+alt valid input
+    return
+else throws NullException
+    NotifyCommand -> TextUi : showError(e.getMessage())
+end
+
+NotifyCommand -> TextUi : listNotification(transactions, description)
+
+TextUi --> User : Show notification info
+
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+
+hide footbox
+skinparam sequenceReferenceBackgroundColor #f7807c
+
+actor User
+
+participant ":TextUi" as TextUi #EE82EE
+participant ":SetBudgetCommand" as SetBudgetCommand #ADD8E6
+participant ":TransactionManager" as TransactionManager #90EE90
+
+User -> TextUi : setBudget a/AMOUNT
+TextUi -> SetBudgetCommand : new SetBudgetCommand(amount, transactions, ui)
+
+SetBudgetCommand -> TransactionManager : checkBudgetLimit(amount)
+
+alt amount > 0
+    return
+else amount <= 0
+    SetBudgetCommand -> SetBudgetCommand : throw NullException
+end
+
+SetBudgetCommand -> TextUi : PrintBudgetLimit(transactions, amount)
+
+TextUi --> User : Show budget limit result
+
+@enduml
