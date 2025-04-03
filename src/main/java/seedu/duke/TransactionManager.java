@@ -9,6 +9,7 @@ import constant.Constant;
 import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
+import exceptions.InvalidCommand;
 import exceptions.NullException;
 import ui.Ui;
 
@@ -188,6 +189,36 @@ public class TransactionManager {
         transaction.setRecurringPeriod(recurringPeriod);
     }
 
+    public void editInfo(int id, String info, int type) throws Exception {
+        if (checkIdEmpty(id)) {
+            return;
+        }
+
+        switch (type) {
+        case 0:
+            transactions.get(id).setDescription(info);
+            break;
+        case 1:
+            transactions.get(id).setCategory(Category.valueOf(info));
+            break;
+        case 2:
+            int value;
+            try {
+                value = Integer.parseInt(info);
+            } catch (Exception e) {
+                throw new InvalidCommand("Invalid amount, try again!");
+            }
+            if (value < 0) {
+                throw new InvalidCommand("Expense cannot be negative!");
+            }
+            transactions.get(id).setAmount(value);
+            break;
+        case 3:
+            transactions.get(id).setCurrency(Currency.valueOf(info));
+            break;
+        }
+    }
+    /**
     public void editDescription(int id, String newDescription) {
         if (checkIdEmpty(id)) {
             return;
@@ -214,7 +245,7 @@ public class TransactionManager {
             return;
         }
         transactions.get(id).setCurrency(Currency.valueOf(newCurrency));
-    }
+    }*/
 
     public boolean checkIdEmpty(int id) {
         if (transactions.get(id) == null) {

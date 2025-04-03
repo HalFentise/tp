@@ -244,33 +244,24 @@ public class Parser {
 
         switch (attribute) {
         case EDIT_DESC:
-            transactions.editDescription(id, value);
+            transactions.editInfo(id, value, 0);
             ui.printEdited(value, 0);
             break;
         case EDIT_CAT:
             try {
-                transactions.editCategory(id, value);
+                transactions.editInfo(id, value, 1);
             } catch (Exception e) {
                 throw new InvalidCommand("Unknown category, try again!");
             }
             ui.printEdited(value, 1);
             break;
         case EDIT_AM:
-            int int_value;
-            try {
-                int_value = Integer.parseInt(value);
-            } catch (Exception e) {
-                throw new InvalidCommand("Invalid amount, try again!");
-            }
-            if (int_value < 0) {
-                throw new InvalidCommand("Expense cannot be negative!");
-            }
-            transactions.editAmount(id, int_value);
+            transactions.editInfo(id, value, 2);
             ui.printEdited(value, 2);
             break;
         case EDIT_CURR:
             try {
-                transactions.editCurrency(id, value);
+                transactions.editInfo(id, value, 3);
             } catch (Exception e) {
                 throw new InvalidCommand("Unknown currency, try again!");
             }
