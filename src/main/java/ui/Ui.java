@@ -105,6 +105,12 @@ public class Ui {
         showLine();
     }
 
+    public void PrintClear() {
+        showLine();
+        System.out.println("All transactions have been cleared!");
+        showLine();
+    }
+
     // Lists current specific upcoming notification
     public void listNotification(ArrayList<Transaction> upcomingTransactions, String description) {
         showLine();
