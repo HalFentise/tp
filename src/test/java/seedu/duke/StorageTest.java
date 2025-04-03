@@ -1,7 +1,7 @@
 package seedu.duke;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,8 +18,10 @@ class StorageTest {
         Storage storage = new Storage();
         ArrayList<Transaction> transactions = new ArrayList<>();
 
-        Transaction t1 = new Transaction(1, "Dinner", 100, Currency.USD, Category.FOOD, LocalDate.of(2025, 4, 1), Status.PENDING);
-        Transaction t2 = new Transaction(2, "Taxi", 50, Currency.USD, Category.TRANSPORTATION, LocalDate.of(2025, 4, 2), Status.COMPLETED);
+        Transaction t1 = new Transaction(1, "Dinner", 100,
+                Currency.USD, Category.FOOD, LocalDate.of(2025, 4, 1), Status.PENDING);
+        Transaction t2 = new Transaction(2, "Taxi", 50, Currency.USD,
+                Category.TRANSPORTATION, LocalDate.of(2025, 4, 2), Status.COMPLETED);
 
         transactions.add(t1);
         transactions.add(t2);

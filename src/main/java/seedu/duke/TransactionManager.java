@@ -43,12 +43,14 @@ public class TransactionManager {
 
     public void addTransaction(int id, String description, double amount, Category category) {
         LocalDate date = LocalDate.now();
-        Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
+        Transaction transaction = new Transaction(id, description, amount, defaultCurrency,
+                category, date, Status.PENDING);
         transactions.add(transaction);
     }
 
     public void addTransaction(int id, String description, double amount, Category category, LocalDate date) {
-        Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
+        Transaction transaction = new Transaction(id, description,
+                amount, defaultCurrency, category, date, Status.PENDING);
         transactions.add(transaction);
     }
 
@@ -276,7 +278,6 @@ public class TransactionManager {
             return;
         }
 
-
         switch (type) {
         case 0:
             transactions.get(id).setDescription(info);
@@ -299,36 +300,10 @@ public class TransactionManager {
         case 3:
             transactions.get(id).setCurrency(Currency.valueOf(info));
             break;
+        default:
+            break;
         }
     }
-    /**
-    public void editDescription(int id, String newDescription) {
-        if (checkIdEmpty(id)) {
-            return;
-        }
-        transactions.get(id).setDescription(newDescription);
-    }
-
-    public void editCategory(int id, String newCategory) {
-        if (checkIdEmpty(id)) {
-            return;
-        }
-        transactions.get(id).setCategory(Category.valueOf(newCategory));
-    }
-
-    public void editAmount(int id, int newAmount) {
-        if (checkIdEmpty(id)) {
-            return;
-        }
-        transactions.get(id).setAmount(newAmount);
-    }
-
-    public void editCurrency(int id, String newCurrency) {
-        if (checkIdEmpty(id)) {
-            return;
-        }
-        transactions.get(id).setCurrency(Currency.valueOf(newCurrency));
-    }*/
 
     public boolean checkIdEmpty(int id) {
         if (transactions.get(id) == null) {

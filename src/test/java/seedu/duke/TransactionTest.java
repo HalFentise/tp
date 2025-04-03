@@ -1,8 +1,9 @@
 package seedu.duke;
 
-import enumStructure.*;
+import enumStructure.Status;
+import enumStructure.Category;
+import enumStructure.Currency;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
 
 class TransactionTest {

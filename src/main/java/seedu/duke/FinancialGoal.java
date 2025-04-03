@@ -2,11 +2,9 @@ package seedu.duke;
 
 import enumStructure.Currency;
 import ui.Ui;
-
 import java.util.Scanner;
 
 public class FinancialGoal {
-
     private double deposits;
     private String currentGoal;
     private double targetAmount;
@@ -19,7 +17,6 @@ public class FinancialGoal {
     private double currentAmount;
     private boolean isBlank;
     private double expenses;
-    private double deposits;
 
     // Constructors
 
@@ -159,5 +156,4 @@ public class FinancialGoal {
                 + getBalance() + " / $" + targetAmount + " saved \n"
                  + (isAchieved ? "Goal Reached!" : "Keep saving!");
     }
-
 }
