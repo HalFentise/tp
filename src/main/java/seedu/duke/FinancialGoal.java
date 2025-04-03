@@ -13,8 +13,9 @@ public class FinancialGoal {
     // Changeable fields
 
     private boolean isAchieved;
-    private int currentAmount;
+    private int deposits;
     private boolean isBlank;
+    private int expenses;
 
     // Constructors
 
@@ -31,7 +32,7 @@ public class FinancialGoal {
         this.targetAmount = Integer.MAX_VALUE;
         this.description = "General Savings - Use comamnd to add goal";
         this.isAchieved = false;
-        this.currentAmount = 0;
+        this.deposits = 0;
         isBlank = true;
     }
 
@@ -49,8 +50,8 @@ public class FinancialGoal {
         return this.targetAmount;
     }
 
-    public int getCurrentAmount() {
-        return this.currentAmount;
+    public int getDeposits() {
+        return this.deposits;
     }
 
     public String getGoal() {
@@ -59,6 +60,14 @@ public class FinancialGoal {
 
     public boolean isBlank() {
         return this.isBlank;
+    }
+
+    public int getExpenses() {
+        return this.expenses;
+    }
+
+    public int getBalance() {
+        return this.expenses - this.deposits;
     }
 
     // set method
@@ -82,18 +91,22 @@ public class FinancialGoal {
 
     public void addToSavings(int amount) {
         isBlank = false;
-        currentAmount += amount;
+        deposits += amount;
         checkGoalStatus();
     }
 
     public void subFromSavings(int amount) {
         isBlank = false;
-        currentAmount -= amount;
-        Ui.subFromSavings(amount, currentAmount);
+        deposits -= amount;
+        Ui.subFromSavings(amount, getBalance());
     }
 
     public void checkGoalStatus() {
-        isAchieved = Ui.printGoalStatus(currentAmount, targetAmount);
+        isAchieved = Ui.printGoalStatus(getBalance(), targetAmount);
+    }
+
+    public void updateExpenses(TransactionManager transactions) {
+        expenses = transactions.getTotalAmount();
     }
 
     // Goal setting
@@ -125,11 +138,11 @@ public class FinancialGoal {
         if (targetAmount == Integer.MAX_VALUE){
             return currentGoal + "\n"
                     + description + "\n$"
-                    + currentAmount + " saved \n";
+                    + "balance: " + getBalance() + "\n";
         }
         return currentGoal + "\n"
                 + description + "\n$"
-                + currentAmount + " / $" + targetAmount + " saved \n"
+                + getBalance() + " / $" + targetAmount + " saved \n"
                  + (isAchieved ? "Goal Reached!" : "Keep saving!");
     }
 

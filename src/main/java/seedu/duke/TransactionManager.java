@@ -3,6 +3,7 @@ package seedu.duke;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import constant.Constant;
 import enumStructure.Category;
@@ -221,6 +222,31 @@ public class TransactionManager {
             return true;
         }
         return false;
+    }
+
+    public int getTotalAmount() {
+        return getRecurringAmount() + getNormalAmount();
+    }
+
+    public int getRecurringAmount() {
+        int sum = 0;
+        for (Transaction transaction : transactions) {
+            if (transaction.getRecurringPeriod() > 0 && !transaction.isDeleted()) {
+                long daysBetween = ChronoUnit.DAYS.between(transaction.getDate(), LocalDate.now());
+                sum += transaction.getAmount() * (int)((double) daysBetween / transaction.getRecurringPeriod() + 1);
+            }
+        }
+        return sum;
+    }
+
+    public int getNormalAmount() {
+        int sum = 0;
+        for (Transaction transaction : transactions) {
+            if (transaction.getRecurringPeriod() <= 0 && !transaction.isDeleted()) { //&& transaction.isCompleted()) {
+                sum += transaction.getAmount();
+            }
+        }
+        return sum;
     }
 }
 
