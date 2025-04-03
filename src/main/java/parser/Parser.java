@@ -6,7 +6,6 @@ import command.SetBudgetCommand;
 import exceptions.NullException;
 import exceptions.InvalidCommand;
 import seedu.duke.FinancialGoal;
-import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
 import enumStructure.Category;
 import ui.Ui;
@@ -86,6 +85,10 @@ public class Parser {
                 details = parts[1].split(IDENTIFIER_AMOUNT, 2);
                 amount = Integer.parseInt(details[1]);
                 new SetBudgetCommand(amount, transactions, ui);
+                break;
+            case FIND_DATE:
+                String time = parts[1];
+                transactions.getUpcomingTransactions(time);
                 break;
             case COMMAND_NOTIFY:
                 String[] detail = {"description", "amount", "category", "date"};

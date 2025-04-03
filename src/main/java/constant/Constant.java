@@ -96,6 +96,11 @@ public class Constant {
     public static final String COMMAND_CHANGECATE = "changecate";
 
     /**
+     * Command tag for looking up tasks in a given time period.
+     */
+    public static final String FIND_DATE = "find";
+
+    /**
      * Represents an invalid input exception.
      */
     public static final String INVALID_INPUT = "OOPS!!! I'm sorry, but I don't know what that means :-(";

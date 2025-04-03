@@ -38,6 +38,7 @@ public class TransactionManager {
         for (Transaction transaction : transactions) {
             if (!transaction.isDeleted()) {
                 printTransactions.add(transaction);
+                sortTransactions(printTransactions);
             }
         }
         return printTransactions;
@@ -174,5 +175,84 @@ public class TransactionManager {
         }
         transaction.setRecurringPeriod(recurringPeriod);
     }
+
+    public ArrayList<Transaction> sortTransactions(ArrayList<Transaction> transactions) {
+
+        transactions.sort((t1, t2) -> {
+            if (t1.getDate() == null && t2.getDate() == null) {
+                return 0;
+            }
+            if (t1.getDate() == null) {
+                return -1;
+            }
+            if (t2.getDate() == null) {
+                return 1;
+            }
+            return t1.getDate().compareTo(t2.getDate());
+        });
+
+        return transactions;
+    }
+
+    public ArrayList<Transaction> getTransactionsOnDate(LocalDate targetDate) {
+        ArrayList<Transaction> filteredTransactions = new ArrayList<>();
+        for (Transaction t : getTransactions()) {
+            if (t.getDate() != null && t.getDate().equals(targetDate)) {
+                filteredTransactions.add(t);
+            }
+        }
+        return filteredTransactions;
+    }
+
+    public ArrayList<Transaction> getTransactionsThisMonth() {
+        int month = LocalDate.now().getMonthValue();
+        int year = LocalDate.now().getYear();
+        ArrayList<Transaction> filteredTransactions = new ArrayList<>();
+
+        for (Transaction t : getTransactions()) {
+            if (t.getDate() != null &&
+                    t.getDate().getMonthValue() == month &&
+                    t.getDate().getYear() == year) {
+                filteredTransactions.add(t);
+            }
+        }
+        return filteredTransactions;
+    }
+
+    public ArrayList<Transaction> getTransactionsThisWeek() {
+        LocalDate today = LocalDate.now();
+        LocalDate nextWeek = today.plusDays(7);
+
+        ArrayList<Transaction> filteredTransactions = new ArrayList<>();
+        for (Transaction t : getTransactions()) {
+            if (t.getDate() != null &&
+                    !t.getDate().isBefore(today) &&
+                    !t.getDate().isAfter(nextWeek)) {
+                filteredTransactions.add(t);
+            }
+        }
+        return filteredTransactions;
+    }
+
+    public void getUpcomingTransactions(String period) {
+
+        period = period.toLowerCase();
+        switch (period) {
+            case "today":
+                System.out.println(getTransactionsOnDate(LocalDate.now()));
+            case "week":
+                System.out.println(getTransactionsThisWeek());
+            case "month":
+                System.out.println(getTransactionsThisMonth());
+            default:
+                try {
+                    LocalDate date = LocalDate.parse(period);
+                    System.out.println(getTransactionsOnDate(date));
+                } catch (Exception e) {
+                    System.out.println("Invalid period. Use 'today', 'week', 'month', or a date (yyyy-mm-dd)");
+                }
+        }
+    }
 }
+
 

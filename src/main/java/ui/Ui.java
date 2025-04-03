@@ -238,7 +238,7 @@ public class Ui {
 
     }
 
-    public static void subFromSavings(int amount, int currentAmount) {
+    public static void subFromSavings(double amount, double currentAmount) {
         showLine();
         System.out.println("Subtracted " + amount + " from your savings.");
         if (currentAmount < 0){
@@ -247,7 +247,7 @@ public class Ui {
         showLine();
     }
 
-    public static boolean printGoalStatus(int currentAmount, int targetAmount) {
+    public static boolean printGoalStatus(double currentAmount, double targetAmount) {
         showLine();
         if (currentAmount >= targetAmount) {
             System.out.println("You have achieved the goal! Congratulations!");

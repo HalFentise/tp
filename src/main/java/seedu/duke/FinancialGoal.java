@@ -1,5 +1,6 @@
 package seedu.duke;
 
+import enumStructure.Currency;
 import ui.Ui;
 
 import java.util.Scanner;
@@ -7,29 +8,40 @@ import java.util.Scanner;
 public class FinancialGoal {
 
     private String currentGoal;
-    private int targetAmount;
+    private double targetAmount;
     private String description;
+    private Currency currency;
 
     // Changeable fields
 
     private boolean isAchieved;
-    private int currentAmount;
+    private double currentAmount;
     private boolean isBlank;
 
     // Constructors
 
-    public FinancialGoal(String name, int targetAmount, String description) {
+    public FinancialGoal(String name, double targetAmount, String description) {
         this.currentGoal = name;
         this.targetAmount = targetAmount;
         this.description = description;
         this.isAchieved = false;
         isBlank = false;
+        this.currency = Currency.SGD;
+    }
+
+    public FinancialGoal(String name, double targetAmount, String description, Currency currency) {
+        this.currentGoal = name;
+        this.targetAmount = targetAmount;
+        this.description = description;
+        this.isAchieved = false;
+        isBlank = false;
+        this.currency = currency;
     }
 
     public FinancialGoal() {
         this.currentGoal = "--Loose Savings--";
         this.targetAmount = Integer.MAX_VALUE;
-        this.description = "General Savings - Use comamnd to add goal";
+        this.description = "General Savings - Use command to add goal";
         this.isAchieved = false;
         this.currentAmount = 0;
         isBlank = true;
@@ -45,11 +57,11 @@ public class FinancialGoal {
         return this.description;
     }
 
-    public int getTargetAmount() {
+    public double getTargetAmount() {
         return this.targetAmount;
     }
 
-    public int getCurrentAmount() {
+    public double getCurrentAmount() {
         return this.currentAmount;
     }
 
@@ -86,7 +98,7 @@ public class FinancialGoal {
         checkGoalStatus();
     }
 
-    public void subFromSavings(int amount) {
+    public void subFromSavings(double amount) {
         isBlank = false;
         currentAmount -= amount;
         Ui.subFromSavings(amount, currentAmount);
