@@ -3,8 +3,10 @@ package ui;
 import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 
+import javax.sound.midi.SysexMessage;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.format.DateTimeFormatter;
 
 import static constant.Constant.*;
 
@@ -103,7 +105,7 @@ public class Ui {
         showLine();
     }
 
-    // Lists all upcoming notifications
+    // Lists current specific upcoming notification
     public void listNotification(ArrayList<Transaction> upcomingTransactions, String description) {
         showLine();
         if (upcomingTransactions.isEmpty()) {
@@ -121,8 +123,68 @@ public class Ui {
         showLine();
     }
 
+    // Lists all upcoming notifications
+    public void listNotifications(ArrayList<Transaction> upcomingTransactions) {
+        if (upcomingTransactions.isEmpty()) {
+            System.out.println("There are no upcoming transactions for now.");
+            return;
+        }
+        boolean hasUpcoming = false;
+
+        for (Transaction transaction : upcomingTransactions) {
+            if (transaction.getDate() != null) {
+                if (!hasUpcoming) {
+                    System.out.println("Upcoming Expenses:");
+                    hasUpcoming = true;
+                }
+                System.out.println("- " + transaction.getDescription() + " of " + transaction.getAmount() + " "
+                        + transaction.getCurrency() + " in category " + transaction.getCategory() + " is due on "
+                        + transaction.getDate().toString());
+            }
+        }
+        if (!hasUpcoming) {
+            System.out.println("No upcoming expenses for now.");
+        }
+    }
+
+    //
+    public void PrintPriority(ArrayList<Transaction> transactions, int index) {
+        showLine();
+        if (transactions.isEmpty()) {
+            System.out.println("Please add a transaction first before you set the priority!");
+        } else {
+            System.out.println("Priority is set to " + transactions.get(index).getPriority() + " for current transaction.");
+        }
+        showLine();
+    }
+
+    // Lists all transactions that have the high priority
+    public void listPriorities(ArrayList<Transaction> upcomingTransactions) {
+        String defaultPriority = "HIGH";
+        boolean hasHighPriority = false;
+
+        for (Transaction transaction : upcomingTransactions) {
+            if (transaction.getPriority() != null && transaction.getPriority().toString().equalsIgnoreCase(defaultPriority)) {
+                if (!hasHighPriority) {
+                    System.out.println("Following transactions have the high priority:");
+                    hasHighPriority = true;
+                }
+                System.out.println("- " + transaction.getDescription() + " " + transaction.getAmount() + " "
+                        + transaction.getCurrency() + " in category " + transaction.getCategory());
+            }
+        }
+        if (!hasHighPriority) {
+            System.out.println("No high priority transactions found.");
+        }
+    }
+
     public void printTransactions(ArrayList<Transaction> transactions) {
         showLine();
+        if (transactions.isEmpty()) {
+            System.out.println("No transaction found.");
+            showLine();
+            return;
+        }
         System.out.println("Here is the list of transactions:");
         for (Transaction transaction : transactions) {
             printTransaction(transaction);
@@ -241,7 +303,7 @@ public class Ui {
     public static void subFromSavings(double amount, double currentAmount) {
         showLine();
         System.out.println("Subtracted " + amount + " from your savings.");
-        if (currentAmount < 0){
+        if (currentAmount < 0) {
             System.out.println("Warning. You currently have a negative balance.");
         }
         showLine();
@@ -256,5 +318,41 @@ public class Ui {
         System.out.println("You're " + currentAmount + " out of " + targetAmount + ". Good luck!");
         showLine();
         return false;
+    }
+
+    public void printEdited(String value, int typeId) {
+        String type = "";
+        switch (typeId) {
+        case 0:
+            type = "description";
+            break;
+        case 1:
+            type = "category";
+            break;
+        case 2:
+            type = "amount";
+            break;
+        case 3:
+            type = "currency";
+            break;
+        }
+
+        showLine();
+        System.out.println("Done! The " + type
+                + " of the target transaction has been updated to:\n" + value);
+        showLine();
+    }
+
+    public static void printRecurringTransactions(ArrayList<Transaction> transactions) {
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("E, dd MMM yyyy");
+        showLine();
+        System.out.println("Here is a list of your upcoming recurring payments:");
+        int count = 1;
+        for (Transaction transaction : transactions) {
+            System.out.println(count + ". " + transaction.getDescription()
+                    + " - " + transaction.getDate().format(df));
+            count++;
+        }
+        showLine();
     }
 }

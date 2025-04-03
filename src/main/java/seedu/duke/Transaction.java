@@ -2,6 +2,7 @@ package seedu.duke;
 
 import enumStructure.Category;
 import enumStructure.Currency;
+import enumStructure.Priority;
 import enumStructure.Status;
 
 import java.time.LocalDate;
@@ -16,8 +17,12 @@ public class Transaction {
 
 
     // changeable fields
+    private int amount;
+    private Currency currency;
     private String description;
     private Category category;
+    private Priority priority;
+    private LocalDate date;
     private ArrayList<String> tags;
     private boolean isDeleted = false;
     private int recurringPeriod; // Repeated every recurringPeriod days, one-time if 0
@@ -33,6 +38,7 @@ public class Transaction {
         this.category = category;
         this.date = date;
         this.status = status;
+        this.priority = Priority.LOW;
         tags = new ArrayList<>();
         recurringPeriod = 0;
     }
@@ -44,6 +50,7 @@ public class Transaction {
         this.currency = currency;
         this.date = date;
         this.status = status;
+        this.priority = Priority.LOW;
         this.tags = new ArrayList<>();
         recurringPeriod = 0;
     }
@@ -60,7 +67,6 @@ public class Transaction {
     public int getId() {
         return id;
     }
-
 
     public double getAmount() {
         return amount;
@@ -82,6 +88,9 @@ public class Transaction {
         return date;
     }
 
+    public Priority getPriority() {
+        return priority;
+    }
 
     public ArrayList<String> getTags() {
         return new ArrayList<>(tags);
@@ -112,8 +121,24 @@ public class Transaction {
         this.category = category;
     }
 
+    public void setRecurringPeriod(int recurringPeriod) {
+        this.recurringPeriod = recurringPeriod;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
     }
 
     public void complete() {

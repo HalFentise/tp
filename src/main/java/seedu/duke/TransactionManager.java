@@ -1,11 +1,15 @@
 package seedu.duke;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
+import constant.Constant;
 import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
+import exceptions.InvalidCommand;
 import exceptions.NullException;
 import ui.Ui;
 
@@ -50,12 +54,15 @@ public class TransactionManager {
     }
 
     /**
-     * Deletes a translation from the task list.
+     * Deletes a transaction from the transaction list.
      *
-     * @param index the index of the task to be removed.
+     * @param id the index of the transaction to be removed.
      */
-    public void deleteExpense(int index) {
-        transactions.remove(index);
+    public void deleteExpense(int id) {
+        if (checkIdEmpty(id)) {
+            return;
+        }
+        transactions.remove(id);
     }
 
     /*
@@ -102,14 +109,37 @@ public class TransactionManager {
                     }
                 }
             }
-            if (printTransactions.isEmpty()) {
-                throw new NullException("Transaction is invalid");
-            }
             return printTransactions;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
+    }
+
+    public void remindRecurringTransactions() {
+        ArrayList<Transaction> nextRecurring = new ArrayList<>();
+        for (Transaction transaction : transactions) {
+            if (!transaction.isDeleted() && transaction.getRecurringPeriod() > 0) {
+                nextRecurring.add(transaction);
+            }
+        }
+        if (nextRecurring.isEmpty()) {
+            return;
+        }
+
+        nextRecurring = sortRecurringTransactions(nextRecurring);
+        Ui.printRecurringTransactions(nextRecurring);
+    }
+
+    public ArrayList<Transaction> sortRecurringTransactions(ArrayList<Transaction> transactions) {
+        for (Transaction transaction : transactions) {
+            int period = transaction.getRecurringPeriod();
+            while (transaction.getDate().isBefore(LocalDate.now())) {
+                transaction.setDate(transaction.getDate().plusDays(period));
+            }
+        }
+        transactions.sort(Comparator.comparing(Transaction::getDate));
+        return transactions;
     }
 
     // Sets a notification for an upcoming transaction
@@ -121,22 +151,6 @@ public class TransactionManager {
         for (Transaction transaction : transactions) {
             if (transaction.getDescription().equals(description) && transaction.getCategory().equals(category)) {
                 transaction.setDate(dueDate);
-            }
-        }
-    }
-
-    // Lists all upcoming notifications
-    public void listNotifications(String description) {
-        if (upcomingTransactions.isEmpty()) {
-            System.out.println("No upcoming expenses.");
-        } else {
-            System.out.println("Upcoming Expenses:");
-            for (Transaction transaction : upcomingTransactions) {
-                if (transaction.getDescription().equals(description)) {
-                    System.out.println("- " + transaction.getDescription() + " of " + transaction.getAmount() + " "
-                            + transaction.getCurrency() + " in category " + transaction.getCategory() + " is due on "
-                            + transaction.getDate().toString());
-                }
             }
         }
     }
@@ -257,6 +271,95 @@ public class TransactionManager {
                     System.out.println("Invalid period. Use 'today', 'week', 'month', or a date (yyyy-mm-dd)");
                 }
         }
+    public void editInfo(int id, String info, int type) throws Exception {
+        if (checkIdEmpty(id)) {
+            return;
+        }
+
+        switch (type) {
+        case 0:
+            transactions.get(id).setDescription(info);
+            break;
+        case 1:
+            transactions.get(id).setCategory(Category.valueOf(info));
+            break;
+        case 2:
+            int value;
+            try {
+                value = Integer.parseInt(info);
+            } catch (Exception e) {
+                throw new InvalidCommand("Invalid amount, try again!");
+            }
+            if (value < 0) {
+                throw new InvalidCommand("Expense cannot be negative!");
+            }
+            transactions.get(id).setAmount(value);
+            break;
+        case 3:
+            transactions.get(id).setCurrency(Currency.valueOf(info));
+            break;
+        }
+    }
+    /**
+    public void editDescription(int id, String newDescription) {
+        if (checkIdEmpty(id)) {
+            return;
+        }
+        transactions.get(id).setDescription(newDescription);
+    }
+
+    public void editCategory(int id, String newCategory) {
+        if (checkIdEmpty(id)) {
+            return;
+        }
+        transactions.get(id).setCategory(Category.valueOf(newCategory));
+    }
+
+    public void editAmount(int id, int newAmount) {
+        if (checkIdEmpty(id)) {
+            return;
+        }
+        transactions.get(id).setAmount(newAmount);
+    }
+
+    public void editCurrency(int id, String newCurrency) {
+        if (checkIdEmpty(id)) {
+            return;
+        }
+        transactions.get(id).setCurrency(Currency.valueOf(newCurrency));
+    }*/
+
+    public boolean checkIdEmpty(int id) {
+        if (transactions.get(id) == null) {
+            System.out.println(Constant.INVALID_TRANSACTION_ID);
+            return true;
+        }
+        return false;
+    }
+
+    public int getTotalAmount() {
+        return getRecurringAmount() + getNormalAmount();
+    }
+
+    public int getRecurringAmount() {
+        int sum = 0;
+        for (Transaction transaction : transactions) {
+            if (transaction.getRecurringPeriod() > 0 && !transaction.isDeleted()) {
+                long daysBetween = ChronoUnit.DAYS.between(transaction.getDate(), LocalDate.now());
+                sum += transaction.getAmount() * (int)((double) daysBetween / transaction.getRecurringPeriod() + 1);
+            }
+        }
+        return sum;
+    }
+
+    public int getNormalAmount() {
+        int sum = 0;
+        for (Transaction transaction : transactions) {
+            if (transaction.getRecurringPeriod() <= 0 && !transaction.isDeleted()) { //&& transaction.isCompleted()) {
+                sum += transaction.getAmount();
+            }
+        }
+        return sum;
     }
 }
 
