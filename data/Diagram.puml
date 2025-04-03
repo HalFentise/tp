@@ -1,0 +1,141 @@
+@startuml
+
+' Define Transaction class
+class Transaction {
+    - int id
+    - double amount
+    - LocalDate date
+    - String description
+    - ArrayList<String> tags
+    - boolean isDeleted
+    - int recurringPeriod
+    - boolean isCompleted
+    + Transaction(int, String, double, Currency, Category, LocalDate, Status)
+    + Transaction(int, String, double, Currency, LocalDate, Status)
+    + String toString()
+    + int getId()
+    + double getAmount()
+    + String getDescription()
+    + Currency getCurrency()
+    + Category getCategory()
+    + LocalDate getDate()
+    + Priority getPriority()
+    + ArrayList<String> getTags()
+    + Status getStatus()
+    + boolean isDeleted()
+    + int getRecurringPeriod()
+    + boolean isCompleted()
+    + void setDescription(String)
+    + void setCategory(Category)
+    + void setRecurringPeriod(int)
+    + void setAmount(int)
+    + void setCurrency(Currency)
+    + void setDate(LocalDate)
+    + void setPriority(Priority)
+    + void complete()
+    + void notComplete()
+    + void addTag(String)
+    + void removeTag(String)
+    + boolean containsTag(String)
+    + boolean isSameTransaction(Transaction)
+    + void delete()
+    + void recover()
+    + void convertTo(Currency)
+}
+
+' Define TransactionManager class
+class TransactionManager {
+    + TransactionManager()
+    + int getNum()
+    + int getSize()
+    + void addTransaction(Transaction)
+    + void addTransaction(int, String, int, Category)
+    + void addTransaction(int, String, int, Category, LocalDate)
+    + ArrayList<Transaction> getTransactions()
+    + void deleteExpense(int)
+    + void checkBudgetLimit(int)
+    + void clear()
+    + Transaction searchTransaction(int)
+    + ArrayList<Transaction> searchTransactionList(boolean, String, Ui)
+    + void remindRecurringTransactions()
+    + ArrayList<Transaction> sortRecurringTransactions(ArrayList<Transaction>)
+    + void notify(String, int, String, String)
+    + void addTag(int, String)
+    + void removeTag(int, String)
+    + void tickTransaction(int)
+    + void unTickTransaction(int)
+    + void setRecur(int, int)
+    + ArrayList<Transaction> sortTransactions(ArrayList<Transaction>)
+    + ArrayList<Transaction> getTransactionsOnDate(LocalDate)
+    + ArrayList<Transaction> getTransactionsThisMonth()
+    + ArrayList<Transaction> getTransactionsThisWeek()
+    + void getUpcomingTransactions(String)
+    + void editInfo(int, String, int)
+    + boolean checkIdEmpty(int)
+    + int getTotalAmount()
+    + int getRecurringAmount()
+    + int getNormalAmount()
+}
+
+' Define Currency class
+enum Currency {
+    USD
+    SGD
+    CNY
+    EUR
+    JPY
+    GBP
+    + double getRate()
+    + double convertTo(double,Currency)
+}
+
+' Define Status class
+enum Status {
+    PENDING
+    COMPLETED
+    FAILED
+    CANCELED
+    REFUNDED
+    IN_PROGRESS
+    PAID
+    + String getDescription()
+}
+
+' Define Category class
+enum Category {
+    FOOD,
+    EDUCATION,
+    TRANSPORTATION,
+    SHOPPING,
+    ENTERTAINMENT,
+    HEALTHCARE,
+    HOUSING,
+    OTHER;
+}
+
+' Define Priority class
+enum Priority {
+    + LOW
+    + MEDIUM
+    + HIGH
+}
+
+' Association: TransactionManager manages multiple Transactions
+TransactionManager "1" -- "*" Transaction :  >
+
+TransactionManager "1" -- "1" Currency :  >
+
+TransactionManager "1" -- "1" Status :  >
+
+' Association: Transaction references Category
+Transaction "1" -- "1" Category :  >
+
+Transaction "1" -- "1" Priority :  >
+
+' Association: Transaction references Currency
+Transaction "1" -- "1" Currency :  >
+
+' Association: Transaction references Status
+Transaction "1" -- "1" Status :  >
+
+@enduml
