@@ -12,7 +12,7 @@ This application is designed to be optimised for a Command Line Interface (CLI),
 1. Ensure that you have Java 17 or above installed.
 2. Down the latest version of `NoteUrSavings.jar` from [here](http://link.to/duke).
 > (Optional) Ideally, relocate the `.jar` file to somewhere easy to find first.
-3. Click on the `.jar` file
+3. Click on the `.jar` file to run.
 > If the above does not work, right-click the file and select `Copy as path`. <br>
 > Open CMD and run `java -jar [path you just copied]`.
 
@@ -45,7 +45,7 @@ Format: `list`
 ### Editing an expense: `edit`
 Edits an existing expense entry.
 
-Format: `edit [tag] [id] [value]`
+Format: `edit [tag] [id] [value]` <br>
 Tags: `desc`, `cat`, `am`, `curr`
 
 * `desc`: Task description
@@ -104,7 +104,7 @@ Examples:
 Creates a recurring expense entry.
 
 Format: `recur [id]/[period]`
-* `[period]` refers to how often this payment is made in days.
+* `[period]` refers to how often this payment is made in days. <br>
 Example:
 * `recur 1/7` (Sets expense with id `1` to recur weekly)
 
@@ -116,11 +116,11 @@ Set a savings goal.
 Format: `goal [tag] [value]` <br>
 Tags: `target`, `desc`, `title`, `status`, `new`
 
-* `target`: Update target balance to save up for
-* `desc`: Update goal description
-* `title`: Update goal title
-* `status`: Check progress towards goal
-* `new`: Create new goal
+* `target`: Update target balance to save up for.
+* `desc`: Update goal description.
+* `title`: Update goal title.
+* `status`: Check progress towards goal.
+* `new`: Create new goal.
 > By default, goal commands without a recognized tag print the current goal. <br>
 > If there is not a goal yet, `goal new` is run instead. <br>
 
