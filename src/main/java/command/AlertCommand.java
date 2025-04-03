@@ -8,13 +8,13 @@ public class AlertCommand extends Command{
     /**
      * @throws NullException If the date format is invalid.
      */
-    public AlertCommand(TransactionManager transcations, Ui ui) throws NullException {
+    public AlertCommand(TransactionManager transactions, Ui ui) throws NullException {
 
         try {
-            ui.listNotifications(transcations.getTransactions());
+            ui.listNotifications(transactions.getTransactions());
             Ui.showLine();
-            ui.listPriorities(transcations.getTransactions());
-            Ui.printRecurringTransactions(transcations.getTransactions());
+            ui.listPriorities(transactions.getTransactions());
+            Ui.printRecurringTransactions(transactions.getTransactions());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

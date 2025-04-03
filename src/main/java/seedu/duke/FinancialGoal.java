@@ -17,7 +17,8 @@ public class FinancialGoal {
     private boolean isAchieved;
     private double currentAmount;
     private boolean isBlank;
-    private int expenses;
+    private double expenses;
+    private double deposits;
 
     // Constructors
 
@@ -74,11 +75,11 @@ public class FinancialGoal {
         return this.isBlank;
     }
 
-    public int getExpenses() {
+    public double getExpenses() {
         return this.expenses;
     }
 
-    public int getBalance() {
+    public double getBalance() {
         return this.expenses - this.deposits;
     }
 

@@ -18,11 +18,6 @@ public enum Status {
         this.description = description;
     }
 
-    // Get display name
-    public String getDisplayName() {
-        return displayName;
-    }
-
     // Get description
     public String getDescription() {
         return description;

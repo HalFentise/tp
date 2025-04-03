@@ -11,15 +11,15 @@ public class SetPriorityCommand extends Command {
      * @param priorityStr The string representing the priority level want to set.
      * @throws NullException If the date format is invalid.
      */
-    public SetPriorityCommand(int index, String priorityStr, TransactionManager transcations, Ui ui) throws NullException {
+    public SetPriorityCommand(int index, String priorityStr, TransactionManager transactions, Ui ui) throws NullException {
         Priority priority = Priority.valueOf(priorityStr.toUpperCase());
 
         try {
-            transcations.getTransactions().get(index).setPriority(priority);
+            transactions.getTransactions().get(index).setPriority(priority);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        ui.PrintPriority(transcations.getTransactions(), index);
+        ui.PrintPriority(transactions.getTransactions(), index);
     }
 
     /**

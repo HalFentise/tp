@@ -9,8 +9,6 @@ import enumStructure.Currency;
 import enumStructure.Priority;
 import enumStructure.Status;
 
-import javax.swing.*;
-
 public class Storage {
     private static final String FOLDER_PATH = "data";  // Folder path
     private static final String FILE_PATH = FOLDER_PATH + "/transactions.csv";  // File path
@@ -62,7 +60,7 @@ public class Storage {
 
     // Convert a Transaction object into a CSV format string
     private String formatTransaction(Transaction t) {
-        return String.format("%d,%s,%d,%s,%s,%s,%s,%d,%b,%b,%s",
+        return String.format("%d,%s,%f,%s,%s,%s,%s,%d,%b,%b,%s",
                 t.getId(), t.getDescription(), t.getAmount(), t.getCurrency(),
                 t.getCategory(), t.getDate(), t.getStatus(),
                 t.getRecurringPeriod(), t.isDeleted(), t.isCompleted(), t.getPriority());

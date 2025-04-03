@@ -41,13 +41,13 @@ public class TransactionManager {
         transactions.add(transaction);
     }
 
-    public void addTransaction(int id, String description, int amount, Category category) {
+    public void addTransaction(int id, String description, double amount, Category category) {
         LocalDate date = LocalDate.now();
         Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
         transactions.add(transaction);
     }
 
-    public void addTransaction(int id, String description, int amount, Category category, LocalDate date) {
+    public void addTransaction(int id, String description, double amount, Category category, LocalDate date) {
         Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
         transactions.add(transaction);
     }
@@ -78,8 +78,8 @@ public class TransactionManager {
     /*
     function to record and trace the total budget limit
      */
-    public void checkBudgetLimit(int budgetLimit) {
-        int totalAmount = 0;
+    public void checkBudgetLimit(double budgetLimit) {
+        double totalAmount = 0;
         for (Transaction transaction : transactions) {
             if (!transaction.isDeleted()) {
                 totalAmount += transaction.getAmount();
@@ -108,7 +108,7 @@ public class TransactionManager {
         }
     }
 
-    public ArrayList<Transaction> searchTransactionList(boolean isIndex, String searchTerm, Ui ui) {
+    public ArrayList<Transaction> searchTransactionList(boolean isIndex, String searchTerm) {
         try {
             ArrayList<Transaction> printTransactions = new ArrayList<>();
             if (isIndex) {
@@ -157,7 +157,7 @@ public class TransactionManager {
     }
 
     // Sets a notification for an upcoming transaction
-    public void notify(String description, int amount, String categoryString, String date) {
+    public void notify(String description, double amount, String categoryString, String date) {
         LocalDate dueDate = LocalDate.parse(date);
 
         Category category = Category.valueOf(categoryString);
@@ -167,22 +167,6 @@ public class TransactionManager {
                 transaction.setDate(dueDate);
             }
         }
-    }
-
-    public void addTag(int id, String tag) {
-        Transaction transaction = searchTransaction(id);
-        if (transaction == null) {
-            return;
-        }
-        transaction.addTag(tag);
-    }
-
-    public void removeTag(int id, String tag) {
-        Transaction transaction = searchTransaction(id);
-        if (transaction == null) {
-            return;
-        }
-        transaction.removeTag(tag);
     }
 
     public void tickTransaction(int id) {
@@ -354,12 +338,12 @@ public class TransactionManager {
         return false;
     }
 
-    public int getTotalAmount() {
+    public double getTotalAmount() {
         return getRecurringAmount() + getNormalAmount();
     }
 
-    public int getRecurringAmount() {
-        int sum = 0;
+    public double getRecurringAmount() {
+        double sum = 0;
         for (Transaction transaction : transactions) {
             if (transaction.getRecurringPeriod() > 0 && !transaction.isDeleted()) {
                 long daysBetween = ChronoUnit.DAYS.between(transaction.getDate(), LocalDate.now());
@@ -369,8 +353,8 @@ public class TransactionManager {
         return sum;
     }
 
-    public int getNormalAmount() {
-        int sum = 0;
+    public double getNormalAmount() {
+        double sum = 0;
         for (Transaction transaction : transactions) {
             if (transaction.getRecurringPeriod() <= 0 && !transaction.isDeleted()) { //&& transaction.isCompleted()) {
                 sum += transaction.getAmount();

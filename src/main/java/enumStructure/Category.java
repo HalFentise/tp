@@ -8,5 +8,5 @@ public enum Category {
     ENTERTAINMENT,
     HEALTHCARE,
     HOUSING,
-    OTHER;
+    OTHER
 }
