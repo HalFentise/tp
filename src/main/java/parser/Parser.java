@@ -21,7 +21,8 @@ public class Parser {
      * @param userInput The raw user input string.
      * @throws NullException If the input is invalid or missing required details.
      */
-    public static void parser(String userInput, Ui ui, TransactionManager transactions, FinancialGoal goal, Storage storage) {
+    public static void parser(String userInput, Ui ui, TransactionManager transactions,
+                              FinancialGoal goal, Storage storage) {
         String[] parts = userInput.toLowerCase().split(" ", 2);
         String commandType = parts[0];
         String[] details;
@@ -181,6 +182,7 @@ public class Parser {
                 storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_GOAL:
+                goal.updateExpenses(transactions);
                 try {
                     String goalTag = parts.length < 2 ? "placeholder" : parts[1];
                     parseGoalCommands(goalTag, ui, goal);
