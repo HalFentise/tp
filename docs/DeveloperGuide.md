@@ -2,8 +2,7 @@
 
 ## Acknowledgements
 
-{list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the
-original source as well}
+At this stage, no third-party libraries, external code, or documentation have been reused. Any future integrations or adaptations will be properly documented here.
 
 ## Design & implementation
 
@@ -275,22 +274,75 @@ The total expenditure is calculated before `goal` commands are executed instead 
 
 ### Target user profile
 
-{Describe the target user profile}
+**User Type: University Students**
+
+Demographics:
+
+* Age: 18-25
+* Education Level: Undergraduate or Graduate Students
+* Financial Situation: Limited budget, dependent on allowances, scholarships, or part-time income
+
+Pain Points:
+
+* Struggles with tracking daily expenses
+* Finds it difficult to stay within a budget
+* Lacks awareness of spending habits and financial discipline
+* Needs reminders to avoid overspending
+
+Needs & Expectations:
+
+* A simple and intuitive way to record transactions
+* A budget-setting feature to manage monthly or weekly expenses
+* Notifications or alerts when spending exceeds set limits
+* A lightweight, user-friendly interface without complex financial jargon
+
+Behavior & Technology Use:
+
+* Prefers mobile apps or web-based solutions for quick access
+* Uses digital payment methods (credit/debit cards, mobile wallets)
+* May not have prior experience with financial management tools
+
+Ideal Solution:  
+A straightforward financial management tool that helps students easily track expenses
+, set spending limits, and receive reminders to avoid exceeding their budget.
 
 ### Value proposition
 
-{Describe the value proposition: what problem does it solve?}
+This financial management tool helps university students take control of their spending by providing a simple way to record transactions
+, set budget limits, and receive spending alerts. It solves the problem of poor financial tracking and overspending by offering a user-friendly 
+platform that promotes better money management without overwhelming users with complex financial features.
 
 ## User Stories
 
-| Version | As a ... | I want to ...             | So that I can ...                                           |
-|---------|----------|---------------------------|-------------------------------------------------------------|
-| v1.0    | new user | see usage instructions    | refer to them when I forget how to use the application      |
-| v2.0    | user     | find a to-do item by name | locate a to-do without having to go through the entire list |
+| Version | As a ... | I want to ...             | So that I can ...                                     |
+|---------|------|---------------------------|-------------------------------------------------------|
+| v1.0    | user | delete financial information   | correct any upcoming changes in regards to my finances. |
+| v1.0    | user | add financial information  | keep track of my financial goals.                     |
+| v1.0    | user | set a financial goal | track the financial goal |
+| v1.0    | user | search through my expenses   | keep better track of expenses I have to pay for |
+| v1.0    | user | label my expenditures  | remember why I want to spend that money |
+| v1.0    | user | tick off my expenditures   | remember what I have bought and what I haven’t |
+| v1.0    | user | set budget limits   | limit the amount of purchases I add. |
+| v1.0    | user | create recurring transactions  | keep track of regular payments such as subscriptions easily.|
+| v1.0    | user | correct financial information   | mistaken by incorrect financial goals. |
 
 ## Non-Functional Requirements
 
-{Give non-functional requirements}
+1. Usability: The interface should be intuitive and easy to navigate, ensuring a smooth user experience for students with minimal financial management knowledge.
+
+2. Performance: The application should be lightweight and responsive, allowing users to quickly log transactions and check their budget without delays.
+
+3. Scalability: The system should be able to handle an increasing number of transactions and users as adoption grows.
+
+4. Security: Users’ financial data should be securely stored and encrypted to protect sensitive information.
+
+5. Availability: The system should maintain high availability, ensuring users can access their financial records at any time.
+
+6. Compatibility: The tool should be accessible across different devices (e.g., smartphones, tablets, and desktops) with a responsive design.
+
+7. Maintainability: The codebase should be well-documented and modular, allowing for easy updates and improvements in the future.
+
+8. Notifications & Alerts: The system should send timely reminders and alerts without causing excessive interruptions or spam.
 
 ## Glossary
 
