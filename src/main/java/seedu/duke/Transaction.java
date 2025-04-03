@@ -11,8 +11,6 @@ import java.util.ArrayList;
 public class Transaction {
     private final int id;
     private double amount;
-    private Currency currency;
-    private LocalDate date;
     private final Status status;
 
 
