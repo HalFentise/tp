@@ -104,6 +104,10 @@ persistence.
 
 ### Transaction Management Features: Delete, Set Budget Limit and Notifications
 
+![DeleteCommand](./Sequence_Diagrams_pics/DeleteCommand.png)
+![SetBudget](./Sequence_Diagrams_pics/SetBudegt.png)
+![NotifyCommand](./Sequence_Diagrams_pics/NotifyCommand.png)
+
 **Feature Description:**  
 `Peng Ziyi` added three main functionalities to delete transaction, set budget limit and notifications for transactions:
 * Delete Transaction (delete): Lets users remove unwanted or erroneous transaction entries using their index in the displayed list.
@@ -167,6 +171,9 @@ and clear visual cues for overspending or pending transactions.
 
 ### Transaction Management Features: Alert and Set Priority
 
+![Alert Command](./Sequence_Diagrams_pics/AlertCommand.png)
+![Set Priority](./Sequence_Diagrams_pics/SetPriority.png)
+
 **Feature Description:**  
 `Peng Ziyi` added two main functionalities to view spending alerts, set different priorities for transactions:
 * Set Priority (priority): Allows users to assign a priority level (low, medium, or high) to a transaction. By default, all expenses are low priority. This helps users focus on the most urgent or important expenses.
@@ -214,6 +221,159 @@ Spending alerts consolidate relevant financial insights—notifications, recurri
 one unified interface for quick decision-making.
 
 ---
+
+### Transaction Management Features: Filter by date, Currency Conversion, Sort by date
+
+Faheem Akram added the following functionalities to manage transactions:
+
+* Upcoming Transactions (getUpcomingTransactions): Allows users to get transactions for an upcoming date
+* Convert Currency (convertTo): Allows users to change from one currency to another
+
+```Java
+public ArrayList<Transaction> sortTransactions(ArrayList<Transaction> transactions) {
+
+        transactions.sort((t1, t2) -> {
+            if (t1.getDate() == null && t2.getDate() == null) {
+                return 0;
+            }
+            if (t1.getDate() == null) {
+                return -1;
+            }
+            if (t2.getDate() == null) {
+                return 1;
+            }
+            return t1.getDate().compareTo(t2.getDate());
+        });
+
+        return transactions;
+    }
+
+public void getUpcomingTransactions(String period) {
+
+    period = period.toLowerCase();
+    switch (period) {
+        case "today":
+            System.out.println(getTransactionsOnDate(LocalDate.now()));
+        case "week":
+            System.out.println(getTransactionsThisWeek());
+        case "month":
+            System.out.println(getTransactionsThisMonth());
+        default:
+            try {
+                LocalDate date = LocalDate.parse(period);
+                System.out.println(getTransactionsOnDate(date));
+            } catch (Exception e) {
+                System.out.println("Invalid period. Use 'today', 'week', 'month', or a date (yyyy-mm-dd)");
+            }
+    }
+}
+```
+
+Design Consideration:
+The ability to sort by and filter by date allows for the user to quickly find what the soonest transactions will be
+so that they can plan accordingly.
+
+---
+
+
+### Transaction Management Features: Currency Conversion
+
+Faheem Akram added the following feature:
+
+* Sort by date (sortTransactions): Sorts the transactions by date
+
+```Java
+public void convertTo(Currency currency) {
+double toSGD = 1/this.currency.getRate();
+this.amount = currency.getRate() * toSGD;
+this.currency = currency;
+}
+```
+
+Design Consideration
+
+This allows for users to effectively convert between different common currencies.
+
+---
+
+
+### 2. Goal:
+
+### Financial Goal Basic Data Structure
+
+Faheem Akram implemented the FinancialGoal class with data structure and methods for financial goals. It includes the following
+fields:
+
+- currentGoal (Goal name)
+- targetAmount (Goal target)
+- description (Goal description)
+- isAchieved (Goal achieved status)
+- currency (Goal currency type)
+- currentAmount (Transaction date)
+- status (Transaction status)
+  
+```Java
+  public class FinancialGoal {
+
+  private String currentGoal;
+  private double targetAmount;
+  private String description;
+  private Currency currency;
+
+  // Changeable fields
+
+  private boolean isAchieved;
+  private double currentAmount;
+  private boolean isBlank;
+  private int expenses;
+  }
+```
+Design Consideration:  
+This data structure provides all the essential information required for a goal
+
+---
+
+### Goal Management Features: Create and Check
+
+Feature Description:  
+Faheem Akram added 2 main functions to Create goals and check them
+* Create goal (createNewGoal): Lets users create a new goal by prompting them for each field required.
+* Check Goal (checkGoalStatus):
+
+```Java
+public FinancialGoal createNewGoal() {
+Scanner sc = new Scanner(System.in);
+int amount;
+Ui.createGoalConfirm();
+
+    if (!sc.nextLine().equals("Y")) {
+        Ui.createGoalAborted();
+        return this;
+    }
+    Ui.createGoalName();
+    setGoal(sc.nextLine());
+    Ui.createGoalTarget();
+    amount = Integer.parseInt(sc.nextLine());
+    setTargetAmount(amount);
+    Ui.createGoalDescription();
+    setDescription(sc.nextLine());
+    Ui.createGoalSuccess();
+    return this;
+}
+```
+
+Design Considerations
+
+
+### Commands
+
+* Target: Update target balance to save up for
+* Desc: Update goal description
+* Title: Update goal title
+* Status: Check progress towards goal
+* New: Create new goal
+> By default, goal commands without a recognized tag print the current goal. <br>
+> If there is not a goal yet, goal new is run instead.
 
 ### Transaction Management Features: Set Recurring Period, Search, and Edit
 

@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class FinancialGoal {
 
+    private double deposits;
     private String currentGoal;
     private double targetAmount;
     private String description;
@@ -74,11 +75,11 @@ public class FinancialGoal {
         return this.isBlank;
     }
 
-    public int getExpenses() {
+    public double getExpenses() {
         return this.expenses;
     }
 
-    public int getBalance() {
+    public double getBalance() {
         return this.expenses - this.deposits;
     }
 
