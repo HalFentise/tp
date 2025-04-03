@@ -27,6 +27,16 @@ public class TransactionManager {
         return transactions.size();
     }
 
+    public int getSize() {
+        int count = 0;
+        for (Transaction transaction : transactions) {
+            if (!transaction.isDeleted()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
     }
@@ -56,7 +66,7 @@ public class TransactionManager {
         if (checkIdEmpty(id)) {
             return;
         }
-        transactions.remove(id);
+        searchTransaction(id + 1).delete();
     }
 
     /*
@@ -72,6 +82,10 @@ public class TransactionManager {
         if (totalAmount > budgetLimit) {
             System.out.println("Warning: You have exceeded your budget limit!");
         }
+    }
+
+    public void clear() {
+        transactions.clear();
     }
 
     public Transaction searchTransaction(int id) {
@@ -98,7 +112,7 @@ public class TransactionManager {
                 }
             } else {
                 for (Transaction transaction : transactions) {
-                    if (transaction.getDescription().contains(searchTerm)) {
+                    if (transaction.getDescription().contains(searchTerm) && !transaction.isDeleted()) {
                         printTransactions.add(transaction);
                     }
                 }

@@ -82,6 +82,11 @@ public class Constant {
     public static final String COMMAND_GOAL = "goal";
 
     /**
+     * Command keyword for clear all the transactions
+     */
+    public static final String COMMAND_CLEAR = "clear";
+
+    /**
      * Command tag for modifying the target amount
      */
     public static final String GOAL_TARGET = "target";

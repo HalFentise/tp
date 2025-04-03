@@ -95,6 +95,11 @@ public class Parser {
                 new DeleteCommand(index - 1, transactions, ui);
                 storage.saveTransactions(transactions.getTransactions());
                 break;
+            case COMMAND_CLEAR:
+                transactions.clear();
+                storage.saveTransactions(transactions.getTransactions());
+                ui.PrintClear();
+                break;
             case COMMAND_SET_BUDGET:
                 details = parts[1].split(IDENTIFIER_AMOUNT, 2);
                 amount = Integer.parseInt(details[1]);

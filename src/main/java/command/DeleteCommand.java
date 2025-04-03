@@ -12,7 +12,7 @@ public class DeleteCommand extends Command{
      */
     public DeleteCommand(int ExpenseIndex,TransactionManager transactions, Ui ui) {
         this.expenseIndex = ExpenseIndex;
-        Ui.printDeleteTask(transactions.getTransactions().get(ExpenseIndex), transactions.getNum() - 1);
+        Ui.printDeleteTask(transactions.getTransactions().get(ExpenseIndex), transactions.getSize() - 1);
         transactions.deleteExpense(ExpenseIndex);
     }
 
@@ -26,7 +26,7 @@ public class DeleteCommand extends Command{
      */
     @Override
     public void execute(TransactionManager transactions, Ui ui) {
-        Ui.printDeleteTask(transactions.getTransactions().get(expenseIndex), transactions.getNum() - 1);
+        Ui.printDeleteTask(transactions.getTransactions().get(expenseIndex), transactions.getSize() - 1);
         transactions.deleteExpense(expenseIndex);
     }
 }
