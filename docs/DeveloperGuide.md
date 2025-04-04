@@ -104,8 +104,13 @@ persistence.
 
 ### Transaction Management Features: Delete, Set Budget Limit and Notifications
 
+##### Deletion
 ![DeleteCommand](./Sequence_Diagrams_pics/DeleteCommand.png)
+
+#### Set Budget
 ![SetBudget](./Sequence_Diagrams_pics/SetBudegt.png)
+
+#### Notify 
 ![NotifyCommand](./Sequence_Diagrams_pics/NotifyCommand.png)
 
 **Feature Description:**  
@@ -171,7 +176,10 @@ and clear visual cues for overspending or pending transactions.
 
 ### Transaction Management Features: Alert and Set Priority
 
+##### Alert Operation  
 ![Alert Command](./Sequence_Diagrams_pics/AlertCommand.png)
+
+##### Set Priority  
 ![Set Priority](./Sequence_Diagrams_pics/SetPriority.png)
 
 **Feature Description:**  
