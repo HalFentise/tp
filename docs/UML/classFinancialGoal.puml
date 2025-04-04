@@ -1,0 +1,36 @@
+@startuml
+    class FinancialGoal {
+        - String currentGoal
+        - int targetAmount
+        - String description
+        - boolean isAchieved
+        - int deposits
+        - boolean isBlank
+        - int expenses
+
+        + FinancialGoal(String name, int targetAmount, String description)
+        + FinancialGoal()
+
+        + boolean isAchieved()
+        + String getDescription()
+        + int getTargetAmount()
+        + int getDeposits()
+        + String getGoal()
+        + boolean isBlank()
+        + int getExpenses()
+        + int getBalance()
+
+        + void setDescription(String description)
+        + void setTargetAmount(int targetAmount)
+        + void setGoal(String goal)
+
+        + void addToSavings(int amount)
+        + void subFromSavings(int amount)
+        + void checkGoalStatus()
+        + void updateExpenses(TransactionManager transactions)
+
+        + FinancialGoal createNewGoal()
+
+        + String toString()
+    }
+@enduml

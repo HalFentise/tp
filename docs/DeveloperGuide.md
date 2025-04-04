@@ -108,7 +108,7 @@ persistence.
 ![DeleteCommand](./Sequence_Diagrams_pics/DeleteCommand.png)
 
 #### Set Budget
-![SetBudget](./Sequence_Diagrams_pics/SetBudegt.png)
+![SetBudget](./Sequence_Diagrams_pics/SetBudget.png)
 
 #### Notify 
 ![NotifyCommand](./Sequence_Diagrams_pics/NotifyCommand.png)
@@ -305,9 +305,11 @@ This allows for users to effectively convert between different common currencies
 ---
 
 
-### 2. Goal:
+### Goal:
 
 ### Financial Goal Basic Data Structure
+
+![Goal Class Diagram](./images/GoalDiagram.png)
 
 Faheem Akram implemented the FinancialGoal class with data structure and methods for financial goals. It includes the following
 fields:
