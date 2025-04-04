@@ -170,6 +170,7 @@ public class Parser {
                 } catch (Exception e) {
                     throw new InvalidCommand("Format invalid, try again! (recur [id]/[period])");
                 }
+                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_EXIT:
                 ui.printExit();

@@ -108,7 +108,7 @@ persistence.
 ![DeleteCommand](./Sequence_Diagrams_pics/DeleteCommand.png)
 
 #### Set Budget
-![SetBudget](./Sequence_Diagrams_pics/SetBudegt.png)
+![SetBudget](./Sequence_Diagrams_pics/SetBudget.png)
 
 #### Notify 
 ![NotifyCommand](./Sequence_Diagrams_pics/NotifyCommand.png)
@@ -234,7 +234,8 @@ one unified interface for quick decision-making.
 
 `Zhu Yangyi` added the following functionalities to manage transactions:
 
-* Set Recurring Period: Allows users to set transactions to recur every `recurringPeriod` days.
+* Set Recurring Period: Allows users to set transactions to recur every `recurringPeriod` days. <br>
+![Set Recur Sequence Diagram](./images/setRecur.png)
 * Search Transaction: Allows users to search through list of transactions by either description (default) or id.
 * Edit Transaction: Allows users to edit the description, category, amount, or currency of a transaction.
 
@@ -348,12 +349,13 @@ This allows for users to effectively convert between different common currencies
 
 ---
 
-### 2. Goal:
+### Goal:
 
 ### Financial Goal Basic Data Structure
 
-`Faheem Akram` implemented the `FinancialGoal` class with data structure and methods for financial goals. It includes the following
-fields:
+![Goal Class Diagram](./images/GoalDiagram.png)
+
+`Faheem Akram` implemented the `FinancialGoal` class with data structure and methods for financial goals. It includes the following fields:
 
 - `currentGoal` (Goal name)
 - `targetAmount` (Goal target)

@@ -80,7 +80,7 @@ Format: `setbudget a/AMOUNT`
 * `AMOUNT` is the maximum spending limit.
   
 Example:
-* `setBudget a/500` (Sets a spending cap of 500)
+* `setbudget a/500` (Sets a spending cap of 500)
 
 ---
 
@@ -158,7 +158,8 @@ Example:
 ---
 
 ### Setting alerts for higher spending: `alert`
-Marks an expense based on different priorities, default set to be low.
+Marks an expense based on differe[team](team)nt priorities, default set to be low.
+
 
 Format: `alert` <br><br>
 Example: <br>
