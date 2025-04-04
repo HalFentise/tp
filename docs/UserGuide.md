@@ -1,12 +1,5 @@
 # User Guide
 
-## Introduction
-
-NoteUrSavings is a command-line application that helps students document and plan their expenses. It helps to visualize spendings, record savings, and track progress towards savings goals.
-
-This application is designed to be optimised for a Command Line Interface (CLI), making it more efficient than conventional GUI-based applications for fast typers.
-
-
 ## Quick Start
 
 1. Ensure that you have Java 17 or above installed.
@@ -28,7 +21,7 @@ Format: `add d/DESCRIPTION a/AMOUNT c/CATEGORY [t/TAG]`
 * `CATEGORY` is the category of spending (e.g., food, transport, entertainment).
 * `TAG` (optional) can be used for additional labeling.
 
-Example of usage: 
+Examples: 
 
 `add d/Dinner a/15.50 c/Food`  
 `add d/Netflix Subscription a/12.99 c/Entertainment t/Monthly`
@@ -67,7 +60,8 @@ Deletes the specified expense entry.
 
 Format: `delete INDEX`
 * `INDEX` refers to the position in the displayed expense list.
-Examples:
+  
+Example:
 * `delete 2` (Deletes the 2nd expense in the list)
 
 ---
@@ -84,6 +78,7 @@ Sets a spending limit to prevent overspending.
 
 Format: `setbudget a/AMOUNT`
 * `AMOUNT` is the maximum spending limit.
+  
 Example:
 * `setbudget a/500` (Sets a spending cap of 500)
 
@@ -104,7 +99,8 @@ Examples:
 Creates a recurring expense entry.
 
 Format: `recur [id]/[period]`
-* `[period]` refers to how often this payment is made in days. <br>
+* `[period]` refers to how often this payment is made in days.
+  
 Example:
 * `recur 1/7` (Sets expense with id `1` to recur weekly)
 
@@ -137,25 +133,25 @@ Example:
 ### Ticking off expenditures: `tick`
 Marks an expense as paid or completed.
 
-Format: `tick INDEX`
+Format: `tick INDEX` <br><br>
 Example:
-* `tick 3 (Marks the 3rd expense as completed)`
+* `tick 3` (Marks the 3rd expense as completed)
 
 ---
 
 ### Setting notifications for upcoming payments: `notify`
 Sets reminders for upcoming expenses.
 
-Format: `notify d/DESCRIPTION a/AMOUNT c/CATEGORY t/DATE`
+Format: `notify d/DESCRIPTION a/AMOUNT c/CATEGORY t/DATE` <br><br>
 Example:
-* `notify d/Rent a/1000 c/Housing t/2025-03-01 (Sets a reminder for rent payment on March 1st, 2025)`
+* `notify d/Rent a/1000 c/Housing t/2025-03-01` (Sets a reminder for rent payment on March 1st, 2025)
 
 ---
 
 ### Prioritizing specific expenses: `priority`
 Marks an expense based on different priorities, default set to be low.
 
-Format: `priority INDEX priority_level`
+Format: `priority INDEX priority_level` <br><br>
 Example:
 * `priority 1 high` (Marks the 1st expense as high priority)
 
@@ -164,9 +160,10 @@ Example:
 ### Setting alerts for higher spending: `alert`
 Marks an expense based on differe[team](team)nt priorities, default set to be low.
 
-Format: `alert`
-Example:
-![My Diagram](Screenshots/Alert_demo.png)
+
+Format: `alert` <br><br>
+Example: <br>
+![My Diagram](Screenshoots/Alert_demo.png)
 
 
 ---

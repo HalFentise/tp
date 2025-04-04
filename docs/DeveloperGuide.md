@@ -230,12 +230,57 @@ one unified interface for quick decision-making.
 
 ---
 
+### Transaction Management Features: Set Recurring Period, Search, and Edit
+
+`Zhu Yangyi` added the following functionalities to manage transactions:
+
+* Set Recurring Period: Allows users to set transactions to recur every `recurringPeriod` days. <br>
+![Set Recur Sequence Diagram](./images/setRecur.png)
+* Search Transaction: Allows users to search through list of transactions by either description (default) or id.
+* Edit Transaction: Allows users to edit the description, category, amount, or currency of a transaction.
+
+```java
+public void setRecurringPeriod(int recurringPeriod) {
+    this.recurringPeriod = recurringPeriod;
+}
+
+public ArrayList<Transaction> searchTransactionList(boolean isIndex, String searchTerm, Ui ui) {
+    try {
+        ArrayList<Transaction> printTransactions = new ArrayList<>();
+        if (isIndex) {
+            // Searches for transaction with given index and adds to printTransactions
+        } else {
+            // Searches for all transactions whose description contain the search term and adds to printTransactions
+        }
+        return printTransactions;
+    } catch (Exception e) {
+        // Error handling
+    }
+}
+
+public void editInfo(int id, String info, int type) {
+    if (checkIdEmpty(id)) {
+        return;
+    }
+    
+    // switch-case to update transaction
+}
+```
+
+**Design Consideration:**  
+The ability to set recurring period allows users to manage subscriptions or bills without having to add them
+repeatedly. <br>
+`searchTransactionList(boolean, String, Ui)` and `editInfo(int, T)` enable users to browse and make changes to their log
+with ease.
+
+---
+
 ### Transaction Management Features: Filter by date, Currency Conversion, Sort by date
 
-Faheem Akram added the following functionalities to manage transactions:
+`Faheem Akram` added the following functionalities to manage transactions:
 
-* Upcoming Transactions (getUpcomingTransactions): Allows users to get transactions for an upcoming date
-* Convert Currency (convertTo): Allows users to change from one currency to another
+* Upcoming Transactions (`getUpcomingTransactions`): Allows users to get transactions for an upcoming date
+* Convert Currency (`convertTo`): Allows users to change from one currency to another
 
 ```Java
 public ArrayList<Transaction> sortTransactions(ArrayList<Transaction> transactions) {
@@ -277,7 +322,7 @@ public void getUpcomingTransactions(String period) {
 }
 ```
 
-Design Consideration:
+**Design Consideration:**
 The ability to sort by and filter by date allows for the user to quickly find what the soonest transactions will be
 so that they can plan accordingly.
 
@@ -286,9 +331,9 @@ so that they can plan accordingly.
 
 ### Transaction Management Features: Currency Conversion
 
-Faheem Akram added the following feature:
+`Faheem Akram` added the following feature:
 
-* Sort by date (sortTransactions): Sorts the transactions by date
+* Sort by date (`sortTransactions`): Sorts transactions by date
 
 ```Java
 public void convertTo(Currency currency) {
@@ -298,12 +343,11 @@ this.currency = currency;
 }
 ```
 
-Design Consideration
+**Design Consideration:**
 
 This allows for users to effectively convert between different common currencies.
 
 ---
-
 
 ### Goal:
 
@@ -311,16 +355,17 @@ This allows for users to effectively convert between different common currencies
 
 ![Goal Class Diagram](./images/GoalDiagram.png)
 
-Faheem Akram implemented the FinancialGoal class with data structure and methods for financial goals. It includes the following
-fields:
+`Faheem Akram` implemented the `FinancialGoal` class with data structure and methods for financial goals. It includes the following fields:
 
-- currentGoal (Goal name)
-- targetAmount (Goal target)
-- description (Goal description)
-- isAchieved (Goal achieved status)
-- currency (Goal currency type)
-- currentAmount (Transaction date)
-- status (Transaction status)
+- `currentGoal` (Goal name)
+- `targetAmount` (Goal target)
+- `description` (Goal description)
+- `isAchieved` (Goal achieved status)
+- `currency` (Goal currency type)
+- `currentAmount` (Transaction date)
+- `status` (Transaction status) <br>
+
+`Zhu Yangyi` added the `expenses` field which stores the total amount paid, in order to synchronize expenditure with savings.
   
 ```Java
   public class FinancialGoal {
@@ -338,125 +383,7 @@ fields:
   private int expenses;
   }
 ```
-Design Consideration:  
-This data structure provides all the essential information required for a goal
 
----
-
-### Goal Management Features: Create and Check
-
-Feature Description:  
-Faheem Akram added 2 main functions to Create goals and check them
-* Create goal (createNewGoal): Lets users create a new goal by prompting them for each field required.
-* Check Goal (checkGoalStatus):
-
-```Java
-public FinancialGoal createNewGoal() {
-Scanner sc = new Scanner(System.in);
-int amount;
-Ui.createGoalConfirm();
-
-    if (!sc.nextLine().equals("Y")) {
-        Ui.createGoalAborted();
-        return this;
-    }
-    Ui.createGoalName();
-    setGoal(sc.nextLine());
-    Ui.createGoalTarget();
-    amount = Integer.parseInt(sc.nextLine());
-    setTargetAmount(amount);
-    Ui.createGoalDescription();
-    setDescription(sc.nextLine());
-    Ui.createGoalSuccess();
-    return this;
-}
-```
-
-Design Considerations
-
-
-### Commands
-
-* Target: Update target balance to save up for
-* Desc: Update goal description
-* Title: Update goal title
-* Status: Check progress towards goal
-* New: Create new goal
-> By default, goal commands without a recognized tag print the current goal. <br>
-> If there is not a goal yet, goal new is run instead.
-
-### Transaction Management Features: Set Recurring Period, Search, and Edit
-
-`Zhu Yangyi` added the following functionalities to manage transactions:
-
-* Set Recurring Period: Allows users to set transactions to recur every `recurringPeriod` days.
-* Search Transaction: Allows users to search through list of transactions by either description (default) or id.
-* Edit Transaction: Allows users to edit the description, category, amount, or currency of a transaction.
-
-```java
-public void setRecurringPeriod(int recurringPeriod) {
-    this.recurringPeriod = recurringPeriod;
-}
-
-public ArrayList<Transaction> searchTransactionList(boolean isIndex, String searchTerm, Ui ui) {
-    try {
-        ArrayList<Transaction> printTransactions = new ArrayList<>();
-        if (isIndex) {
-            // Searches for transaction with given index and adds to printTransactions
-        } else {
-            // Searches for all transactions whose description contain the search term and adds to printTransactions
-        }
-        return printTransactions;
-    } catch (Exception e) {
-        // Error handling
-    }
-}
-
-public void editInfo(int id, String info, int type) {
-    if (checkIdEmpty(id)) {
-        return;
-    }
-    
-    // switch-case to update transaction
-}
-```
-
-**Design Consideration:**  
-The ability to set recurring period allows users to manage subscriptions or bills without having to add them
-repeatedly. <br>
-`searchTransactionList(boolean, String, Ui)` and `editInfo(int, T)` enable users to browse and make changes to their log
-with ease.
-
----
-
-### 2. Goal:
-
-### Commands
-
-* Target: Update target balance to save up for
-* Desc: Update goal description
-* Title: Update goal title
-* Status: Check progress towards goal
-* New: Create new goal
-> By default, goal commands without a recognized tag print the current goal. <br>
-> If there is not a goal yet, `goal new` is run instead.
-
-**Command Formats**
-
-```angular2html
-goal target [target]
-goal desc [desc]
-goal title [title]
-goal status
-goal new
-goal
-```
-
----
-
-### Goal Basic Data Structure
-
-**Feature Description:**
 `Zhu Yangyi` integrated the `Goal` class into the program through the `Parser` class.
 
 ```java
@@ -480,6 +407,37 @@ public static void parseGoalCommands(String command, Ui ui, FinancialGoal goal) 
 
 **Design Consideration:**  
 This implementation allows users to update individual parts of the goal, allowing for a more modular approach when only minor modifications are required compared to having to set a new goal each time.
+
+---
+
+### Goal Management Features: Create and Check
+
+Feature Description:  
+`Faheem Akram` added 2 main functions to Create goals and check them
+* Create goal (`createNewGoal`): Lets users create a new goal by prompting them for each field required.
+* Check Goal (`checkGoalStatus`):
+
+```Java
+public FinancialGoal createNewGoal() {
+Scanner sc = new Scanner(System.in);
+int amount;
+Ui.createGoalConfirm();
+
+    if (!sc.nextLine().equals("Y")) {
+        Ui.createGoalAborted();
+        return this;
+    }
+    Ui.createGoalName();
+    setGoal(sc.nextLine());
+    Ui.createGoalTarget();
+    amount = Integer.parseInt(sc.nextLine());
+    setTargetAmount(amount);
+    Ui.createGoalDescription();
+    setDescription(sc.nextLine());
+    Ui.createGoalSuccess();
+    return this;
+}
+```
 
 ---
 
@@ -578,10 +536,10 @@ platform that promotes better money management without overwhelming users with c
 | v1.0  | user     | correct financial information                         | mistaken by incorrect financial goals. |
 | v2.0  | user     | receive alerts                                        | control it when my spending is higher than usual and have upcoming payments.|
 | v2.0  | user     | prioritise specific expenses                          | see what sort of expenses I should focus on first place.|
-| v2.0  | student  | document project expenses                             | control the budget granted and to request reimbursements.|
 | v2.0  | user     | receive the reminders for upcoming recurring payments | don’t miss a payment deadline.|
-| v2.0  | student  | synchronize the expenditures with balances            | can manage the savings better and see any differences.| 
 | v2.0  | user     | view a summary of my expenses for a given time frame  |  can get quick information about my finances when I need it.|
+| v2.0  | student  | document project expenses                             | control the budget granted and to request reimbursements.|
+| v2.0  | student  | synchronize the expenditures with balances            | can manage the savings better and see any differences.| 
 | v2.0  | student  | see 5-10 different types of currencies                |  can convert back to my home currency when I need to, like USD, SGD, EUR and CNY.|
 
 
