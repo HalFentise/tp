@@ -1,12 +1,5 @@
 # User Guide
 
-## Introduction
-
-NoteUrSavings is a command-line application that helps students document and plan their expenses. It helps to visualize spendings, record savings, and track progress towards savings goals.
-
-This application is designed to be optimised for a Command Line Interface (CLI), making it more efficient than conventional GUI-based applications for fast typers.
-
-
 ## Quick Start
 
 1. Ensure that you have Java 17 or above installed.
