@@ -1,0 +1,30 @@
+@startuml
+
+hide footbox
+skinparam sequenceReferenceBackgroundColor #f7807c
+
+actor User
+
+participant ":TextUi" as TextUi #EE82EE
+participant ":SetPriorityCommand" as SetPriorityCommand #ADD8E6
+participant ":TransactionManager" as TransactionManager #90EE90
+participant ":Transaction" as Transaction #FFD700
+
+User -> TextUi : priority INDEX priority_level
+TextUi -> SetPriorityCommand : new SetPriorityCommand(index, priorityStr, transactions, ui)
+
+SetPriorityCommand -> TransactionManager : getTransactions()
+TransactionManager --> SetPriorityCommand : transactionsList
+
+SetPriorityCommand -> Transaction : setPriority(priority)
+alt valid priority
+    return
+else throws Exception
+    SetPriorityCommand -> SetPriorityCommand : print error message
+end
+
+SetPriorityCommand -> TextUi : PrintPriority(transactionsList, index)
+
+TextUi --> User : Show updated priority status
+
+@enduml

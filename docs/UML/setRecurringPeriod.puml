@@ -1,0 +1,41 @@
+@startuml
+
+actor User
+participant Duke
+participant Parser
+participant Transaction
+participant Ui
+participant TransactionManager
+participant Storage
+
+== Set Recurring Period ==
+User -> Duke : Enter "recur" command
+activate Duke
+Duke -> Parser : parser(command)
+activate Parser
+Parser -> TransactionManager : setRecur(id, period)
+activate TransactionManager
+TransactionManager -> Transaction : setRecurringPeriod(period)
+activate Transaction
+Transaction -> TransactionManager : recurringPeriod set to period
+deactivate Transaction
+TransactionManager -> Parser : setRecur complete
+Parser -> Ui : setPeriod(transaction, period)
+activate Ui
+Ui -> TransactionManager : searchTransaction(id)
+TransactionManager -> Ui : Return transaction
+deactivate TransactionManager
+Ui -> Parser : Print updated status
+deactivate Ui
+Parser -> Storage : saveTransactions(transaction)
+activate Storage
+Storage -> Parser : Updated transactions stored
+deactivate Storage
+Parser -> Duke : Command complete
+deactivate Parser
+Duke -> User : Logic cycle end, await next input
+deactivate Duke
+
+
+@enduml
+

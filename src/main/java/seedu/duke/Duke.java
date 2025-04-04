@@ -1,21 +1,39 @@
 package seedu.duke;
 
-import java.util.Scanner;
+import ui.Ui;
+import parser.Parser;
+import java.util.ArrayList;
 
 public class Duke {
-    /**
-     * Main entry-point for the java.duke.Duke application.
-     */
-    public static void main(String[] args) {
-        String logo = " ____        _        \n"
-                + "|  _ \\ _   _| | _____ \n"
-                + "| | | | | | | |/ / _ \\\n"
-                + "| |_| | |_| |   <  __/\n"
-                + "|____/ \\__,_|_|\\_\\___|\n";
-        System.out.println("Hello from\n" + logo);
-        System.out.println("What is your name?");
+    private TransactionManager transactions;
+    private Ui ui;
+    private FinancialGoal goal;
+    private Storage storage;
 
-        Scanner in = new Scanner(System.in);
-        System.out.println("Hello " + in.nextLine());
+    public Duke() {
+        ui = new Ui();
+        goal = new FinancialGoal();
+        storage = new Storage();
+        // load data
+        transactions = new TransactionManager();
+    }
+
+    public void run() {
+        ui.printWelcomeMessage();
+        ArrayList<Transaction> savedTransactions = storage.loadTransactions();
+        for (Transaction t : savedTransactions) {
+            transactions.addTransaction(t);
+        }
+        transactions.remindRecurringTransactions();
+        while (true) {
+            String command = ui.readCommand();
+            Parser.parser(command, ui, transactions, goal, storage);
+        }
+    }
+
+    public static void main(String[] args) {
+        new Duke().run();
+        //assert false : "dummy assertion set to fail";
     }
 }
+
