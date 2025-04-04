@@ -1,6 +1,5 @@
 import enumStructure.Category;
 import enumStructure.Currency;
-import enumStructure.Priority;
 import enumStructure.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
