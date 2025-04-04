@@ -16,24 +16,37 @@ public class Duke {
         storage = new Storage();
         // load data
         transactions = new TransactionManager();
+
+        assert ui != null : "UI should be initialized";
+        assert goal != null : "FinancialGoal should be initialized";
+        assert storage != null : "Storage should be initialized";
+        assert transactions != null : "TransactionManager should be initialized";
     }
 
     public void run() {
         ui.printWelcomeMessage();
+
         ArrayList<Transaction> savedTransactions = storage.loadTransactions();
+        assert savedTransactions != null : "Loaded transactions should not be null";
+
         for (Transaction t : savedTransactions) {
+            assert t != null : "Loaded transaction should not be null";
             transactions.addTransaction(t);
         }
+
         transactions.remindRecurringTransactions();
+
         while (true) {
             String command = ui.readCommand();
+            assert command != null && !command.trim().isEmpty() : "User input should not be null or empty";
+
             Parser.parser(command, ui, transactions, goal, storage);
         }
     }
 
     public static void main(String[] args) {
         new Duke().run();
-        //assert false : "dummy assertion set to fail";
     }
 }
+
 

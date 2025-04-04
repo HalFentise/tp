@@ -61,39 +61,6 @@ and it supports modifying and querying the transaction status (e.g., Pending, Co
 * List Transaction: User can list all the transactions in the manager.
 * Exit Program: Exits the program and ensures any unsaved transactions are stored.
 
-```angular2html
-public void addTransaction(int id, String description, int amount, Category category) {
-    Transaction transaction = new Transaction(id, description, amount, Currency.USD, category, LocalDate.now(), Status.PENDING);
-    transactions.add(transaction);
-}
-
-public void tickTransaction(int id) {
-Transaction transaction = searchTransaction(id);
-if (transaction == null) {
-return;
-}
-transaction.complete();
-}
-
-public void unTickTransaction(int id) {
-Transaction transaction = searchTransaction(id);
-if (transaction == null) {
-return;
-}
-transaction.notComplete();
-}
-
-public ArrayList<Transaction> getTransactions() {
-    ArrayList<Transaction> printTransactions = new ArrayList<>();
-    for (Transaction transaction : transactions) {
-    if (!transaction.isDeleted()) {
-    printTransactions.add(transaction);
-    sortTransactions(printTransactions);
-    }
-    }
-    return printTransactions;
-    }
-```
 
 **Design Consideration:**  
 These functionalities allow the program to provide basic transaction management capabilities. <br>

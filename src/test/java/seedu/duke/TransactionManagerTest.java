@@ -2,39 +2,75 @@ package seedu.duke;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.ArrayList;
 import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
+import static org.junit.jupiter.api.Assertions.*;
 
-class TransactionManagerTest {
+public class TransactionManagerTest {
 
     private TransactionManager manager;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         manager = new TransactionManager();
     }
 
     @Test
-    void testAddTransaction() {
-        Transaction transaction = new Transaction(1, "Groceries", 200, Currency.USD, Category.FOOD, LocalDate.of(2025, 3, 10), Status.PENDING);
-        manager.addTransaction(transaction);
+    public void testAddTransaction() {
+        Transaction t1 = new Transaction(1, "Lunch", 12.5, Currency.SGD, Category.FOOD, LocalDate.now(), Status.PENDING);
+        manager.addTransaction(t1);
 
-        List<Transaction> transactions = manager.getTransactions();
+        ArrayList<Transaction> transactions = manager.getTransactions();
         assertEquals(1, transactions.size());
-        assertEquals("Groceries", transactions.get(0).getDescription());
+        assertEquals("Lunch", transactions.get(0).getDescription());
     }
 
     @Test
-    void testDeleteTransaction() {
-        Transaction transaction = new Transaction(1, "Coffee", 5, Currency.USD, Category.EDUCATION, LocalDate.of(2025, 3, 11), Status.PENDING);
-        manager.addTransaction(transaction);
-        manager.deleteExpense(0);
-
-        List<Transaction> transactions = manager.getTransactions();
-        assertEquals(0, transactions.size());
+    public void testAddTransactionWithParams() {
+        manager.addTransaction(2, "Snacks", 5.0, Category.FOOD);
+        ArrayList<Transaction> transactions = manager.getTransactions();
+        assertEquals(1, transactions.size());
+        assertEquals("Snacks", transactions.get(0).getDescription());
     }
+
+    @Test
+    public void testTickAndUnTickTransaction() {
+        Transaction t = new Transaction(3, "Netflix", 15.0, Currency.SGD, Category.ENTERTAINMENT, LocalDate.now(), Status.PENDING);
+        manager.addTransaction(t);
+
+        manager.tickTransaction(3);
+        assertTrue(manager.searchTransaction(3).isCompleted());
+
+        manager.unTickTransaction(3);
+        assertFalse(manager.searchTransaction(3).isCompleted());
+    }
+
+    @Test
+    public void testClearTransactions() {
+        manager.addTransaction(4, "Book", 20.0, Category.EDUCATION);
+        manager.addTransaction(5, "Groceries", 30.0, Category.FOOD);
+        assertEquals(2, manager.getTransactions().size());
+
+        manager.clear();
+        assertEquals(0, manager.getTransactions().size());
+    }
+
+    @Test
+    public void testDeleteTransaction() {
+        Transaction t = new Transaction(6, "Taxi", 10.0, Currency.SGD, Category.TRANSPORTATION, LocalDate.now(), Status.PENDING);
+        manager.addTransaction(t);
+
+        assertEquals(1, manager.getTransactions().size());
+
+        manager.deleteExpense(5);
+
+        assertEquals(1, manager.getTransactions().size());
+
+        assertEquals(1, manager.getNum());
+    }
+
 }
+
