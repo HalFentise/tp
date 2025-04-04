@@ -10,7 +10,7 @@ At this stage, no third-party libraries, external code, or documentation have be
 
 ### Transaction Basic Data Structure
 
-![Class Diagram](./images/ClassDiagram.png)
+![Class Diagram](./Images/ClassDiagram.png)
 
 **Feature Description:**  
 `Pang Zixi` implemented the `Transaction` class as the basic data structure for transactions. It includes the following
@@ -49,10 +49,10 @@ and it supports modifying and querying the transaction status (e.g., Pending, Co
 
 ### Transaction Management Features: Tick, Add, Exit, List
 
-![Tick](./images/tick.png)
-![Untick](./images/untick.png)
-![add](./images/AddDiagram.png)
-![list](./images/list.png)
+![Tick](./Images/tick.png)
+![Untick](./Images/untick.png)
+![add](./Images/AddDiagram.png)
+![list](./Images/list.png)
 
 **Feature Description:**  
 `Pang Zixi` added several functionalities to manage transactions:
@@ -235,7 +235,7 @@ one unified interface for quick decision-making.
 `Zhu Yangyi` added the following functionalities to manage transactions:
 
 * Set Recurring Period: Allows users to set transactions to recur every `recurringPeriod` days. <br>
-![Set Recur Sequence Diagram](./images/setRecur.png)
+![Set Recur Sequence Diagram](./Images/setRecur.png)
 * Search Transaction: Allows users to search through list of transactions by either description (default) or id.
 * Edit Transaction: Allows users to edit the description, category, amount, or currency of a transaction.
 
@@ -353,7 +353,7 @@ This allows for users to effectively convert between different common currencies
 
 ### Financial Goal Basic Data Structure
 
-![Goal Class Diagram](./images/GoalDiagram.png)
+![Goal Class Diagram](./Images/GoalDiagram.png)
 
 `Faheem Akram` implemented the `FinancialGoal` class with data structure and methods for financial goals. It includes the following fields:
 
