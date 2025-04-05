@@ -6,6 +6,7 @@ import exceptions.InvalidCommand;
 import seedu.duke.FinancialGoal;
 import seedu.duke.TransactionManager;
 import seedu.duke.Storage;
+import seedu.duke.SavingMode;
 import enumStructure.Category;
 import ui.Ui;
 import java.util.Scanner;
@@ -184,21 +185,9 @@ public class Parser {
                 storage.saveTransactions(transactions.getTransactions());
                 System.exit(0);
                 break;
-            case COMMAND_SAVE:
-                try {
-                    int change = Integer.parseInt(parts[1].substring(1).trim());
-                    if (parts[1].startsWith("+")) {
-                        goal.addToSavings(change);
-                    } else if (parts[1].startsWith("-")) {
-                        goal.subFromSavings(change);
-                    } else {
-                        throw new Exception();
-                    }
-                } catch (Exception e) {
-                    throw new InvalidCommand("Format invalid, try again! (save [+/-][amount])");
-                }
-                storage.saveTransactions(transactions.getTransactions());
-                break;
+            case "saving":
+                    SavingMode.enter(ui, goal, storage);
+                    break;
             case COMMAND_GOAL:
                 goal.updateExpenses(transactions);
                 try {
@@ -240,11 +229,11 @@ public class Parser {
             }
             break;
         case GOAL_NEW:
-            goal.createNewGoal();
+            goal.createNewGoal(ui);
             break;
         default:
             if (goal.isBlank()) {
-                goal.createNewGoal();
+                goal.createNewGoal(ui);
             } else {
                 ui.printGoal(goal);
             }
