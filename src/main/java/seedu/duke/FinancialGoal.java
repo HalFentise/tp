@@ -49,7 +49,7 @@ public class FinancialGoal {
         isBlank = true;
     }
 
-    //get method
+    // Get methods
 
     public boolean isAchieved() {
         return this.isAchieved;
@@ -80,17 +80,17 @@ public class FinancialGoal {
     }
 
     public double getBalance() {
-        return this.expenses - this.deposits;
+        return this.deposits;
     }
 
-    // set method
+    // Set methods
 
     public void setDescription(String description) {
         isBlank = false;
         this.description = description;
     }
 
-    public void setTargetAmount(int targetAmount) {
+    public void setTargetAmount(double targetAmount) {
         isBlank = false;
         this.targetAmount = targetAmount;
     }
@@ -122,24 +122,37 @@ public class FinancialGoal {
         expenses = transactions.getTotalAmount();
     }
 
-    // Goal setting
+    // Goal setting (uses ui parameter)
 
-    public FinancialGoal createNewGoal() {
+    public FinancialGoal createNewGoal(Ui ui) {
         Scanner sc = new Scanner(System.in);
-        int amount;
+        double amount;
         Ui.createGoalConfirm();
 
-        if (!sc.nextLine().equals("Y")) {
+        if (!sc.nextLine().equalsIgnoreCase("Y")) {
             Ui.createGoalAborted();
             return this;
         }
+
         Ui.createGoalName();
         setGoal(sc.nextLine());
+
         Ui.createGoalTarget();
-        amount = Integer.parseInt(sc.nextLine());
-        setTargetAmount(amount);
+        try {
+            amount = Double.parseDouble(sc.nextLine());
+            if (amount <= 0) {
+                ui.showError("Target amount must be a positive number.");
+                return this;
+            }
+            setTargetAmount(amount);
+        } catch (NumberFormatException e) {
+            ui.showError("Invalid target amount. Please enter a valid number.");
+            return this;
+        }
+
         Ui.createGoalDescription();
         setDescription(sc.nextLine());
+
         Ui.createGoalSuccess();
         return this;
     }
@@ -148,7 +161,7 @@ public class FinancialGoal {
 
     @Override
     public String toString() {
-        if (targetAmount == Integer.MAX_VALUE){
+        if (targetAmount == Integer.MAX_VALUE) {
             return currentGoal + "\n"
                     + description + "\n$"
                     + "balance: " + getBalance() + "\n";
@@ -156,6 +169,6 @@ public class FinancialGoal {
         return currentGoal + "\n"
                 + description + "\n$"
                 + getBalance() + " / $" + targetAmount + " saved \n"
-                 + (isAchieved ? "Goal Reached!" : "Keep saving!");
+                + (isAchieved ? "Goal Reached!" : "Keep saving!");
     }
 }
