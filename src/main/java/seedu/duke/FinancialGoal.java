@@ -80,7 +80,7 @@ public class FinancialGoal {
     }
 
     public double getBalance() {
-        return this.expenses - this.deposits;
+        return this.deposits - this.expenses;
     }
 
     // set method
