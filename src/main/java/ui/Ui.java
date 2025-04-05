@@ -1,138 +1,114 @@
 package ui;
 
+import static ui.ConsoleFormatter.*;
+
 import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.List;
 import java.time.format.DateTimeFormatter;
 
 import static constant.Constant.*;
 
 public class Ui {
-    /**
-     * Scanner for reading user input.
-     */
     private final Scanner scanner;
 
-    /**
-     * Constructs a {@code Ui} instance and initializes the input scanner.
-     */
     public Ui() {
         scanner = new Scanner(System.in);
     }
 
-    /**
-     * Reads the user input from the command line.
-     *
-     * @return the user's input as a string.
-     */
     public String readCommand() {
         System.out.println("Enter your command:");
         return scanner.nextLine();
     }
 
-    /**
-     * Prints the welcome message when the application starts.
-     */
     public void printWelcomeMessage() {
-        showLine();
-        System.out.println(" Hello! This is NoteUrSavings here!" + "\n" + " What can I do for you?");
-        showLine();
-    }
-
-    public void printExit() {
-        showLine();
-        System.out.println("Goodbye! Hope to see you again!");
+        printLine();
+        printCenteredLine(".  .    ,    .  .    __.                 ");
+        printCenteredLine("|\\ | _ -+- _ |  |._.(__  _..  ,*._  _  __");
+        printCenteredLine("| \\|(_) | (/,|__|[  .__)(_] \\/ |[ )(_]_)");
+        printCenteredLine("                                  ._|");
+        printCenteredLine("");
+        printCenteredLine("Hello! This is NoteUrSavings here!");
+        printCenteredLine("What can I do for you?");
+        printLine();
     }
 
     public void help() {
-        showLine();
-        System.out.println("Here are all the commands:");
-
-        System.out.println("add: Adds a new transaction");
-        System.out.println("  Usage: add d/<description> a/<amount> c/<category>");
-        System.out.println("  Example: add 'Grocery Shopping' 50.0 SGD Groceries 2025-04-01 Pending");
-
-        System.out.println("delete: Deletes an existing transaction by ID");
-        System.out.println("  Usage: delete <transaction_id>");
-        System.out.println("  Example: delete 1");
-
-        System.out.println("list: Lists all transactions");
-        System.out.println("  Usage: list");
-        System.out.println("  Example: list");
-
-        System.out.println("search: Searches transactions based on a query (description)");
-        System.out.println("  Usage: search <query>");
-        System.out.println("  Example: search 'Groceries'");
-
-        System.out.println("update: edit an existing transaction's details");
-        System.out.println("  Usage: edit <transaction_id> <description|amount|currency|category|status> <new_value>");
-        System.out.println("  Example: edit 1 description 'Monthly Groceries'");
-
-        System.out.println("remind: Sets up reminders for recurring transactions");
-        System.out.println("  Usage: remind");
-        System.out.println("  Example: remind");
-
-        System.out.println("exit: Exits the application");
-        System.out.println("  Usage: exit");
-
-        showLine();
+        printCenteredTitle("Help");
+        printLeftAlignedLine("add: Adds a new transaction");
+        printLeftAlignedLine("  Usage: add d/<description> a/<amount> c/<category>");
+        printLeftAlignedLine("  Example: add 'Grocery Shopping' 50.0 SGD Groceries");
+        printLeftAlignedLine("           2025-04-01 Pending");
+        printLeftAlignedLine("");
+        printLeftAlignedLine("delete: Deletes an existing transaction by ID");
+        printLeftAlignedLine("  Usage: delete <transaction_id>");
+        printLeftAlignedLine("  Example: delete 1");
+        printLeftAlignedLine("");
+        printLeftAlignedLine("list: Lists all transactions");
+        printLeftAlignedLine("  Usage: list");
+        printLeftAlignedLine("  Example: list");
+        printLeftAlignedLine("");
+        printLeftAlignedLine("search: Searches transactions based on a query (description)");
+        printLeftAlignedLine("  Usage: search <query>");
+        printLeftAlignedLine("  Example: search 'Groceries'");
+        printLeftAlignedLine("");
+        printLeftAlignedLine("update: edit an existing transaction's details");
+        printLeftAlignedLine("  Usage: edit <transaction_id>");
+        printLeftAlignedLine("         <description|amount|currency|category|status>");
+        printLeftAlignedLine("         <new_value>");
+        printLeftAlignedLine("  Example: edit 1 description 'Monthly Groceries'");
+        printLeftAlignedLine("");
+        printLeftAlignedLine("remind: Sets up reminders for recurring transactions");
+        printLeftAlignedLine("  Usage: remind");
+        printLeftAlignedLine("  Example: remind");
+        printLeftAlignedLine("");
+        printLeftAlignedLine("exit: Exits the application");
+        printLeftAlignedLine("  Usage: exit");
+        printLine();
     }
 
-
-    /**
-     * Prints a horizontal line separator.
-     */
-    public static void showLine() {
-        System.out.println(LINE_SEPARATOR);
+    public void printExit() {
+        printLine();
+        printCenteredLine("Goodbye! Hope to see you again!");
+        printLine();
     }
 
-    /**
-     * Displays an error message.
-     *
-     * @param message the error message to be displayed.
-     */
     public void showError(String message) {
-        showLine();
-        System.out.println("Error: " + message); // Display the error
-        showLine();
+        printLine();
+        printLeftAlignedLine("Error: " + message);
+        printLine();
     }
 
-    /**
-     * Prints a message indicating that a task has been deleted.
-     *
-     * @param transaction the task that was deleted.
-     * @param Count       the new total number of tasks in the list.
-     */
-    public static void printDeleteTask(Transaction transaction, int Count) {
-        showLine();
-        System.out.printf(INDENT + "Noted. I've removed this transaction:\n", "");
-        System.out.printf(INDENT + "%s\n", "", transaction.toString());
-        System.out.printf(INDENT + "Now you have %d transactions in the list.%n", "", Count);
-        showLine();
+    public static void printDeleteTask(Transaction transaction, int count) {
+        printLine();
+        System.out.println("Noted. I've removed this transaction:");
+        System.out.println(transaction);
+        System.out.printf("Now you have %d transactions in the list.%n", count);
+        printLine();
     }
 
     public void PrintBudgetLimit(TransactionManager transaction) {
-        showLine();
+        printLine();
         if (transaction.getTransactions().isEmpty()) {
-            System.out.println("Please add a translation first before you set the budget!");
+            System.out.println("Please add a transaction first before you set the budget!");
         } else {
             transaction.checkBudgetLimit(transaction.getTotalAmount());
         }
-        showLine();
+        printLine();
     }
 
     public void PrintClear() {
-        showLine();
+        printLine();
         System.out.println("All transactions have been cleared!");
-        showLine();
+        printLine();
     }
 
-    // Lists current specific upcoming notification
     public void listNotification(ArrayList<Transaction> upcomingTransactions, String description) {
-        showLine();
+        printLine();
         if (upcomingTransactions.isEmpty()) {
             System.out.println("No upcoming expenses.");
         } else {
@@ -141,21 +117,19 @@ public class Ui {
                 if (transaction.getDescription().equals(description) && transaction.getDate() != null) {
                     System.out.println("- " + transaction.getDescription() + " of " + transaction.getAmount() + " "
                             + transaction.getCurrency() + " in category " + transaction.getCategory() + " is due on "
-                            + transaction.getDate().toString());
+                            + transaction.getDate());
                 }
             }
         }
-        showLine();
+        printLine();
     }
 
-    // Lists all upcoming notifications
     public void listNotifications(ArrayList<Transaction> upcomingTransactions) {
         if (upcomingTransactions.isEmpty()) {
             System.out.println("There are no upcoming transactions for now.");
             return;
         }
         boolean hasUpcoming = false;
-
         for (Transaction transaction : upcomingTransactions) {
             if (transaction.getDate() != null) {
                 if (!hasUpcoming) {
@@ -164,7 +138,7 @@ public class Ui {
                 }
                 System.out.println("- " + transaction.getDescription() + " of " + transaction.getAmount() + " "
                         + transaction.getCurrency() + " in category " + transaction.getCategory() + " is due on "
-                        + transaction.getDate().toString());
+                        + transaction.getDate());
             }
         }
         if (!hasUpcoming) {
@@ -172,22 +146,19 @@ public class Ui {
         }
     }
 
-    //
     public void PrintPriority(ArrayList<Transaction> transactions, int index) {
-        showLine();
+        printLine();
         if (transactions.isEmpty()) {
             System.out.println("Please add a transaction first before you set the priority!");
         } else {
             System.out.println("Priority is set to " + transactions.get(index).getPriority() + " for current transaction.");
         }
-        showLine();
+        printLine();
     }
 
-    // Lists all transactions that have the high priority
     public void listPriorities(ArrayList<Transaction> upcomingTransactions) {
         String defaultPriority = "HIGH";
         boolean hasHighPriority = false;
-
         for (Transaction transaction : upcomingTransactions) {
             if (transaction.getPriority() != null && transaction.getPriority().toString().equalsIgnoreCase(defaultPriority)) {
                 if (!hasHighPriority) {
@@ -204,43 +175,95 @@ public class Ui {
     }
 
     public void printTransactions(ArrayList<Transaction> transactions) {
-        showLine();
+        printLine();
         if (transactions.isEmpty()) {
             System.out.println("No transaction found.");
-            showLine();
+            printLine();
             return;
         }
         System.out.println("Here is the list of transactions:");
-        for (Transaction transaction : transactions) {
-            printTransaction(transaction);
-            System.out.println(" ");
-        }
-        showLine();
+        printTransactionsTable(transactions);
+        printLine();
     }
 
     public void printTransaction(Transaction transaction) {
         System.out.println(transaction);
     }
 
+    public void printTransactionsTable(List<Transaction> transactions) {
+        final int TOTAL_WIDTH = 81;
+        final String INNER_HEADER_FORMAT = "| %-2s | %-12s | %9s | %-8s | %-9s | %-8s |";
+        final String INNER_ROW_FORMAT    = "| %2d | %-12s | %9.2f | %-8s | %-9s | %-8s |";
+
+        String sampleHeader = String.format(INNER_HEADER_FORMAT, "ID", "Description", "Amount", "Currency", "Category", "Priority");
+        int tableWidth = sampleHeader.length(); // ~64
+        int spaceInsideBox = TOTAL_WIDTH - 4;   // 外框两侧 || 各占2
+        int sidePadding = (spaceInsideBox - tableWidth) / 2;
+
+        // 打印顶边框
+        printLine();
+
+        if (transactions.isEmpty()) {
+            printLeftAlignedLine("No transaction found.");
+            printLine();
+            return;
+        }
+
+        // 打印表头
+        printTableLine(sampleHeader, sidePadding);
+
+        // 表头下横线
+        printTableLine("-".repeat(tableWidth), sidePadding);
+
+        // 每一行打印
+        for (Transaction t : transactions) {
+            String row = String.format(INNER_ROW_FORMAT,
+                    t.getId(),
+                    t.getDescription(),
+                    t.getAmount(),
+                    t.getCurrency(),
+                    t.getCategory(),
+                    t.getPriority());
+            printTableLine(row, sidePadding);
+        }
+
+        // 打印底边框
+        printLine();
+    }
+
+    /**
+     * 打印表格行，包裹 || 并居中填充空格
+     */
+    public void printTableLine(String content, int sidePadding) {
+        final int TOTAL_WIDTH = 81;
+        int contentWidth = TOTAL_WIDTH - 4;
+        int rightPadding = contentWidth - sidePadding - content.length();
+        String line = "| " + " ".repeat(sidePadding) + content + " ".repeat(Math.max(0, rightPadding)) + " |";
+        System.out.println(line);
+    }
+
+
+
+
     public void tickTransaction(Transaction transaction) {
-        showLine();
+        printLine();
         System.out.println("I have ticked the following transaction:");
         printTransaction(transaction);
-        showLine();
+        printLine();
     }
 
     public void unTickTransaction(Transaction transaction) {
-        showLine();
+        printLine();
         System.out.println("I un tick the following transaction:");
         printTransaction(transaction);
-        showLine();
+        printLine();
     }
 
     public void add(Transaction transaction) {
-        showLine();
-        System.out.println("I have added the following transactions:");
+        printLine();
+        System.out.println("I have added the following transaction:");
         printTransaction(transaction);
-        showLine();
+        printLine();
     }
 
     public void search(boolean isIndex) {
@@ -252,92 +275,92 @@ public class Ui {
     }
 
     public void setPeriod(Transaction transaction, int recurringPeriod) {
-        showLine();
+        printLine();
         if (recurringPeriod > 0) {
             System.out.println("I have set the given transaction to recur every"
-                    + (recurringPeriod == 1 ? "day." : " " + recurringPeriod + " days."));
+                    + (recurringPeriod == 1 ? " day." : " " + recurringPeriod + " days."));
         } else {
             System.out.println("I have disabled this transaction from recurring.");
         }
         printTransaction(transaction);
-        showLine();
+        printLine();
     }
 
     public void printGoal(FinancialGoal goal) {
-        showLine();
+        printLine();
         System.out.println(goal);
-        showLine();
+        printLine();
     }
 
     public void setGoalTarget(FinancialGoal goal) {
-        showLine();
+        printLine();
         System.out.println("I have updated your target to: " + goal.getTargetAmount());
-        showLine();
+        printLine();
     }
 
     public void setGoalDescription(FinancialGoal goal) {
-        showLine();
+        printLine();
         System.out.println("I have updated your description to:\n" + goal.getDescription());
-        showLine();
+        printLine();
     }
 
     public void setGoalTitle(FinancialGoal goal) {
-        showLine();
+        printLine();
         System.out.println("I have updated your goal to:\n" + goal.getGoal());
-        showLine();
+        printLine();
     }
 
     public static void createGoalConfirm() {
-        showLine();
+        printLine();
         System.out.println("Want to set a new goal (Y/N)? ");
-        showLine();
+        printLine();
     }
 
     public static void createGoalName() {
         System.out.println("Name of new goal:");
-        showLine();
+        printLine();
     }
 
     public static void createGoalTarget() {
         System.out.println("Target amount of new goal:");
-        showLine();
+        printLine();
     }
 
     public static void createGoalDescription() {
-        showLine();
+        printLine();
         System.out.println("Description of new goal:");
-        showLine();
+        printLine();
     }
 
     public static void createGoalSuccess() {
-        showLine();
+        printLine();
         System.out.println("Goal successfully created\nRun 'goal' to see it!");
-        showLine();
+        printLine();
     }
 
     public static void createGoalAborted() {
-        showLine();
+        printLine();
         System.out.println("Goal creation cancelled by user.");
-        showLine();
+        printLine();
     }
 
     public static void subFromSavings(double amount, double currentAmount) {
-        showLine();
+        printLine();
         System.out.println("Subtracted " + amount + " from your savings.");
         if (currentAmount < 0) {
             System.out.println("Warning. You currently have a negative balance.");
         }
-        showLine();
+        printLine();
     }
 
     public static boolean printGoalStatus(double currentAmount, double targetAmount) {
-        showLine();
+        printLine();
         if (currentAmount >= targetAmount) {
             System.out.println("You have achieved the goal! Congratulations!");
             return true;
         }
         System.out.println("You're " + currentAmount + " out of " + targetAmount + ". Good luck!");
-        showLine();
+        printLine();
         return false;
     }
 
@@ -350,15 +373,15 @@ public class Ui {
             default -> "";
         };
 
-        showLine();
+        printLine();
         System.out.println("Done! The " + type
                 + " of the target transaction has been updated to:\n" + value);
-        showLine();
+        printLine();
     }
 
     public static void printRecurringTransactions(ArrayList<Transaction> transactions) {
         DateTimeFormatter df = DateTimeFormatter.ofPattern("E, dd MMM yyyy");
-        showLine();
+        printLine();
         System.out.println("Here is a list of your upcoming recurring payments:");
         int count = 1;
         for (Transaction transaction : transactions) {
@@ -366,14 +389,16 @@ public class Ui {
                     + " - " + transaction.getDate().format(df));
             count++;
         }
-        showLine();
+        printLine();
     }
 
     public void printSavingOverview(FinancialGoal goal) {
-        showLine();
+        printCenteredTitle("Saving Overview");
+
         if (goal.isBlank()) {
-            System.out.println("💰 No saving goal set. Run 'saving' > 'set' to create one!");
-            showLine();
+            printLeftAlignedLine("💰 You haven't set a saving goal yet.");
+            printLeftAlignedLine("💡 Tip: Use 'saving > set' to create one and start tracking!");
+            printLine();
             return;
         }
 
@@ -381,6 +406,7 @@ public class Ui {
         double target = goal.getTargetAmount();
         double percent = current / target;
         percent = Math.max(0.0, Math.min(percent, 1.0));
+
         int barLength = 20;
         int filled = (int) (percent * barLength);
         int empty = barLength - filled;
@@ -390,11 +416,26 @@ public class Ui {
         bar.append(" ".repeat(empty));
         bar.append("]");
 
-        System.out.println("💰 Saving Goal: " + goal.getGoal());
-        System.out.println("📝 Description: " + goal.getDescription());
-        System.out.printf("📊 Progress: %s  %.1f%% ($%.2f / $%.2f)%n",
-                bar.toString(), percent * 100, current, target);
-        showLine();
+        printLeftAlignedLine("Goal:         \"" + goal.getGoal() + "\"");
+        printLeftAlignedLine("Description:  " + goal.getDescription());
+        printLeftAlignedLine("");
+
+        printLeftAlignedLine("Status:       You're currently at:"+String.format("  %s  %.1f%% complete",
+                bar.toString(), percent * 100, current, target));
+
+        if (percent >= 1.0) {
+            printLeftAlignedLine("Analysis:     Amazing! You've achieved your savings goal. Time to celebrate!");
+        } else if (percent >= 0.75) {
+            printLeftAlignedLine("Analysis:     You're almost there! Keep going, you're doing great!");
+        } else if (percent >= 0.5) {
+            printLeftAlignedLine("Analysis:     You're halfway through. Keep up the good work!");
+        } else if (percent > 0.0) {
+            printLeftAlignedLine("Analysis:     Good start! Keep saving and you'll get there in no time.");
+        } else {
+            printLeftAlignedLine("Analysis:     You haven't started saving yet. Let's begin today!");
+        }
+
+        printLine();
     }
 
 }

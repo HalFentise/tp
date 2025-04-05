@@ -10,6 +10,7 @@ import seedu.duke.SavingMode;
 import seedu.duke.budget.BudgetMode;
 import enumStructure.Category;
 import ui.Ui;
+import ui.ConsoleFormatter;
 import java.util.Scanner;
 
 import java.util.regex.Matcher;
@@ -300,14 +301,14 @@ public class Parser {
         ui.showError("Invalid category: \"" + userInput + "\"");
 
         // Show available options
-        ui.showLine();
+        ConsoleFormatter.printLine();
         System.out.println("Please choose a valid category from the list below:");
         int index = 1;
         for (Category category : Category.values()) {
             System.out.println(index + ". " + category.name());
             index++;
         }
-        ui.showLine();
+        ConsoleFormatter.printLine();
 
         // Prompt for selection
         Scanner scanner = new Scanner(System.in);

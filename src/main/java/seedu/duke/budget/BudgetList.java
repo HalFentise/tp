@@ -2,6 +2,7 @@ package seedu.duke.budget;
 
 import java.util.ArrayList;
 import ui.Ui;
+import ui.ConsoleFormatter;
 
 public class BudgetList {
     private ArrayList<Budget> budgets;
@@ -45,34 +46,52 @@ public class BudgetList {
         }
 
         Budget b = budgets.get(index);
-        ui.showLine();
+        ConsoleFormatter.printLine();
         System.out.println("🔍 Budget Details:");
         System.out.println("Name: " + b.getName());
         System.out.println("Target Amount: $" + b.getTotalAmount());
         System.out.println("Remaining: $" + b.getRemainingAmount());
         System.out.println("End Date: " + b.getEndDate());
         System.out.println("Category: " + b.getCategory());
-        ui.showLine();
+        ConsoleFormatter.printLine();
     }
 
     public void printAllBudgets(Ui ui) {
-        ui.showLine();
+        final int TOTAL_WIDTH = 81;
+        final String HEADER_FORMAT = "| %-2s | %-14s | %9s | %-10s | %-10s |";
+        final String ROW_FORMAT    = "| %2d | %-14s | %9.2f | %-10s | %-10s |";
+
         if (budgets.isEmpty()) {
-            System.out.println("No budgets found.");
-            ui.showLine();
+            ConsoleFormatter.printLine();
+            ConsoleFormatter.printLeftAlignedLine("No budgets found.");
+            ConsoleFormatter.printLine();
             return;
         }
 
-        System.out.println("📋 List of Budgets:");
+        String headerLine = String.format(HEADER_FORMAT, "#", "Name", "Amount", "End Date", "Category");
+        int tableWidth = headerLine.length();
+        int spaceInsideBox = TOTAL_WIDTH - 4;
+        int sidePadding = (spaceInsideBox - tableWidth) / 2;
+
+        ConsoleFormatter.printLine();
+
+        int headerLeftPad = (TOTAL_WIDTH - headerLine.length()) / 2;
+        System.out.println(" ".repeat(headerLeftPad) + headerLine);
+
+        ui.printTableLine("-".repeat(tableWidth), sidePadding);
+
         for (int i = 0; i < budgets.size(); i++) {
             Budget b = budgets.get(i);
-            System.out.printf("%d. %s | $%.2f | Ends: %s | Category: %s%n",
+            String row = String.format(ROW_FORMAT,
                     i + 1,
                     b.getName(),
                     b.getTotalAmount(),
-                    b.getEndDate(),
+                    b.getEndDate().toString(),
                     b.getCategory());
+            ui.printTableLine(row, sidePadding);
         }
-        ui.showLine();
+
+        ConsoleFormatter.printLine();
     }
+
 }
