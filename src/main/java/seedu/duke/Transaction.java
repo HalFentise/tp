@@ -61,7 +61,7 @@ public class Transaction {
 
 
     public String toString() {
-        return "Transaction id: " + id + " | " + description + " | " + amount + " " + currency + " | " + category;
+        return "Transaction id: " + id + " | " + description + " | " + amount + " " + currency + " | " + category + " | " + priority;
     }
 
 

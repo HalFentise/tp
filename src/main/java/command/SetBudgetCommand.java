@@ -18,13 +18,14 @@ public class SetBudgetCommand extends Command {
         try {
             if (amount > 0) {
                 transactions.checkBudgetLimit(amount);
+                //ui.PrintBudgetLimit(transactions, amount);
             } else {
                 throw new NullException("Invalid input amount, amount can not be negative!");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        ui.PrintBudgetLimit(transactions.getTransactions(), amount);
+
     }
 
     /**

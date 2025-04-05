@@ -11,6 +11,7 @@ public class AlertCommand extends Command{
     public AlertCommand(TransactionManager transactions, Ui ui) throws NullException {
 
         try {
+            ui.PrintBudgetLimit(transactions);
             ui.listNotifications(transactions.getTransactions());
             Ui.showLine();
             ui.listPriorities(transactions.getTransactions());

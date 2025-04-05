@@ -17,7 +17,7 @@ public class TransactionManagerTest {
 
     @BeforeEach
     public void setUp() {
-        Transaction e = new Transaction(1, "Dinner", 100.0, Currency.USD,
+        transaction = new Transaction(1, "Dinner", 100.0, Currency.USD,
                 Category.FOOD, LocalDate.of(2025, 3, 28), Status.PENDING);
     }
 
