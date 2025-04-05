@@ -1,7 +1,9 @@
 package seedu.duke;
 
+import seedu.duke.budget.BudgetList;
 import ui.Ui;
 import parser.Parser;
+
 import java.util.ArrayList;
 
 public class Duke {
@@ -14,31 +16,37 @@ public class Duke {
         ui = new Ui();
         storage = new Storage();
         transactions = new TransactionManager();
+
+        // ✅ 加载 Transaction 数据
+        ArrayList<Transaction> savedTransactions = storage.loadTransactions();
+        for (Transaction t : savedTransactions) {
+            transactions.addTransaction(t);
+        }
+
+        // ✅ 加载 Budget 数据
+        BudgetList loadedBudgets = storage.loadBudgets();
+        transactions.setBudgetList(loadedBudgets);
+
+        // ✅ 加载储蓄目标
         goal = storage.loadGoal();
 
+        // 安全性断言
         assert ui != null : "UI should be initialized";
         assert goal != null : "FinancialGoal should be initialized";
         assert storage != null : "Storage should be initialized";
         assert transactions != null : "TransactionManager should be initialized";
     }
 
-
     public void run() {
         ui.printWelcomeMessage();
-
-        ArrayList<Transaction> savedTransactions = storage.loadTransactions();
-        assert savedTransactions != null : "Loaded transactions should not be null";
-
-        for (Transaction t : savedTransactions) {
-            assert t != null : "Loaded transaction should not be null";
-            transactions.addTransaction(t);
-        }
-
+        ui.printSavingOverview(goal);
         transactions.remindRecurringTransactions();
 
         while (true) {
             String command = ui.readCommand();
-            assert command != null && !command.trim().isEmpty() : "User input should not be null or empty";
+            if (command == null || command.trim().isEmpty()) {
+                continue;
+            }
 
             Parser.parser(command, ui, transactions, goal, storage);
         }
@@ -48,5 +56,3 @@ public class Duke {
         new Duke().run();
     }
 }
-
-
