@@ -4,16 +4,54 @@
 
 At this stage, no third-party libraries, external code, or documentation have been reused. Any future integrations or adaptations will be properly documented here.
 
-## Design & implementation
+## Table of Contents
 
-### Transactions
+- [Introduction](##ntroduction)
+- [Getting Started](#getting-started)
+- [Design](#design)
+- [Usage](#usage)
+- [Contributing](#contributing)
+
+## Introduction
+NoteUrSaving is a lightweight and efficient financial management tool designed to help students track their incomes and expenses through a simple Command Line Interface (CLI).
+With an emphasis on speed and ease of use, this product provides an intuitive platform for managing personal finances, making it an ideal choice for students seeking to stay organized. 
+This developer guide outlines the architecture, design principles, and implementation details of the application to support developers in contributing to its ongoing development.
+
+## Getting Started
+
+### Prerequisites: 
+* JDK 17
+* Gradle 7.6.2 or higher
+
+### Setup:
+1. **Fork this project to your own github, and clone it to your computer**
+2. **Ensure Intellij JDK 17 is defined as an SDK**, as described [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk) -- this step is not needed if you have used JDK 17 in a previous Intellij project.
+3. **Import the project _as a Gradle project_**, as described [here](https://se-education.org/guides/tutorials/intellijImportGradleProject.html).
+4. **Verify the setup**: After the importing is complete, locate the `src/main/java/seedu/duke/Duke.java` file, right-click it, and choose `Run Duke.main()`. If the setup is correct, you should see something like the below:
+   ```
+   > Task :compileJava
+   > Task :processResources NO-SOURCE
+   > Task :classes
+   
+   > Task :Duke.main()
+   ```
+<div style="background-color: #FFA500; border-left: 6px solid #FF0000; padding: 10px; color: #000000;">
+  <strong> Important: </strong> Please import this project as a Gradle project
+</div>
+<br/>
+
+
+
+## Design
+
+## Implementation
 
 ### Transaction Basic Data Structure
 
-![Class Diagram](./images/ClassDiagram.png)
+![Class Diagram](./Images/ClassDiagram.png)
 
-**Feature Description:**  
-`Pang Zixi` implemented the `Transaction` class as the basic data structure for transactions. It includes the following
+**Feature Description:**
+the `Transaction` class as the basic data structure for transactions. It includes the following
 fields:
 
 - `id` (Transaction ID)
@@ -24,7 +62,7 @@ fields:
 - `date` (Transaction date)
 - `status` (Transaction status)
 
-`Zhu Yangyi` added the ability to set the period at which expenses recur, stored in the `recurringPeriod` field.
+added the ability to set the period at which expenses recur, stored in the `recurringPeriod` field.
 
 ```java
 public class Transaction {
@@ -49,10 +87,10 @@ and it supports modifying and querying the transaction status (e.g., Pending, Co
 
 ### Transaction Management Features: Tick, Add, Exit, List
 
-![Tick](./images/tick.png)
-![Untick](./images/untick.png)
-![add](./images/AddDiagram.png)
-![list](./images/list.png)
+![Tick](./Images/tick.png)
+![Untick](./Images/untick.png)
+![add](./Images/AddDiagram.png)
+![list](./Images/list.png)
 
 **Feature Description:**  
 `Pang Zixi` added several functionalities to manage transactions:
@@ -61,39 +99,6 @@ and it supports modifying and querying the transaction status (e.g., Pending, Co
 * List Transaction: User can list all the transactions in the manager.
 * Exit Program: Exits the program and ensures any unsaved transactions are stored.
 
-```angular2html
-public void addTransaction(int id, String description, int amount, Category category) {
-    Transaction transaction = new Transaction(id, description, amount, Currency.USD, category, LocalDate.now(), Status.PENDING);
-    transactions.add(transaction);
-}
-
-public void tickTransaction(int id) {
-Transaction transaction = searchTransaction(id);
-if (transaction == null) {
-return;
-}
-transaction.complete();
-}
-
-public void unTickTransaction(int id) {
-Transaction transaction = searchTransaction(id);
-if (transaction == null) {
-return;
-}
-transaction.notComplete();
-}
-
-public ArrayList<Transaction> getTransactions() {
-    ArrayList<Transaction> printTransactions = new ArrayList<>();
-    for (Transaction transaction : transactions) {
-    if (!transaction.isDeleted()) {
-    printTransactions.add(transaction);
-    sortTransactions(printTransactions);
-    }
-    }
-    return printTransactions;
-    }
-```
 
 **Design Consideration:**  
 These functionalities allow the program to provide basic transaction management capabilities. <br>
@@ -235,7 +240,7 @@ one unified interface for quick decision-making.
 `Zhu Yangyi` added the following functionalities to manage transactions:
 
 * Set Recurring Period: Allows users to set transactions to recur every `recurringPeriod` days. <br>
-![Set Recur Sequence Diagram](./images/setRecur.png)
+![Set Recur Sequence Diagram](./Images/setRecur.png)
 * Search Transaction: Allows users to search through list of transactions by either description (default) or id.
 * Edit Transaction: Allows users to edit the description, category, amount, or currency of a transaction.
 
@@ -353,7 +358,7 @@ This allows for users to effectively convert between different common currencies
 
 ### Financial Goal Basic Data Structure
 
-![Goal Class Diagram](./images/GoalDiagram.png)
+![Goal Class Diagram](./Images/GoalDiagram.png)
 
 `Faheem Akram` implemented the `FinancialGoal` class with data structure and methods for financial goals. It includes the following fields:
 

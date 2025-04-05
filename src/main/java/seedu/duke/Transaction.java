@@ -27,6 +27,13 @@ public class Transaction {
     //Constructor
     public Transaction(int id, String description, double amount, Currency currency,
                        Category category, LocalDate date, Status status) {
+        assert description != null : "Description cannot be null";
+        assert currency != null : "Currency cannot be null";
+        assert category != null : "Category cannot be null";
+        assert date != null : "Date cannot be null";
+        assert status != null : "Status cannot be null";
+        assert amount >= 0 : "Amount should be non-negative";
+
         this.id = id;
         this.amount = amount;
         this.description = description;
@@ -38,6 +45,7 @@ public class Transaction {
         tags = new ArrayList<>();
         recurringPeriod = 0;
     }
+
 
     public Transaction(int id, String description, double amount, Currency currency, LocalDate date, Status status) {
         this.id = id;
@@ -53,11 +61,9 @@ public class Transaction {
 
 
     public String toString() {
-        String checkBox = (recurringPeriod > 0) ? "[R]" : (isCompleted ? "[✓]" : "[ ]");
-        return "Transaction id: " + id + "   " + checkBox + "\namount: "
-                + amount + "\ndescription: " + description + "\ncategory: " + category
-                + (recurringPeriod > 0 ? "\nperiod: " + recurringPeriod : "");
+        return "Transaction id: " + id + " | " + description + " | " + amount + " " + currency + " | " + category + " | " + priority;
     }
+
 
     //get method
     public int getId() {

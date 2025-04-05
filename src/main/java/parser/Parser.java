@@ -6,8 +6,10 @@ import exceptions.InvalidCommand;
 import seedu.duke.FinancialGoal;
 import seedu.duke.TransactionManager;
 import seedu.duke.Storage;
+import seedu.duke.SavingMode;
 import enumStructure.Category;
 import ui.Ui;
+import java.util.Scanner;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,12 +35,15 @@ public class Parser {
 
         try {
             switch (commandType) {
+            case COMMAND_HELP:
+                ui.help();
+                break;
             case COMMAND_ADD:
                 fields = new String[]{"description", "amount", "category"};
                 String[] patterns = {
-                        "d/(.*?)(?:\\s+[ac]/|$)", // d/
-                        "a/(.*?)(?:\\s+[dc]/|$)", // a/
-                        "c/(.*?)(?:\\s+[da]/|$)"  // c/
+                        "d/(.*?)(?:\\s+[ace]/|$)", // d/
+                        "a/(.*?)(?:\\s+[dce]/|$)", // a/
+                        "c/(.*?)(?:\\s+[dae]/|$)"  // c/
                 };
 
                 String[] results = new String[fields.length];
@@ -54,10 +59,14 @@ public class Parser {
                     }
                 }
                 amount = Double.parseDouble(results[1]);
-                Category category = Category.valueOf(results[2].toUpperCase());
-                transactions.addTransaction(transactions.getNum() + 1, results[0], amount, category);
-                ui.add(transactions.searchTransaction(transactions.getNum()));
-                storage.saveTransactions(transactions.getTransactions());
+                Category category = parseCategory(results[2], ui);
+
+                boolean success = transactions.addTransaction(transactions.getNum() + 1, results[0], amount, category);
+
+                if (success) {
+                    ui.add(transactions.searchTransaction(transactions.getNum()));
+                    storage.saveTransactions(transactions.getTransactions());
+                }
                 break;
             case COMMAND_LIST:
                 if (parts.length > 1) {
@@ -133,14 +142,13 @@ public class Parser {
                     }
                 }
 
-                amount = Integer.parseInt(result[1]);
+                amount = Double.parseDouble(result[1]);
                 String categoryString = result[2].toUpperCase();
                 String date = result[3];
 
                 new NotifyCommand(result[0], amount, categoryString, date, transactions, ui);
                 storage.saveTransactions(transactions.getTransactions());
                 break;
-
             case COMMAND_ALERT:
                 if (parts.length > 1) {
                     throw new InvalidCommand("Invalid command");
@@ -177,21 +185,9 @@ public class Parser {
                 storage.saveTransactions(transactions.getTransactions());
                 System.exit(0);
                 break;
-            case COMMAND_SAVE:
-                try {
-                    int change = Integer.parseInt(parts[1].substring(1).trim());
-                    if (parts[1].startsWith("+")) {
-                        goal.addToSavings(change);
-                    } else if (parts[1].startsWith("-")) {
-                        goal.subFromSavings(change);
-                    } else {
-                        throw new Exception();
-                    }
-                } catch (Exception e) {
-                    throw new InvalidCommand("Format invalid, try again! (save [+/-][amount])");
-                }
-                storage.saveTransactions(transactions.getTransactions());
-                break;
+            case "saving":
+                    SavingMode.enter(ui, goal, storage);
+                    break;
             case COMMAND_GOAL:
                 goal.updateExpenses(transactions);
                 try {
@@ -233,11 +229,11 @@ public class Parser {
             }
             break;
         case GOAL_NEW:
-            goal.createNewGoal();
+            goal.createNewGoal(ui);
             break;
         default:
             if (goal.isBlank()) {
-                goal.createNewGoal();
+                goal.createNewGoal(ui);
             } else {
                 ui.printGoal(goal);
             }
@@ -282,4 +278,45 @@ public class Parser {
             throw new InvalidCommand("Unknown attribute!");
         }
     }
+
+    /**
+     * Tries to parse a string into a valid Category enum, case-insensitively.
+     * If the input is invalid, shows a list of valid categories and asks user to choose one.
+     */
+    public static Category parseCategory(String userInput, Ui ui) {
+        String trimmedInput = userInput.trim();
+        for (Category category : Category.values()) {
+            if (category.name().equalsIgnoreCase(trimmedInput)) {
+                return category;
+            }
+        }
+
+        // Invalid category
+        ui.showError("Invalid category: \"" + userInput + "\"");
+
+        // Show available options
+        ui.showLine();
+        System.out.println("Please choose a valid category from the list below:");
+        int index = 1;
+        for (Category category : Category.values()) {
+            System.out.println(index + ". " + category.name());
+            index++;
+        }
+        ui.showLine();
+
+        // Prompt for selection
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.print("Enter category number (1-" + Category.values().length + "): ");
+            String choice = scanner.nextLine();
+            try {
+                int selected = Integer.parseInt(choice);
+                if (selected >= 1 && selected <= Category.values().length) {
+                    return Category.values()[selected - 1];
+                }
+            } catch (NumberFormatException ignored) {}
+            System.out.println("Invalid selection. Please enter a number between 1 and " + Category.values().length + ".");
+        }
+    }
+
 }

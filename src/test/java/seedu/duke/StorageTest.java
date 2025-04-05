@@ -1,43 +1,115 @@
 package seedu.duke;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import java.io.File;
+import org.junit.jupiter.api.*;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
+import enumStructure.Priority;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class StorageTest {
+public class StorageTest {
+    private Storage storage;
+    private File testFolder;
+    private File testFile;
 
-    private static final String TEST_FILE_PATH = "data/test_transactions.csv";
+    @BeforeEach
+    public void setUp() throws IOException {
+        storage = new Storage();
+        testFolder = new File("data");
+        testFile = new File("data/transactions.csv");
+        if (!testFolder.exists()) {
+            testFolder.mkdirs();
+        }
+        if (testFile.exists()) {
+            testFile.delete();
+        }
+    }
+
+    @AfterEach
+    public void tearDown() {
+        if (testFile.exists()) {
+            testFile.delete();
+        }
+    }
 
     @Test
-    void testSaveAndLoadTransactions() {
-        Storage storage = new Storage();
-        ArrayList<Transaction> transactions = new ArrayList<>();
+    public void testSaveAndLoadTransactions_success() {
+        ArrayList<Transaction> originalList = new ArrayList<>();
+        Transaction t1 = new Transaction(1, "Coffee", 5.0, Currency.SGD,
+                Category.FOOD, LocalDate.now(), Status.PENDING);
+        t1.setRecurringPeriod(7);
+        t1.setPriority(Priority.HIGH);
+        t1.complete();
+        originalList.add(t1);
 
-        Transaction t1 = new Transaction(1, "Dinner", 100, Currency.USD, Category.FOOD, LocalDate.of(2025, 4, 1), Status.PENDING);
-        Transaction t2 = new Transaction(2, "Taxi", 50, Currency.USD, Category.TRANSPORTATION, LocalDate.of(2025, 4, 2), Status.COMPLETED);
+        Transaction t2 = new Transaction(2, "Movie", 12.5, Currency.USD,
+                Category.ENTERTAINMENT, LocalDate.now(), Status.COMPLETED);
+        t2.setRecurringPeriod(0);
+        t2.setPriority(Priority.LOW);
+        t2.delete();
+        originalList.add(t2);
 
-        transactions.add(t1);
-        transactions.add(t2);
+        storage.saveTransactions(originalList);
 
-        // 1. 测试保存
-        storage.saveTransactions(transactions);
+        ArrayList<Transaction> loadedList = storage.loadTransactions();
 
-        // 2. 读取回数据
-        ArrayList<Transaction> loadedTransactions = storage.loadTransactions();
+        assertEquals(originalList.size(), loadedList.size());
+        Transaction loaded1 = loadedList.get(0);
+        assertEquals("Coffee", loaded1.getDescription());
+        assertEquals(5.0, loaded1.getAmount());
+        assertEquals(Currency.SGD, loaded1.getCurrency());
+        assertEquals(Category.FOOD, loaded1.getCategory());
+        assertEquals(Priority.HIGH, loaded1.getPriority());
+        assertTrue(loaded1.isCompleted());
+        assertFalse(loaded1.isDeleted());
 
-        // 3. 验证数据是否一致
-        assertEquals(2, loadedTransactions.size());
-        assertEquals("Dinner", loadedTransactions.get(0).getDescription());
-        assertEquals(100, loadedTransactions.get(0).getAmount());
-        assertEquals("Taxi", loadedTransactions.get(1).getDescription());
+        Transaction loaded2 = loadedList.get(1);
+        assertEquals("Movie", loaded2.getDescription());
+        assertEquals(Currency.USD, loaded2.getCurrency());
+        assertEquals(Category.ENTERTAINMENT, loaded2.getCategory());
+        assertEquals(Priority.LOW, loaded2.getPriority());
+        assertFalse(loaded2.isCompleted());
+        assertTrue(loaded2.isDeleted());
+    }
 
-        // 4. 清理测试文件
-        new File(TEST_FILE_PATH).delete();
+    @Test
+    public void testLoadTransactions_fileNotExist_returnsEmptyList() {
+        if (testFile.exists()) {
+            testFile.delete();
+        }
+        ArrayList<Transaction> transactions = storage.loadTransactions();
+        assertNotNull(transactions);
+        assertEquals(0, transactions.size());
+    }
+
+    @Test
+    public void testSaveTransactions_createsFile() {
+        ArrayList<Transaction> list = new ArrayList<>();
+        list.add(new Transaction(1, "Test", 10.0, Currency.SGD,
+                Category.OTHER, LocalDate.now(), Status.PENDING));
+        storage.saveTransactions(list);
+        assertTrue(testFile.exists());
+    }
+
+    @Test
+    public void testLoadTransactions_invalidLine_skippedGracefully() throws IOException {
+        if (!testFolder.exists()) {
+            testFolder.mkdirs();
+        }
+        BufferedWriter writer = new BufferedWriter(new FileWriter(testFile));
+        writer.write("1,Test,notANumber,SGD,FOOD,2024-01-01,PENDING,0,false,false,LOW");
+        writer.newLine();
+        writer.close();
+
+        ArrayList<Transaction> loaded = storage.loadTransactions();
+        assertTrue(loaded.isEmpty());
     }
 }
+
 
