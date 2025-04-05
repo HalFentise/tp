@@ -8,6 +8,7 @@ import seedu.duke.TransactionManager;
 import seedu.duke.Storage;
 import enumStructure.Category;
 import ui.Ui;
+import java.util.Scanner;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,9 +40,9 @@ public class Parser {
             case COMMAND_ADD:
                 fields = new String[]{"description", "amount", "category"};
                 String[] patterns = {
-                        "d/(.*?)(?:\\s+[ac]/|$)", // d/
-                        "a/(.*?)(?:\\s+[dc]/|$)", // a/
-                        "c/(.*?)(?:\\s+[da]/|$)"  // c/
+                        "d/(.*?)(?:\\s+[ace]/|$)", // d/
+                        "a/(.*?)(?:\\s+[dce]/|$)", // a/
+                        "c/(.*?)(?:\\s+[dae]/|$)"  // c/
                 };
 
                 String[] results = new String[fields.length];
@@ -57,7 +58,7 @@ public class Parser {
                     }
                 }
                 amount = Double.parseDouble(results[1]);
-                Category category = Category.valueOf(results[2].toUpperCase());
+                Category category = parseCategory(results[2], ui);
 
                 boolean success = transactions.addTransaction(transactions.getNum() + 1, results[0], amount, category);
 
@@ -288,4 +289,45 @@ public class Parser {
             throw new InvalidCommand("Unknown attribute!");
         }
     }
+
+    /**
+     * Tries to parse a string into a valid Category enum, case-insensitively.
+     * If the input is invalid, shows a list of valid categories and asks user to choose one.
+     */
+    public static Category parseCategory(String userInput, Ui ui) {
+        String trimmedInput = userInput.trim();
+        for (Category category : Category.values()) {
+            if (category.name().equalsIgnoreCase(trimmedInput)) {
+                return category;
+            }
+        }
+
+        // Invalid category
+        ui.showError("Invalid category: \"" + userInput + "\"");
+
+        // Show available options
+        ui.showLine();
+        System.out.println("Please choose a valid category from the list below:");
+        int index = 1;
+        for (Category category : Category.values()) {
+            System.out.println(index + ". " + category.name());
+            index++;
+        }
+        ui.showLine();
+
+        // Prompt for selection
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.print("Enter category number (1-" + Category.values().length + "): ");
+            String choice = scanner.nextLine();
+            try {
+                int selected = Integer.parseInt(choice);
+                if (selected >= 1 && selected <= Category.values().length) {
+                    return Category.values()[selected - 1];
+                }
+            } catch (NumberFormatException ignored) {}
+            System.out.println("Invalid selection. Please enter a number between 1 and " + Category.values().length + ".");
+        }
+    }
+
 }
