@@ -8,7 +8,9 @@ import java.io.FileWriter;
 import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.time.format.DateTimeParseException;
 
+import exceptions.StorageParseException;
 import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Priority;
@@ -86,45 +88,96 @@ public class Storage {
     // Parse a CSV line into a Transaction object
     private Transaction parseTransaction(String line) {
         try {
-            assert line != null : "CSV line should not be null";
+            if (line == null || line.trim().isEmpty()) {
+                throw new StorageParseException("Storage is empty.");
+            }
+
             String[] parts = line.split(",");
-            assert parts.length == 11 : "Expected 11 fields but got " + parts.length;
+            if (parts.length != 11) {
+                throw new StorageParseException("Storage format error.");
+            }
 
-            int id = Integer.parseInt(parts[0]);
+            int id;
+            double amount;
+            int recurringPeriod;
+            boolean isDeleted;
+            boolean isCompleted;
+
+            try {
+                id = Integer.parseInt(parts[0]);
+            } catch (NumberFormatException e) {
+                throw new StorageParseException("Invalid ID format: " + parts[0]);
+            }
+
             String description = parts[1];
-            double amount = Double.parseDouble(parts[2]);
-            Currency currency = Currency.valueOf(parts[3]);
-            Category category = Category.valueOf(parts[4]);
-            LocalDate date = LocalDate.parse(parts[5]);
-            Status status = Status.valueOf(parts[6].toUpperCase());
-            int recurringPeriod = Integer.parseInt(parts[7]);
-            boolean isDeleted = Boolean.parseBoolean(parts[8]);
-            boolean isCompleted = Boolean.parseBoolean(parts[9]);
-            Priority priority = Priority.valueOf(parts[10].toUpperCase());
 
-            assert amount >= 0 : "Amount should be non-negative";
-            assert currency != null : "Currency should not be null";
-            assert category != null : "Category should not be null";
-            assert date != null : "Date should not be null";
-            assert status != null : "Status should not be null";
+            try {
+                amount = Double.parseDouble(parts[2]);
+            } catch (NumberFormatException e) {
+                throw new StorageParseException("Invalid amount format: " + parts[2]);
+            }
 
+            Currency currency;
+            try {
+                currency = Currency.valueOf(parts[3]);
+            } catch (IllegalArgumentException e) {
+                throw new StorageParseException("Invalid currency type: " + parts[3]);
+            }
+
+            Category category;
+            try {
+                category = Category.valueOf(parts[4]);
+            } catch (IllegalArgumentException e) {
+                throw new StorageParseException("Invalid category type: " + parts[4]);
+            }
+
+            LocalDate date;
+            try {
+                date = LocalDate.parse(parts[5]);
+            } catch (DateTimeParseException e) {
+                throw new StorageParseException("Invalid date format: " + parts[5]);
+            }
+
+            Status status;
+            try {
+                status = Status.valueOf(parts[6].toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new StorageParseException("Invalid status value: " + parts[6]);
+            }
+
+            try {
+                recurringPeriod = Integer.parseInt(parts[7]);
+            } catch (NumberFormatException e) {
+                throw new StorageParseException("Invalid recurring period: " + parts[7]);
+            }
+
+            try {
+                isDeleted = Boolean.parseBoolean(parts[8]);
+                isCompleted = Boolean.parseBoolean(parts[9]);
+            } catch (Exception e) {
+                throw new StorageParseException("Invalid boolean value in deleted/completed status.");
+            }
+
+            Priority priority;
+            try {
+                priority = Priority.valueOf(parts[10].toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new StorageParseException("Invalid priority: " + parts[10]);
+            }
+
+            // Build transaction
             Transaction transaction = new Transaction(id, description, amount, currency, category, date, status);
             transaction.setRecurringPeriod(recurringPeriod);
             transaction.setPriority(priority);
 
-            if (isDeleted) {
-                transaction.delete();
-            }
-            if (isCompleted) {
-                transaction.complete();
-            }
+            if (isDeleted) transaction.delete();
+            if (isCompleted) transaction.complete();
+
             return transaction;
+
         } catch (Exception e) {
-            System.out.println("Error parsing transaction: " + line + " - " + e.getMessage());
+            System.out.println(e.getMessage());
             return null;
         }
     }
 }
-
-
-
