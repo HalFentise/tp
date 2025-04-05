@@ -7,6 +7,11 @@ public class Constant {
 
     // Command keywords
     /**
+     * Command keyword for adding a new expense
+     */
+    public static final String COMMAND_HELP = "help";
+
+    /**
      * Command keyword for listing tasks
      */
     public static final String COMMAND_LIST = "list";

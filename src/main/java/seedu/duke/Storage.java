@@ -1,6 +1,11 @@
 package seedu.duke;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -23,10 +28,13 @@ public class Storage {
 
     // Save the transaction data to a CSV file
     public void saveTransactions(ArrayList<Transaction> transactions) {
+        assert transactions != null : "Transaction list should not be null";
+
         createDataFolderIfNeeded();  // Ensure the folder exists
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Transaction t : transactions) {
+                assert t != null : "Transaction object should not be null";
                 writer.write(formatTransaction(t));
                 writer.newLine();
             }
@@ -47,6 +55,7 @@ public class Storage {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
+                assert !line.trim().isEmpty() : "CSV line should not be empty";
                 Transaction t = parseTransaction(line);
                 if (t != null) {
                     transactions.add(t);
@@ -60,6 +69,14 @@ public class Storage {
 
     // Convert a Transaction object into a CSV format string
     private String formatTransaction(Transaction t) {
+        assert t != null : "Transaction cannot be null";
+        assert t.getCurrency() != null : "Currency cannot be null";
+        assert t.getCategory() != null : "Category cannot be null";
+        assert t.getDate() != null : "Date cannot be null";
+        assert t.getStatus() != null : "Status cannot be null";
+        assert t.getPriority() != null : "Priority cannot be null";
+        assert t.getDescription() != null : "Description cannot be null";
+
         return String.format("%d,%s,%f,%s,%s,%s,%s,%d,%b,%b,%s",
                 t.getId(), t.getDescription(), t.getAmount(), t.getCurrency(),
                 t.getCategory(), t.getDate(), t.getStatus(),
@@ -69,10 +86,9 @@ public class Storage {
     // Parse a CSV line into a Transaction object
     private Transaction parseTransaction(String line) {
         try {
+            assert line != null : "CSV line should not be null";
             String[] parts = line.split(",");
-            if (parts.length != 11) {
-                throw new IllegalArgumentException("Invalid number of fields in transaction: " + line);
-            }
+            assert parts.length == 11 : "Expected 11 fields but got " + parts.length;
 
             int id = Integer.parseInt(parts[0]);
             String description = parts[1];
@@ -85,6 +101,12 @@ public class Storage {
             boolean isDeleted = Boolean.parseBoolean(parts[8]);
             boolean isCompleted = Boolean.parseBoolean(parts[9]);
             Priority priority = Priority.valueOf(parts[10].toUpperCase());
+
+            assert amount >= 0 : "Amount should be non-negative";
+            assert currency != null : "Currency should not be null";
+            assert category != null : "Category should not be null";
+            assert date != null : "Date should not be null";
+            assert status != null : "Status should not be null";
 
             Transaction transaction = new Transaction(id, description, amount, currency, category, date, status);
             transaction.setRecurringPeriod(recurringPeriod);
@@ -103,5 +125,6 @@ public class Storage {
         }
     }
 }
+
 
 

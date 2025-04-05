@@ -33,6 +33,9 @@ public class Parser {
 
         try {
             switch (commandType) {
+            case COMMAND_HELP:
+                ui.help();
+                break;
             case COMMAND_ADD:
                 fields = new String[]{"description", "amount", "category"};
                 String[] patterns = {
@@ -140,7 +143,6 @@ public class Parser {
                 new NotifyCommand(result[0], amount, categoryString, date, transactions, ui);
                 storage.saveTransactions(transactions.getTransactions());
                 break;
-
             case COMMAND_ALERT:
                 if (parts.length > 1) {
                     throw new InvalidCommand("Invalid command");

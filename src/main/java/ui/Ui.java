@@ -46,6 +46,41 @@ public class Ui {
         System.out.println("Goodbye! Hope to see you again!");
     }
 
+    public void help() {
+        showLine();
+        System.out.println("Here are all the commands:");
+
+        System.out.println("add: Adds a new transaction");
+        System.out.println("  Usage: add d/<description> a/<amount> c/<category>");
+        System.out.println("  Example: add 'Grocery Shopping' 50.0 SGD Groceries 2025-04-01 Pending");
+
+        System.out.println("delete: Deletes an existing transaction by ID");
+        System.out.println("  Usage: delete <transaction_id>");
+        System.out.println("  Example: delete 1");
+
+        System.out.println("list: Lists all transactions");
+        System.out.println("  Usage: list");
+        System.out.println("  Example: list");
+
+        System.out.println("search: Searches transactions based on a query (description)");
+        System.out.println("  Usage: search <query>");
+        System.out.println("  Example: search 'Groceries'");
+
+        System.out.println("update: edit an existing transaction's details");
+        System.out.println("  Usage: edit <transaction_id> <description|amount|currency|category|status> <new_value>");
+        System.out.println("  Example: edit 1 description 'Monthly Groceries'");
+
+        System.out.println("remind: Sets up reminders for recurring transactions");
+        System.out.println("  Usage: remind");
+        System.out.println("  Example: remind");
+
+        System.out.println("exit: Exits the application");
+        System.out.println("  Usage: exit");
+
+        showLine();
+    }
+
+
 
     /**
      * Prints a horizontal line separator.
@@ -64,12 +99,6 @@ public class Ui {
         System.out.println("Error: " + message); // Display the error
         showLine();
     }
-
-    /*
-     * Function for setting the expense limit for a specific time duration?
-     * The type default is expense
-     * Can keep the amount as for the all-time spend limit first
-     */
 
     /**
      * Prints a message indicating that a task has been deleted.

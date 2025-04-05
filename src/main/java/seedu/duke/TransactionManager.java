@@ -15,12 +15,10 @@ import ui.Ui;
 
 public class TransactionManager {
     private ArrayList<Transaction> transactions;
-    private ArrayList<Transaction> upcomingTransactions;
     private Currency defaultCurrency = Currency.SGD;
 
     public TransactionManager() {
         transactions = new ArrayList<>();
-        upcomingTransactions = new ArrayList<>();
     }
 
     public int getNum() {
@@ -43,12 +41,8 @@ public class TransactionManager {
 
     public void addTransaction(int id, String description, double amount, Category category) {
         LocalDate date = LocalDate.now();
-        Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
-        transactions.add(transaction);
-    }
-
-    public void addTransaction(int id, String description, double amount, Category category, LocalDate date) {
-        Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
+        Transaction transaction = new Transaction(id, description, amount,
+                defaultCurrency, category, date, Status.PENDING);
         transactions.add(transaction);
     }
 
@@ -159,9 +153,7 @@ public class TransactionManager {
     // Sets a notification for an upcoming transaction
     public void notify(String description, double amount, String categoryString, String date) {
         LocalDate dueDate = LocalDate.parse(date);
-
         Category category = Category.valueOf(categoryString);
-
         for (Transaction transaction : transactions) {
             if (transaction.getDescription().equals(description) && transaction.getCategory().equals(category)) {
                 transaction.setDate(dueDate);
@@ -207,7 +199,6 @@ public class TransactionManager {
             }
             return t1.getDate().compareTo(t2.getDate());
         });
-
         return transactions;
     }
 
@@ -257,10 +248,13 @@ public class TransactionManager {
         switch (period) {
         case "today":
             System.out.println(getTransactionsOnDate(LocalDate.now()));
+            break;
         case "week":
             System.out.println(getTransactionsThisWeek());
+            break;
         case "month":
             System.out.println(getTransactionsThisMonth());
+            break;
         default:
             try {
                 LocalDate date = LocalDate.parse(period);
@@ -268,6 +262,7 @@ public class TransactionManager {
             } catch (Exception e) {
                 System.out.println("Invalid period. Use 'today', 'week', 'month', or a date (yyyy-mm-dd)");
             }
+            break;
         }
     }
 
@@ -275,8 +270,6 @@ public class TransactionManager {
         if (checkIdEmpty(id)) {
             return;
         }
-
-
         switch (type) {
         case 0:
             transactions.get(id).setDescription(info);
@@ -299,39 +292,13 @@ public class TransactionManager {
         case 3:
             transactions.get(id).setCurrency(Currency.valueOf(info));
             break;
+        default:
+            break;
         }
     }
-    /**
-    public void editDescription(int id, String newDescription) {
-        if (checkIdEmpty(id)) {
-            return;
-        }
-        transactions.get(id).setDescription(newDescription);
-    }
-
-    public void editCategory(int id, String newCategory) {
-        if (checkIdEmpty(id)) {
-            return;
-        }
-        transactions.get(id).setCategory(Category.valueOf(newCategory));
-    }
-
-    public void editAmount(int id, int newAmount) {
-        if (checkIdEmpty(id)) {
-            return;
-        }
-        transactions.get(id).setAmount(newAmount);
-    }
-
-    public void editCurrency(int id, String newCurrency) {
-        if (checkIdEmpty(id)) {
-            return;
-        }
-        transactions.get(id).setCurrency(Currency.valueOf(newCurrency));
-    }*/
 
     public boolean checkIdEmpty(int id) {
-        if (transactions.get(id) == null) {
+        if (searchTransaction(id) == null) {
             System.out.println(Constant.INVALID_TRANSACTION_ID);
             return true;
         }
