@@ -9,7 +9,9 @@ import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
 import enumStructure.Priority;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TransactionTest {
 

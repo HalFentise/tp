@@ -5,7 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seedu.duke.Transaction;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,7 +17,8 @@ public class TransactionManagerTest {
 
     @BeforeEach
     public void setUp() {
-        Transaction e = new Transaction(1, "Dinner", 100.0, Currency.USD, Category.FOOD, LocalDate.of(2025, 3, 28), Status.PENDING);
+        Transaction e = new Transaction(1, "Dinner", 100.0, Currency.USD,
+                Category.FOOD, LocalDate.of(2025, 3, 28), Status.PENDING);
     }
 
     @Test

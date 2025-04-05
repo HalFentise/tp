@@ -10,7 +10,8 @@ import enumStructure.Currency;
 import enumStructure.Status;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class DukeTest {
 
@@ -49,7 +50,8 @@ public class DukeTest {
     public void testRunWithSavedTransactions() {
         // Create some sample transactions and save them
         ArrayList<Transaction> transactionsList = new ArrayList<>();
-        transactionsList.add(new Transaction(1, "Test", 100.0, Currency.SGD, Category.GROCERIES, LocalDate.now(), Status.PENDING));
+        transactionsList.add(new Transaction(1, "Test", 100.0,
+                Currency.SGD, Category.GROCERIES, LocalDate.now(), Status.PENDING));
 
         // Save the transaction data
         storage.saveTransactions(transactionsList);

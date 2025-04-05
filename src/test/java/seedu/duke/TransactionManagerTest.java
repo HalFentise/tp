@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TransactionManagerTest {
 
@@ -20,7 +22,8 @@ public class TransactionManagerTest {
 
     @Test
     public void testAddTransaction() {
-        Transaction t1 = new Transaction(1, "Lunch", 12.5, Currency.SGD, Category.FOOD, LocalDate.now(), Status.PENDING);
+        Transaction t1 = new Transaction(1, "Lunch", 12.5,
+                Currency.SGD, Category.FOOD, LocalDate.now(), Status.PENDING);
         manager.addTransaction(t1);
 
         ArrayList<Transaction> transactions = manager.getTransactions();
@@ -38,7 +41,8 @@ public class TransactionManagerTest {
 
     @Test
     public void testTickAndUnTickTransaction() {
-        Transaction t = new Transaction(3, "Netflix", 15.0, Currency.SGD, Category.ENTERTAINMENT, LocalDate.now(), Status.PENDING);
+        Transaction t = new Transaction(3, "Netflix", 15.0, Currency.SGD,
+                Category.ENTERTAINMENT, LocalDate.now(), Status.PENDING);
         manager.addTransaction(t);
 
         manager.tickTransaction(3);
@@ -60,7 +64,8 @@ public class TransactionManagerTest {
 
     @Test
     public void testDeleteTransaction() {
-        Transaction t = new Transaction(6, "Taxi", 10.0, Currency.SGD, Category.TRANSPORTATION, LocalDate.now(), Status.PENDING);
+        Transaction t = new Transaction(6, "Taxi", 10.0, Currency.SGD,
+                Category.TRANSPORTATION, LocalDate.now(), Status.PENDING);
         manager.addTransaction(t);
 
         assertEquals(1, manager.getTransactions().size());

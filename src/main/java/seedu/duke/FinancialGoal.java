@@ -158,5 +158,4 @@ public class FinancialGoal {
                 + getBalance() + " / $" + targetAmount + " saved \n"
                  + (isAchieved ? "Goal Reached!" : "Keep saving!");
     }
-
 }

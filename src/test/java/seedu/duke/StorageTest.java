@@ -8,7 +8,10 @@ import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
 import enumStructure.Priority;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class StorageTest {
     private Storage storage;
@@ -38,13 +41,15 @@ public class StorageTest {
     @Test
     public void testSaveAndLoadTransactions_success() {
         ArrayList<Transaction> originalList = new ArrayList<>();
-        Transaction t1 = new Transaction(1, "Coffee", 5.0, Currency.SGD, Category.FOOD, LocalDate.now(), Status.PENDING);
+        Transaction t1 = new Transaction(1, "Coffee", 5.0, Currency.SGD,
+                Category.FOOD, LocalDate.now(), Status.PENDING);
         t1.setRecurringPeriod(7);
         t1.setPriority(Priority.HIGH);
         t1.complete();
         originalList.add(t1);
 
-        Transaction t2 = new Transaction(2, "Movie", 12.5, Currency.USD, Category.ENTERTAINMENT, LocalDate.now(), Status.COMPLETED);
+        Transaction t2 = new Transaction(2, "Movie", 12.5, Currency.USD,
+                Category.ENTERTAINMENT, LocalDate.now(), Status.COMPLETED);
         t2.setRecurringPeriod(0);
         t2.setPriority(Priority.LOW);
         t2.delete();
@@ -86,7 +91,8 @@ public class StorageTest {
     @Test
     public void testSaveTransactions_createsFile() {
         ArrayList<Transaction> list = new ArrayList<>();
-        list.add(new Transaction(1, "Test", 10.0, Currency.SGD, Category.OTHER, LocalDate.now(), Status.PENDING));
+        list.add(new Transaction(1, "Test", 10.0, Currency.SGD,
+                Category.OTHER, LocalDate.now(), Status.PENDING));
         storage.saveTransactions(list);
         assertTrue(testFile.exists());
     }

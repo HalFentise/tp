@@ -8,12 +8,12 @@ public class DeleteCommand extends Command{
     /**
      * Creates a DeleteCommand with the specified translation index.
      *
-     * @param ExpenseIndex The index of the task to be deleted (zero-based).
+     * @param expenseIndex The index of the task to be deleted (zero-based).
      */
-    public DeleteCommand(int ExpenseIndex,TransactionManager transactions, Ui ui) {
-        this.expenseIndex = ExpenseIndex;
-        Ui.printDeleteTask(transactions.getTransactions().get(ExpenseIndex), transactions.getSize() - 1);
-        transactions.deleteExpense(ExpenseIndex);
+    public DeleteCommand(int expenseIndex,TransactionManager transactions, Ui ui) {
+        this.expenseIndex = expenseIndex;
+        Ui.printDeleteTask(transactions.getTransactions().get(expenseIndex), transactions.getSize() - 1);
+        transactions.deleteExpense(expenseIndex);
     }
 
     /**

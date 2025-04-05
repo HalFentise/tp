@@ -41,7 +41,8 @@ public class TransactionManager {
 
     public void addTransaction(int id, String description, double amount, Category category) {
         LocalDate date = LocalDate.now();
-        Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
+        Transaction transaction = new Transaction(id, description, amount,
+                defaultCurrency, category, date, Status.PENDING);
         transactions.add(transaction);
     }
 
@@ -247,10 +248,13 @@ public class TransactionManager {
         switch (period) {
         case "today":
             System.out.println(getTransactionsOnDate(LocalDate.now()));
+            break;
         case "week":
             System.out.println(getTransactionsThisWeek());
+            break;
         case "month":
             System.out.println(getTransactionsThisMonth());
+            break;
         default:
             try {
                 LocalDate date = LocalDate.parse(period);
@@ -258,6 +262,7 @@ public class TransactionManager {
             } catch (Exception e) {
                 System.out.println("Invalid period. Use 'today', 'week', 'month', or a date (yyyy-mm-dd)");
             }
+            break;
         }
     }
 
