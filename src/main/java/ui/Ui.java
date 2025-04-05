@@ -2,6 +2,7 @@ package ui;
 
 import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
+import seedu.duke.TransactionManager;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -81,7 +82,6 @@ public class Ui {
     }
 
 
-
     /**
      * Prints a horizontal line separator.
      */
@@ -114,12 +114,12 @@ public class Ui {
         showLine();
     }
 
-    public void PrintBudgetLimit(ArrayList<Transaction> transaction, double amount) {
+    public void PrintBudgetLimit(TransactionManager transaction) {
         showLine();
-        if (transaction.isEmpty()) {
+        if (transaction.getTransactions().isEmpty()) {
             System.out.println("Please add a translation first before you set the budget!");
         } else {
-            System.out.println("Budget limit set to " + amount + " " + transaction.get(0).getCurrency());
+            transaction.checkBudgetLimit(transaction.getTotalAmount());
         }
         showLine();
     }

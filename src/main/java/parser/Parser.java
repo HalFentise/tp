@@ -58,9 +58,13 @@ public class Parser {
                 }
                 amount = Double.parseDouble(results[1]);
                 Category category = Category.valueOf(results[2].toUpperCase());
-                transactions.addTransaction(transactions.getNum() + 1, results[0], amount, category);
-                ui.add(transactions.searchTransaction(transactions.getNum()));
-                storage.saveTransactions(transactions.getTransactions());
+
+                boolean success = transactions.addTransaction(transactions.getNum() + 1, results[0], amount, category);
+
+                if (success) {
+                    ui.add(transactions.searchTransaction(transactions.getNum()));
+                    storage.saveTransactions(transactions.getTransactions());
+                }
                 break;
             case COMMAND_LIST:
                 if (parts.length > 1) {
@@ -136,7 +140,7 @@ public class Parser {
                     }
                 }
 
-                amount = Integer.parseInt(result[1]);
+                amount = Double.parseDouble(result[1]);
                 String categoryString = result[2].toUpperCase();
                 String date = result[3];
 
