@@ -7,6 +7,7 @@ import seedu.duke.FinancialGoal;
 import seedu.duke.TransactionManager;
 import seedu.duke.Storage;
 import seedu.duke.SavingMode;
+import seedu.duke.budget.BudgetMode;
 import enumStructure.Category;
 import ui.Ui;
 import java.util.Scanner;
@@ -188,6 +189,10 @@ public class Parser {
             case "saving":
                     SavingMode.enter(ui, goal, storage);
                     break;
+            case "budget":
+                BudgetMode.enter(ui, transactions.getBudgetList(), storage);
+                break;
+
             case COMMAND_GOAL:
                 goal.updateExpenses(transactions);
                 try {

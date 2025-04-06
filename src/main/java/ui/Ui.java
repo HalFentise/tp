@@ -368,4 +368,33 @@ public class Ui {
         }
         showLine();
     }
+
+    public void printSavingOverview(FinancialGoal goal) {
+        showLine();
+        if (goal.isBlank()) {
+            System.out.println("💰 No saving goal set. Run 'saving' > 'set' to create one!");
+            showLine();
+            return;
+        }
+
+        double current = goal.getBalance();
+        double target = goal.getTargetAmount();
+        double percent = current / target;
+        percent = Math.max(0.0, Math.min(percent, 1.0));
+        int barLength = 20;
+        int filled = (int) (percent * barLength);
+        int empty = barLength - filled;
+
+        StringBuilder bar = new StringBuilder("[");
+        bar.append("█".repeat(filled));
+        bar.append(" ".repeat(empty));
+        bar.append("]");
+
+        System.out.println("💰 Saving Goal: " + goal.getGoal());
+        System.out.println("📝 Description: " + goal.getDescription());
+        System.out.printf("📊 Progress: %s  %.1f%% ($%.2f / $%.2f)%n",
+                bar.toString(), percent * 100, current, target);
+        showLine();
+    }
+
 }

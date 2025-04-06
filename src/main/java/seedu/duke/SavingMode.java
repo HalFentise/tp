@@ -11,6 +11,7 @@ public class SavingMode {
         System.out.println("You're now in Saving Mode!");
         System.out.println("Type 'help' to see saving commands. Type 'exit' to return.");
         ui.showLine();
+        ui.printSavingOverview(goal);
 
         while (true) {
             System.out.print("saving> ");

@@ -1,5 +1,6 @@
 package seedu.duke;
 
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.time.LocalDate;
@@ -12,6 +13,9 @@ import enumStructure.Status;
 import exceptions.InvalidCommand;
 import exceptions.NullException;
 import ui.Ui;
+import seedu.duke.budget.BudgetList;
+import seedu.duke.budget.Budget;
+
 
 public class TransactionManager {
     private ArrayList<Transaction> transactions;
@@ -19,9 +23,16 @@ public class TransactionManager {
     private double budgetLimit = -1; // -1 means budget is not set yet
     private boolean isBudgetSet = false;
 
+    private BudgetList budgetList = new BudgetList();
+
+    public void setBudgetList(seedu.duke.budget.BudgetList budgetList) {
+        this.budgetList = budgetList;
+    }
+
     public TransactionManager() {
         transactions = new ArrayList<>();
     }
+
 
     public int getNum() {
         return transactions.size();
@@ -116,7 +127,9 @@ public class TransactionManager {
 
     public void clear() {
         transactions.clear();
+        budgetList.clear();
     }
+
 
     public Transaction searchTransaction(int id) {
         try {
@@ -358,6 +371,10 @@ public class TransactionManager {
             }
         }
         return sum;
+    }
+
+    public BudgetList getBudgetList() {
+        return budgetList;
     }
 }
 
