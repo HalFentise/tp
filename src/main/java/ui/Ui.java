@@ -11,8 +11,6 @@ import java.util.Scanner;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
 
-import static constant.Constant.*;
-
 public class Ui {
     private final Scanner scanner;
 
@@ -79,7 +77,7 @@ public class Ui {
 
     public void showError(String message) {
         printLine();
-        printLeftAlignedLine("Error: " + message);
+        printLeftAlignedLine("Failed: " + message);
         printLine();
     }
 
@@ -416,18 +414,16 @@ public class Ui {
         int filled = (int) (percent * barLength);
         int empty = barLength - filled;
 
-        StringBuilder bar = new StringBuilder("[");
-        bar.append("█".repeat(filled));
-        bar.append(" ".repeat(empty));
-        bar.append("]");
+        String bar = "[" + "█".repeat(filled) +
+                " ".repeat(empty) +
+                "]";
 
         printLeftAlignedLine("Goal:         \"" + goal.getGoal() + "\"");
         printLeftAlignedLine("Description:  " + goal.getDescription());
         printLeftAlignedLine("");
 
         printLeftAlignedLine("Status:       You're currently at:"+String.format("  %s  %.1f%% complete",
-                bar.toString(), percent * 100, current, target));
-
+                bar, percent * 100, current, target));
         if (percent >= 1.0) {
             printLeftAlignedLine("Analysis:     Amazing! You've achieved your savings goal. Time to celebrate!");
         } else if (percent >= 0.75) {
@@ -439,7 +435,6 @@ public class Ui {
         } else {
             printLeftAlignedLine("Analysis:     You haven't started saving yet. Let's begin today!");
         }
-
         printLine();
     }
 

@@ -12,7 +12,7 @@ public class DeleteCommand extends Command {
      *
      * @param transactionId The ID of the transaction to delete (NOT list index).
      */
-    public DeleteCommand(int transactionId, TransactionManager transactions, Ui ui) throws InvalidCommand{
+    public DeleteCommand(int transactionId, TransactionManager transactions) throws InvalidCommand{
 
         Transaction t = transactions.searchTransaction(transactionId);
         if (t == null) {

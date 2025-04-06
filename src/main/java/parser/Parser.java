@@ -114,7 +114,7 @@ public class Parser {
                 break;
             case COMMAND_DELETE:
                 id = Integer.parseInt(parts[1]);
-                new DeleteCommand(id, transactions, ui);
+                new DeleteCommand(id, transactions);
                 storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_CLEAR:
