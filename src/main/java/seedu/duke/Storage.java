@@ -16,6 +16,7 @@ public class Storage {
     private static final String FILE_PATH = FOLDER_PATH + "/transactions.csv";
     private static final String GOAL_FILE_PATH = FOLDER_PATH + "/goal.csv";
     private static final String BUDGET_FILE_PATH = FOLDER_PATH + "/budgets.csv";
+    private static final String META_FILE_PATH = FOLDER_PATH + "/meta.txt";
 
     private void createDataFolderIfNeeded() {
         File folder = new File(FOLDER_PATH);
@@ -93,6 +94,33 @@ public class Storage {
         } catch (Exception e) {
             System.out.println("Error parsing transaction: " + line + " - " + e.getMessage());
             return null;
+        }
+    }
+
+    // 获取当前最大 Transaction ID
+    public int loadMaxTransactionId() {
+        createDataFolderIfNeeded();
+        File file = new File(META_FILE_PATH);
+        if (!file.exists()) {
+            return 0;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line = reader.readLine();
+            return line != null ? Integer.parseInt(line.trim()) : 0;
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("Error loading max transaction ID: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    // 更新最大 Transaction ID
+    public void saveMaxTransactionId(int id) {
+        createDataFolderIfNeeded();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(META_FILE_PATH))) {
+            writer.write(String.valueOf(id));
+        } catch (IOException e) {
+            System.out.println("Error saving max transaction ID: " + e.getMessage());
         }
     }
 

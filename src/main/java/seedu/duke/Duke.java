@@ -16,6 +16,8 @@ public class Duke {
         ui = new Ui();
         storage = new Storage();
         transactions = new TransactionManager();
+        transactions.setStorage(storage);
+
 
         ArrayList<Transaction> savedTransactions = storage.loadTransactions();
         for (Transaction t : savedTransactions) {

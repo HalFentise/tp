@@ -183,4 +183,7 @@ public class Transaction {
         this.amount = currency.getRate() * toSGD;
         this.currency = currency;
     }
+
+
+
 }
