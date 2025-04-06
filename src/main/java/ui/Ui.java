@@ -2,6 +2,8 @@ package ui;
 
 import static ui.ConsoleFormatter.*;
 
+import enumStructure.Category;
+import enumStructure.Currency;
 import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
@@ -444,4 +446,46 @@ public class Ui {
         printLine();
     }
 
+    public void printCurrencyChoice() {
+        ConsoleFormatter.printLine();
+        System.out.println("You can enter exit to quit choose progress");
+        System.out.println("Please choose a valid currency from the list below:");
+
+        int index = 1;
+        for (Currency currency : Currency.values()) {
+            System.out.println(index + ". " + currency.name());
+            index++;
+        }
+        ConsoleFormatter.printLine();
+    }
+
+    public void printCurrencyHint() {
+        System.out.print("Enter currency number (1-" + Currency.values().length + "): ");
+    }
+
+    public void printCurrencySetting() {
+        System.out.println("Set your default currency successfully!");
+        ConsoleFormatter.printLine();
+    }
+
+    public void printCategoryChoice() {
+        ConsoleFormatter.printLine();
+        System.out.println("You can enter exit to quit choose progress");
+        System.out.println("Please choose a valid category from the list below:");
+        int index = 1;
+        for (Category category : Category.values()) {
+            System.out.println(index + ". " + category.name());
+            index++;
+        }
+        ConsoleFormatter.printLine();
+    }
+
+    public void printCategoryHint() {
+        System.out.print("Enter category number (1-" + Category.values().length + "): ");
+    }
+
+    public void printCategoryChoose() {
+        System.out.println("Choose category successfully!");
+        ConsoleFormatter.printLine();
+    }
 }

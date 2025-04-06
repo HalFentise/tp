@@ -1,6 +1,7 @@
 package parser;
 
 import command.*;
+import enumStructure.Currency;
 import exceptions.NullException;
 import exceptions.InvalidCommand;
 import seedu.duke.FinancialGoal;
@@ -10,7 +11,6 @@ import seedu.duke.SavingMode;
 import seedu.duke.budget.BudgetMode;
 import enumStructure.Category;
 import ui.Ui;
-import ui.ConsoleFormatter;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -131,6 +131,11 @@ public class Parser {
             case FIND_DATE:
                 String time = parts[1];
                 transactions.getUpcomingTransactions(time);
+                break;
+            case CURRENCY:
+                Currency currency = parseCurrency(ui);
+                transactions.setDefaultCurrency(currency);
+                storage.saveDefaultCurrency(currency);
                 break;
             case COMMAND_NOTIFY:
                 String[] detail = {"description", "amount", "category", "date"};
@@ -306,33 +311,47 @@ public class Parser {
             }
         }
 
-        // Invalid category
         ui.showError("Invalid category: \"" + userInput + "\"");
+        ui.printCategoryChoice();
 
-        // Show available options
-        ConsoleFormatter.printLine();
-        System.out.println("Please choose a valid category from the list below:");
-        int index = 1;
-        for (Category category : Category.values()) {
-            System.out.println(index + ". " + category.name());
-            index++;
-        }
-        ConsoleFormatter.printLine();
-
-        // Prompt for selection
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.print("Enter category number (1-" + Category.values().length + "): ");
+            ui.printCategoryHint();
             String choice = scanner.nextLine();
+            if(choice.equals("exit")) {
+                return Category.OTHER;
+            }
             try {
                 int selected = Integer.parseInt(choice);
                 if (selected >= 1 && selected <= Category.values().length) {
+                    ui.printCategoryChoose();
                     return Category.values()[selected - 1];
                 }
             } catch (NumberFormatException ignored) {}
             System.out.println("Invalid selection. Please enter a number between 1 and " + Category.values().length + ".");
         }
     }
+
+    public static Currency parseCurrency(Ui ui) {
+        ui.printCurrencyChoice();
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            ui.printCurrencyHint();
+            String choice = scanner.nextLine();
+            if(choice.equals("exit")) {
+                return Currency.SGD;
+            }
+            try {
+                int selected = Integer.parseInt(choice);
+                if (selected >= 1 && selected <= Currency.values().length) {
+                    ui.printCurrencySetting();
+                    return Currency.values()[selected - 1]; // Return the selected currency
+                }
+            } catch (NumberFormatException ignored) {}
+            System.out.println("Invalid selection. Please enter a number between 1 and " + Category.values().length + ".");
+        }
+    }
+
 
     private static LocalDate parseToLocalDate(String input) throws InvalidCommand {
         if (input == null || input.isBlank()) {

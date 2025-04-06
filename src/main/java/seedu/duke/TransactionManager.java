@@ -15,7 +15,7 @@ import seedu.duke.budget.BudgetList;
 
 public class TransactionManager {
     private ArrayList<Transaction> transactions;
-    private final Currency defaultCurrency = Currency.SGD;
+    private Currency defaultCurrency = Currency.SGD;
     private double budgetLimit = -1;
     private boolean isBudgetSet = false;
 
@@ -35,6 +35,10 @@ public class TransactionManager {
 
     public TransactionManager() {
         transactions = new ArrayList<>();
+    }
+
+    public void setDefaultCurrency(Currency defaultCurrency) {
+        this.defaultCurrency = defaultCurrency;
     }
 
     public int getNum() {
