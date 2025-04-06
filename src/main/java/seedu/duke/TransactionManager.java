@@ -163,23 +163,30 @@ public class TransactionManager {
         return null;
     }
 
-    public ArrayList<Transaction> searchTransactionList(boolean isIndex, String term) {
-        ArrayList<Transaction> result = new ArrayList<>();
+    public ArrayList<Transaction> searchTransactionList(boolean isIndex, String searchTerm) throws Exception {
         try {
+          ArrayList<Transaction> result = new ArrayList<>();
             if (isIndex) {
-                Transaction t = searchTransaction(Integer.parseInt(term));
-                if (t != null) result.add(t);
+                int id = Integer.parseInt(searchTerm);
+                for (Transaction t : transactions) {
+                    if (t.getId() == id && !t.isDeleted()) {
+                        result.add(t);
+                        break;
+                    }
+                }
             } else {
                 for (Transaction t : transactions) {
-                    if (!t.isDeleted() && t.getDescription().contains(term)) {
+                    if (!t.isDeleted() && t.getDescription().contains(searchTerm)) {
                         result.add(t);
                     }
                 }
             }
+            return result;
+        } catch (NumberFormatException ne) {
+            throw new InvalidCommand("That wasn't an id... Try again!");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new InvalidCommand("An unexpected error occurred, try again!");
         }
-        return result;
     }
 
     public void remindRecurringTransactions() {
