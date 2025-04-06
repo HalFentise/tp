@@ -124,7 +124,12 @@ public class Parser {
                 break;
             case COMMAND_SET_BUDGET:
                 details = parts[1].split(IDENTIFIER_AMOUNT, 2);
-                amount = Integer.parseInt(details[1]);
+                amount = Double.parseDouble(details[1]);
+
+                if (Double.isInfinite(amount) || Double.isNaN(amount)) {
+                    System.out.println("Invalid input: amount is too large, too small, or not a number.");
+                }
+
                 new SetBudgetCommand(amount, transactions, ui);
                 storage.saveTransactions(transactions.getTransactions());
                 break;
@@ -166,15 +171,15 @@ public class Parser {
                 storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_ALERT:
-                    if (parts.length > 1 && !parts[1].trim().isEmpty()) {
-                        throw new InvalidCommand("Invalid command");
-                    }
-                    new AlertCommand(transactions, ui);
-                    storage.saveTransactions(transactions.getTransactions());
-                    break;
+                if (parts.length > 1 && !parts[1].trim().isEmpty()) {
+                    throw new InvalidCommand("Invalid command");
+                }
+                new AlertCommand(transactions, ui);
+                storage.saveTransactions(transactions.getTransactions());
+                break;
 
 
-                case COMMAND_SET_PRIORITY:
+            case COMMAND_SET_PRIORITY:
                 try {
                     details = parts[1].split(" ", 2);
                     index = Integer.parseInt(details[0]);
@@ -327,7 +332,8 @@ public class Parser {
                     ui.printCategoryChoose();
                     return Category.values()[selected - 1];
                 }
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
             System.out.println("Invalid selection. Please enter a number between 1 and " + Category.values().length + ".");
         }
     }

@@ -16,6 +16,7 @@ public class Duke {
         transactions.setStorage(storage);
 
         storage.load(transactions);
+        transactions.loadBudgetFromStorage();
         goal = storage.loadGoal();
 
         assert goal != null : "FinancialGoal should be initialized";
