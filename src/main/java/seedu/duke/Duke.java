@@ -3,7 +3,6 @@ package seedu.duke;
 import seedu.duke.budget.BudgetList;
 import ui.Ui;
 import parser.Parser;
-
 import java.util.ArrayList;
 
 public class Duke {
@@ -18,15 +17,12 @@ public class Duke {
         transactions = new TransactionManager();
         transactions.setStorage(storage);
 
-
         ArrayList<Transaction> savedTransactions = storage.loadTransactions();
         for (Transaction t : savedTransactions) {
             transactions.addTransaction(t);
         }
-
         BudgetList loadedBudgets = storage.loadBudgets();
         transactions.setBudgetList(loadedBudgets);
-
         goal = storage.loadGoal();
 
         assert ui != null : "UI should be initialized";
@@ -45,7 +41,6 @@ public class Duke {
             if (command == null || command.trim().isEmpty()) {
                 continue;
             }
-
             Parser.parser(command, ui, transactions, goal, storage);
         }
     }

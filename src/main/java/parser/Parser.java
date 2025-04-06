@@ -67,6 +67,8 @@ public class Parser {
                 if (success) {
                     ui.add(transactions.searchTransaction(transactions.getNum()));
                     storage.saveTransactions(transactions.getTransactions());
+                } else {
+                    throw new InvalidCommand("Cannot add new transaction! Budget limit exceeded!");
                 }
                 break;
             case COMMAND_LIST:

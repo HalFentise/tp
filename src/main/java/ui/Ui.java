@@ -199,9 +199,6 @@ public class Ui {
         String sampleHeader = String.format(INNER_HEADER_FORMAT,
                 "ID", "Description", "Amount", "Currency", "Category", "Date", "Completed", "Priority");
 
-
-
-
         int tableWidth = sampleHeader.length(); // ~64
         int spaceInsideBox = TOTAL_WIDTH - 4;   // 外框两侧 || 各占2
         int sidePadding = (spaceInsideBox - tableWidth) / 2;
@@ -253,9 +250,6 @@ public class Ui {
         System.out.println(line);
     }
 
-
-
-
     public void tickTransaction(Transaction transaction) {
         printLine();
         System.out.println("I have ticked the following transaction:");
@@ -272,7 +266,7 @@ public class Ui {
 
     public void add(Transaction transaction) {
         printLine();
-        System.out.println("I have added the following transaction:");
+        System.out.println("I have added the following transaction to the list:");
         printTransaction(transaction);
         printLine();
     }

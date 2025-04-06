@@ -23,19 +23,11 @@ public class TransactionManager {
     private BudgetList budgetList = new BudgetList();
 
     private Storage storage;
-    private int currentMaxId = 0;  // 永久自增ID
+    private int currentMaxId = 0;
 
     public void setStorage(Storage storage) {
         this.storage = storage;
         this.currentMaxId = storage.loadMaxTransactionId();
-    }
-
-    private int getNextAvailableId() {
-        currentMaxId += 1;
-        if (storage != null) {
-            storage.saveMaxTransactionId(currentMaxId);
-        }
-        return currentMaxId;
     }
 
     public void setBudgetList(BudgetList budgetList) {
@@ -52,8 +44,8 @@ public class TransactionManager {
 
     public int getSize() {
         int count = 0;
-        for (Transaction t : transactions) {
-            if (!t.isDeleted()) {
+        for (Transaction transaction : transactions) {
+            if (!transaction.isDeleted()) {
                 count++;
             }
         }
@@ -81,30 +73,11 @@ public class TransactionManager {
         }
     }
 
-    public boolean addTransaction(String description, double amount, Category category) {
-        int id = getNextAvailableId(); // 自动分配唯一ID
-        LocalDate date = LocalDate.now();
-        Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
-
-        if (isBudgetSet) {
-            double projected = getTotalTransactionAmount() + amount;
-            if (projected > budgetLimit) {
-                System.out.println("Cannot add new transaction! Budget limit exceeded!");
-                return false;
-            }
-        }
-
-        transactions.add(transaction);
-        return true;
-    }
-
-
     public boolean addTransaction(int id, String description, double amount, Category category) {
         LocalDate date = LocalDate.now();
         Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
 
         if (isBudgetSet && (getTotalTransactionAmount() + amount > budgetLimit)) {
-            System.out.println("Cannot add new transaction! Budget limit exceeded!");
             return false;
         }
 
@@ -119,14 +92,14 @@ public class TransactionManager {
     }
 
     public ArrayList<Transaction> getTransactions() {
-        ArrayList<Transaction> active = new ArrayList<>();
-        for (Transaction t : transactions) {
-            if (!t.isDeleted()) {
-                active.add(t);
+        ArrayList<Transaction> existTransactions = new ArrayList<>();
+        for (Transaction transaction : transactions) {
+            if (!transaction.isDeleted()) {
+                existTransactions.add(transaction);
             }
         }
-        sortTransactions(active);
-        return active;
+        sortTransactions(existTransactions);
+        return existTransactions;
     }
 
     public void deleteExpense(int id) {
@@ -154,12 +127,11 @@ public class TransactionManager {
     }
 
     public Transaction searchTransaction(int id) {
-        for (Transaction t : transactions) {
-            if (t.getId() == id && !t.isDeleted()) {
-                return t;
+        for (Transaction transaction : transactions) {
+            if (transaction.getId() == id && !transaction.isDeleted()) {
+                return transaction;
             }
         }
-        System.out.println("Transaction is invalid");
         return null;
     }
 
@@ -223,14 +195,22 @@ public class TransactionManager {
         }
     }
 
-    public void tickTransaction(int id) {
-        Transaction t = searchTransaction(id);
-        if (t != null) t.complete();
+    public void tickTransaction(int id) throws Exception{
+        Transaction transaction = searchTransaction(id);
+        if (transaction != null) {
+            transaction.complete();
+        } else {
+            throw new InvalidCommand("Transaction not found! Complete failed.");
+        }
     }
 
-    public void unTickTransaction(int id) {
-        Transaction t = searchTransaction(id);
-        if (t != null) t.notComplete();
+    public void unTickTransaction(int id) throws Exception{
+        Transaction transaction = searchTransaction(id);
+        if (transaction != null) {
+            transaction.notComplete();
+        } else {
+            throw new InvalidCommand("Transaction not found!");
+        }
     }
 
     public void setRecur(int id, int period) {

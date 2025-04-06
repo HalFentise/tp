@@ -73,9 +73,6 @@ public class Transaction {
     }
 
 
-
-
-
     //get method
     public int getId() {
         return id;
@@ -192,7 +189,4 @@ public class Transaction {
         this.amount = currency.getRate() * toSGD;
         this.currency = currency;
     }
-
-
-
 }
