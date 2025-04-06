@@ -70,10 +70,15 @@ These features form the core functionality of the application, allowing users to
 ### Enhancements implemented:
 * Fixed the conversion issue caused by decimal values in amounts.
 * Improved the functionality for adding and deleting transactions, ensuring better performance and reliability.
-### Contributions to the UG:
-I contribute the description part of UG. I listed all the features we have and gave a simple description and the using format and examples.
-### Contributions to the DG:
-I contribute to the Product Scope, User stories, Non-functional requirement and my own part of the features.
+### Documentation
+* **User Guide:**
+  * Added documentation and instructions of my related code and features.
+  * Added command overview and introduction in UG
+  * Maintain UG to meet our product implementation
+* **Developer Guide:**
+  * Added Table of Content, Getting Started, Product Scope, User Stories v1.0 and Non-Functional Requirements
+  * Added Design part
+  * Added data structure and `add` `tick` `untick` `list` introduction
 ### Community:
 * Maintain `ui`,`parser`and `transactionManager`
 * Review teams code and fix the bug

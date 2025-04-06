@@ -1,11 +1,14 @@
 # User Guide
 
+## Introduction
+**NoteUrSavings** is a lightweight, user-friendly budgeting tool designed to help users effectively track their expenses, manage recurring payments, set financial goals, and stay within budget. Built with simplicity in mind, this Java-based application allows users to easily add, edit, and view their expenses using concise commands. With features such as budget limits, customizable categories, currency settings, reminders, and savings goals, NoteUrSavings empowers users to take control of their personal finances in a structured yet flexible manner. Whether you're managing daily spending or saving up for long-term goals, NoteUrSavings provides all the essential tools through a clean command-line interface.
+
 ## Quick Start
 
 1. Ensure that you have Java 17 or above installed.
-2. Down the latest version of `NoteUrSavings.jar` from [here](http://link.to/duke).
+1. Down the latest version of `NoteUrSavings.jar` from [here](http://link.to/duke).
 > (Optional) Ideally, relocate the `.jar` file to somewhere easy to find first.
-1. Click on the `.jar` file to run.
+3. Click on the `.jar` file to run.
 > If the above does not work, right-click the file and select `Copy as path`. <br>
 > Open CMD and run `java -jar [path you just copied]`.
 
@@ -71,7 +74,7 @@ Example:
 ---
 
 ### Clearing all expenses: `clear`
-Removes all recorded expenses.
+Remove all recorded expenses.
 
 Format: `clear`
 
@@ -192,14 +195,35 @@ Closes the application.
 
 Format: `exit`
 
+---
+
 ## FAQ
 
 **Q**: How do I transfer my data to another computer? 
 
 **A**: {your answer here}
 
-## Command Summary
+## Command Overview
 
-{Give a 'cheat sheet' of commands here}
+| Command       | Format                                                                 | Description                                                                                       | Example                                                                 |
+|---------------|------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| `add`         | `add d/DESCRIPTION a/AMOUNT c/CATEGORY [t/DATE]`                       | Adds a new expense.                                                                              | `add d/Dinner a/15.50 c/Food`<br>`add d/Netflix Subscription a/12.99 c/Entertainment t/04-06-2025` |
+| `list`        | `list`                                                                 | Lists all recorded expenses.                                                                      | `list`                                                                  |
+| `edit`        | `edit [tag] [id] [value]`                                              | Edits an expense's description (`desc`), amount (`am`), category (`cat`), or currency (`curr`).   | `edit desc 1 Coffee`<br>`edit cat 2 OTHER`<br>`edit am 3 25`<br>`edit curr 4 JPY` |
+| `delete`      | `delete INDEX`                                                         | Deletes the expense at the given index.                                                           | `delete 2`                                                              |
+| `clear`       | `clear`                                                                | Deletes **all** expenses.                                                                         | `clear`                                                                 |
+| `setbudget`   | `setbudget a/AMOUNT`                                                   | Sets a maximum spending cap.                                                                      | `setbudget a/500`                                                      |
+| `search`      | `search [keyword]`<br>`search id-[id]`                                 | Searches by keyword or expense ID.                                                                | `search Netflix`<br>`search id-5`                                      |
+| `recur`       | `recur [id]/[period]`                                                  | Sets a recurring expense in days.                                                                 | `recur 1/7` (weekly)                                                    |
+| `goal`        | `goal [tag] [value]`                                                   | Manages savings goals. Tags: `target`, `desc`, `title`, `status`, `new`                         | `goal target 1000`<br>`goal desc New phone`<br>`goal title Gadgets`<br>`goal status`<br>`goal new` |
+| `tick`        | `tick INDEX`                                                           | Marks an expense as completed/paid.                                                               | `tick 3`                                                                |
+| `untick`      | `untick INDEX`                                                         | Unmarks a previously ticked expense.                                                              | `untick 3`                                                              |
+| `currency`    | `currency`                                                             | Changes the default currency.                                                                     | `currency`                                                              |
+| `notify`      | `notify d/DESCRIPTION a/AMOUNT c/CATEGORY t/DATE`                      | Sets a notification for future payment.                                                           | `notify d/Rent a/1000 c/Housing t/2025-03-01`                          |
+| `priority`    | `priority INDEX priority_level`                                        | Sets priority level of an expense. Levels: `low`, `medium`, `high`.                              | `priority 1 high`                                                       |
+| `alert`       | `alert`                                                                | Triggers a warning for higher spending.                                                           | `alert`                                                                 |
+| `exit`        | `exit`                                                                 | Exits the program.                                                                                | `exit`                                                                  |
 
-* Add todo `todo n/TODO_NAME d/DEADLINE`
+## Need Help?
+Make sure you entered the commands exactly as specified, with correct spacing and slashes.
+Still stuck? Contact support or check our GitHub Discussions.
