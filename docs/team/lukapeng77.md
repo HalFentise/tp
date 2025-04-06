@@ -19,6 +19,7 @@ added three main functionalities to delete transaction, set budget limit and not
 * Set Notifications for Upcoming Payments (notify): Allows users to schedule reminders for future expenses based on the transaction's description, amount, category, and due date.
 * Set Priority (priority): Allows users to assign a priority level (low, medium, or high) to a transaction. By default, all expenses are low priority. This helps users focus on the most urgent or important expenses.
 * View Spending Alerts (alert): Displays an overview of upcoming expenses, recurring payments, current remaining budget, and whether the spending has exceeded the set budget limit. This command combines notification, priority, and budget insights in a single view.
+* Summary of Expenses (summary): Provides an overview of expenses for a specified time frame, enabling quick and effective financial review.
 
 ```java
 /**
@@ -93,6 +94,25 @@ public SetPriorityCommand(int index, String priorityStr, TransactionManager tran
     }
     ui.PrintPriority(transcations.getTransactions(), index);
 }
+
+public class SummaryCommand extends Command {
+    private final LocalDate startDate;
+    private final LocalDate endDate;
+    private final TransactionManager transactions;
+
+    public SummaryCommand(LocalDate start, LocalDate end, TransactionManager transactions, Ui ui) {
+        this.startDate = start;
+        this.endDate = end;
+        this.transactions = transactions;
+        List<Transaction> filteredTransactions = transactions.getTransactionsBetween(start, end);
+        double total = filteredTransactions.stream()
+                .mapToDouble(Transaction::getAmount)
+                .sum();
+        ui.printSummary(filteredTransactions, total, start, end);
+
+    }
+}
+    
 ```
 
 **Design Consideration:**
@@ -103,13 +123,16 @@ Users can monitor their spending relative to a predefined threshold and receive 
 Priority levels help users organize and focus on transactions based on importance or urgency.  
 Spending alerts consolidate relevant financial insights—notifications, recurring transactions, and budget status—into
 one unified interface for quick decision-making.
+Expense Summaries: The summary feature provides users with quick, insightful overviews of their spending patterns 
+within a selected time frame, enhancing their ability to review and adjust financial behavior promptly.
 
 These capabilities integrate seamlessly with the transaction management system, enhancing the user experience through automation
 and clear visual cues for overspending or pending transactions.
 ---
 
 ### Enhancements implemented:
-
+For the set budget feature, I try to modify the logic that the user needs to check the current budget limit is exceeded or not before adding the new transaction. 
+If not, the transaction can be added successfully, else there will be a warning message shown up and the user needs to set the budget properly before adding next transaction. 
 
 ### Contributions to the UG:
 I contribute the user command part of UG. I listed the features implemented by myself and gave a simple description and the input command format and examples.
