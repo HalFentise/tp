@@ -409,6 +409,11 @@ public class Ui {
     public static void printRecurringTransactions(ArrayList<Transaction> transactions) {
         DateTimeFormatter df = DateTimeFormatter.ofPattern("E, dd MMM yyyy");
         printLine();
+        if (transactions.isEmpty()) {
+            System.out.println("You have no recurring payments ahead.");
+            printLine();
+            return;
+        }
         System.out.println("Here is a list of your upcoming recurring payments:");
         int count = 1;
         for (Transaction transaction : transactions) {
