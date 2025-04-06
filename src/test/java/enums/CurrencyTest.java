@@ -1,4 +1,4 @@
-package enumstructure;
+package enums;
 
 import org.junit.jupiter.api.Test;
 

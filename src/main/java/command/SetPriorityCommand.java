@@ -1,6 +1,6 @@
 package command;
 
-import enumstructure.Priority;
+import enums.Priority;
 import exceptions.NullException;
 import seedu.duke.TransactionManager;
 import ui.Ui;

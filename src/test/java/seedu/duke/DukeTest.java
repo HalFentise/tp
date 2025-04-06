@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import ui.Ui;
-import enumstructure.Category;
-import enumstructure.Currency;
-import enumstructure.Status;
+import enums.Category;
+import enums.Currency;
+import enums.Status;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

@@ -5,8 +5,8 @@ import static ui.ConsoleFormatter.printCenteredLine;
 import static ui.ConsoleFormatter.printCenteredTitle;
 import static ui.ConsoleFormatter.printLeftAlignedLine;
 
-import enumstructure.Category;
-import enumstructure.Currency;
+import enums.Category;
+import enums.Currency;
 import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;

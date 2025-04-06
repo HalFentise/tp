@@ -1,6 +1,6 @@
-import enumstructure.Category;
-import enumstructure.Currency;
-import enumstructure.Status;
+import enums.Category;
+import enums.Currency;
+import enums.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seedu.duke.Transaction;

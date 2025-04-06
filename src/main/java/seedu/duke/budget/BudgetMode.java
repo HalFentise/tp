@@ -1,6 +1,6 @@
 package seedu.duke.budget;
 
-import enumstructure.Category;
+import enums.Category;
 import ui.Ui;
 import ui.ConsoleFormatter;
 import seedu.duke.Storage;

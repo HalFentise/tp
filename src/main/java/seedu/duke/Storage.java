@@ -12,10 +12,10 @@ import java.util.Scanner;
 import java.time.format.DateTimeParseException;
 
 import exceptions.StorageParseException;
-import enumstructure.Category;
-import enumstructure.Currency;
-import enumstructure.Priority;
-import enumstructure.Status;
+import enums.Category;
+import enums.Currency;
+import enums.Priority;
+import enums.Status;
 import seedu.duke.budget.Budget;
 import seedu.duke.budget.BudgetList;
 

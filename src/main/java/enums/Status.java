@@ -1,4 +1,4 @@
-package enumstructure;
+package enums;
 
 public enum Status {
     PENDING("Pending", "The transaction has been created but is not yet completed"),

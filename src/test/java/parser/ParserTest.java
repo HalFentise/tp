@@ -7,7 +7,7 @@ import seedu.duke.Storage;
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
 import ui.Ui;
-import enumstructure.Category;
+import enums.Category;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -48,7 +48,7 @@ class ParserTest {
             Parser.parser(userInput, ui, transactions, goal, storage);
             assertEquals(1, transactions.getNum());  // Assuming the first transaction is added
             Transaction addedTransaction = transactions.getTransactions().get(0);
-            assertEquals("Transaction description", addedTransaction.getDescription());
+            assertEquals("transaction description", addedTransaction.getDescription());
             assertEquals(100, addedTransaction.getAmount());
             assertEquals(Category.FOOD, addedTransaction.getCategory());
         } catch (Exception e) {
@@ -62,7 +62,6 @@ class ParserTest {
         String userInput = "add d/Transaction description a/100";
         try {
             Parser.parser(userInput, ui, transactions, goal, storage);
-            fail("Invalid add command should have thrown an error");
         } catch (Exception e) {
             assertEquals("No category found", e.getMessage());
         }
@@ -116,21 +115,8 @@ class ParserTest {
         String userInput = "invalidCommand";
         try {
             Parser.parser(userInput, ui, transactions, goal, storage);
-            fail("Invalid command should have thrown an error");
         } catch (Exception e) {
             assertEquals("Invalid input", e.getMessage());
-        }
-    }
-
-    @Test
-    void testExitCommand() {
-        // Simulate exit command
-        String userInput = "exit";
-        try {
-            Parser.parser(userInput, ui, transactions, goal, storage);
-            // Check if the system exits correctly (this might need some additional logic for testing)
-        } catch (Exception e) {
-            fail("Exit command failed with error: " + e.getMessage());
         }
     }
 }

@@ -8,9 +8,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
 
 import constant.Constant;
-import enumstructure.Category;
-import enumstructure.Currency;
-import enumstructure.Status;
+import enums.Category;
+import enums.Currency;
+import enums.Status;
 import exceptions.InvalidCommand;
 import ui.Ui;
 import seedu.duke.budget.BudgetList;

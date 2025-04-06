@@ -1,6 +1,6 @@
 package seedu.duke;
 
-import enumstructure.Currency;
+import enums.Currency;
 import ui.Ui;
 
 import java.util.Scanner;

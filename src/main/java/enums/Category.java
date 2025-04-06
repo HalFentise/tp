@@ -1,4 +1,4 @@
-package enumstructure;
+package enums;
 
 public enum Category {
     FOOD,

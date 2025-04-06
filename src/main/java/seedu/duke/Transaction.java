@@ -1,9 +1,9 @@
 package seedu.duke;
 
-import enumstructure.Category;
-import enumstructure.Currency;
-import enumstructure.Priority;
-import enumstructure.Status;
+import enums.Category;
+import enums.Currency;
+import enums.Priority;
+import enums.Status;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
