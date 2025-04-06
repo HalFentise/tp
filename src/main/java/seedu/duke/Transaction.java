@@ -60,9 +60,20 @@ public class Transaction {
     }
 
 
+    @Override
     public String toString() {
-        return "Transaction id: " + id + " | " + description + " | " + amount + " " + currency + " | " + category;
+        return id + "," +
+                description + "," +
+                amount + "," +
+                currency + "," +
+                category + "," +
+                priority + "," +     // 第6列
+                status + "," +       // 第7列
+                (date == null ? "N/A" : date.toString());  // 第8列
     }
+
+
+
 
 
     //get method
@@ -181,4 +192,7 @@ public class Transaction {
         this.amount = currency.getRate() * toSGD;
         this.currency = currency;
     }
+
+
+
 }

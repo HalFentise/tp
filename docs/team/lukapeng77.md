@@ -5,10 +5,109 @@ This project is a text application that interact using text line. The Main Purpo
 It covers data saving, data parsing and data analysis.
 
 ## Summary of Contributions
+
 ### Code Contributions:
 Can view my code contribution from [here](https://nus-cs2113-ay2425s2.github.io/tp-dashboard/?search=Luka&breakdown=true&sort=groupTitle%20dsc&sortWithin=title&since=2025-02-21&timeframe=commit&mergegroup=&groupSelect=groupByRepos&checkedFileTypes=docs~functional-code~test-code~other)
 
 I implemented five main functional features of this product, such as deletion, set budget and priorities, notification and alert.
+
+---
+**Feature Description:**
+added three main functionalities to delete transaction, set budget limit and notifications for transactions:
+* Delete Transaction (delete): Lets users remove unwanted or erroneous transaction entries using their index in the displayed list.
+* Set Budget Limit (setBudget): Enables users to define a spending cap to avoid overspending. Once the total recorded expenses exceed this limit, a warning is displayed to alert the user.
+* Set Notifications for Upcoming Payments (notify): Allows users to schedule reminders for future expenses based on the transaction's description, amount, category, and due date.
+* Set Priority (priority): Allows users to assign a priority level (low, medium, or high) to a transaction. By default, all expenses are low priority. This helps users focus on the most urgent or important expenses.
+* View Spending Alerts (alert): Displays an overview of upcoming expenses, recurring payments, current remaining budget, and whether the spending has exceeded the set budget limit. This command combines notification, priority, and budget insights in a single view.
+
+```java
+/**
+     * Deletes a transaction from the transaction list.
+     *
+     * @param id the index of the transaction to be removed.
+     */
+    public void deleteExpense(int id) {
+        if (checkIdEmpty(id)) {
+            return;
+        }
+        transactions.remove(id);
+    }
+
+/** 
+    *function to record and trace the total budget limit
+    */
+    public void checkBudgetLimit(int budgetLimit) {
+        int totalAmount = 0;
+        for (Transaction transaction : transactions) {
+            if (!transaction.isDeleted()) {
+                totalAmount += transaction.getAmount();
+            }
+        }
+        if (totalAmount > budgetLimit) {
+            System.out.println("Warning: You have exceeded your budget limit!");
+        }
+    }
+    
+/** 
+    *Sets a notification for an upcoming transaction
+    */
+    public void notify(String description, int amount, String categoryString, String date) {
+        LocalDate dueDate = LocalDate.parse(date);
+
+        Category category = Category.valueOf(categoryString);
+
+        for (Transaction transaction : transactions) {
+            if (transaction.getDescription().equals(description) && transaction.getCategory().equals(category)) {
+                transaction.setDate(dueDate);
+            }
+        }
+    }
+
+/**
+ * @throws NullException If the date format is invalid.
+ */
+public AlertCommand(TransactionManager transcations, Ui ui) throws NullException {
+
+    try {
+        ui.listNotifications(transcations.getTransactions());
+        ConsoleFormatter.printLine();
+        ui.listPriorities(transcations.getTransactions());
+        Ui.printRecurringTransactions(transcations.getTransactions());
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+    }
+}
+
+/**
+ * @param index       The index for the corresponding transaction.
+ * @param priorityStr The string representing the priority level want to set.
+ * @throws NullException If the date format is invalid.
+ */
+public SetPriorityCommand(int index, String priorityStr, TransactionManager transcations, Ui ui) throws NullException {
+    Priority priority = Priority.valueOf(priorityStr.toUpperCase());
+
+    try {
+        transcations.getTransactions().get(index).setPriority(priority);
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+    }
+    ui.PrintPriority(transcations.getTransactions(), index);
+}
+```
+
+**Design Consideration:**
+
+The `deletion`, `budget limit` and `notification` features are designed to improve financial awareness and discipline.
+Users can monitor their spending relative to a predefined threshold and receive timely reminders for future payments.
+
+Priority levels help users organize and focus on transactions based on importance or urgency.  
+Spending alerts consolidate relevant financial insights—notifications, recurring transactions, and budget status—into
+one unified interface for quick decision-making.
+
+These capabilities integrate seamlessly with the transaction management system, enhancing the user experience through automation
+and clear visual cues for overspending or pending transactions.
+---
+
 ### Enhancements implemented:
 
 

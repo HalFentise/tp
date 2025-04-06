@@ -1,7 +1,9 @@
 package seedu.duke;
 
+import seedu.duke.budget.BudgetList;
 import ui.Ui;
 import parser.Parser;
+
 import java.util.ArrayList;
 
 public class Duke {
@@ -12,10 +14,20 @@ public class Duke {
 
     public Duke() {
         ui = new Ui();
-        goal = new FinancialGoal();
         storage = new Storage();
-        // load data
         transactions = new TransactionManager();
+        transactions.setStorage(storage);
+
+
+        ArrayList<Transaction> savedTransactions = storage.loadTransactions();
+        for (Transaction t : savedTransactions) {
+            transactions.addTransaction(t);
+        }
+
+        BudgetList loadedBudgets = storage.loadBudgets();
+        transactions.setBudgetList(loadedBudgets);
+
+        goal = storage.loadGoal();
 
         assert ui != null : "UI should be initialized";
         assert goal != null : "FinancialGoal should be initialized";
@@ -25,20 +37,14 @@ public class Duke {
 
     public void run() {
         ui.printWelcomeMessage();
-
-        ArrayList<Transaction> savedTransactions = storage.loadTransactions();
-        assert savedTransactions != null : "Loaded transactions should not be null";
-
-        for (Transaction t : savedTransactions) {
-            assert t != null : "Loaded transaction should not be null";
-            transactions.addTransaction(t);
-        }
-
+        ui.printSavingOverview(goal);
         transactions.remindRecurringTransactions();
 
         while (true) {
             String command = ui.readCommand();
-            assert command != null && !command.trim().isEmpty() : "User input should not be null or empty";
+            if (command == null || command.trim().isEmpty()) {
+                continue;
+            }
 
             Parser.parser(command, ui, transactions, goal, storage);
         }
@@ -48,5 +54,3 @@ public class Duke {
         new Duke().run();
     }
 }
-
-

@@ -3,6 +3,7 @@ package command;
 import exceptions.NullException;
 import seedu.duke.TransactionManager;
 import ui.Ui;
+import static ui.ConsoleFormatter.*;
 
 public class AlertCommand extends Command{
     /**
@@ -11,8 +12,9 @@ public class AlertCommand extends Command{
     public AlertCommand(TransactionManager transactions, Ui ui) throws NullException {
 
         try {
+            ui.PrintBudgetLimit(transactions);
             ui.listNotifications(transactions.getTransactions());
-            Ui.showLine();
+            printLine();
             ui.listPriorities(transactions.getTransactions());
             Ui.printRecurringTransactions(transactions.getTransactions());
         } catch (Exception e) {
