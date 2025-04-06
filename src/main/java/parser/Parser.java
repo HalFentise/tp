@@ -6,7 +6,7 @@ import command.NotifyCommand;
 import command.SummaryCommand;
 import command.SetBudgetCommand;
 import command.SetPriorityCommand;
-import enumStructure.Currency;
+import enums.Currency;
 import exceptions.NullException;
 import exceptions.InvalidCommand;
 import seedu.duke.FinancialGoal;
@@ -14,18 +14,45 @@ import seedu.duke.TransactionManager;
 import seedu.duke.Storage;
 import seedu.duke.SavingMode;
 import seedu.duke.budget.BudgetMode;
-import enumStructure.Category;
+import enums.Category;
 import ui.Ui;
-
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static constant.Constant.*;
+import static constant.Constant.COMMAND_ADD;
+import static constant.Constant.COMMAND_DELETE;
+import static constant.Constant.COMMAND_EDIT;
+import static constant.Constant.COMMAND_LIST;
+import static constant.Constant.COMMAND_ALERT;
+import static constant.Constant.COMMAND_EXIT;
+import static constant.Constant.COMMAND_CLEAR;
+import static constant.Constant.COMMAND_CURRENCY;
+import static constant.Constant.COMMAND_GOAL;
+import static constant.Constant.COMMAND_HELP;
+import static constant.Constant.COMMAND_NOTIFY;
+import static constant.Constant.COMMAND_TICK;
+import static constant.Constant.COMMAND_UNTICK;
+import static constant.Constant.COMMAND_SEARCH;
+import static constant.Constant.COMMAND_SET_BUDGET;
+import static constant.Constant.COMMAND_SET_PRIORITY;
+import static constant.Constant.COMMAND_SUMMARY;
+import static constant.Constant.COMMAND_RECUR;
+import static constant.Constant.FIND_DATE;
+import static constant.Constant.IDENTIFIER_AMOUNT;
+import static constant.Constant.INVALID_INPUT;
+import static constant.Constant.GOAL_DESC;
+import static constant.Constant.GOAL_NEW;
+import static constant.Constant.GOAL_STATUS;
+import static constant.Constant.GOAL_TARGET;
+import static constant.Constant.GOAL_TITLE;
+import static constant.Constant.EDIT_AM;
+import static constant.Constant.EDIT_CAT;
+import static constant.Constant.EDIT_CURR;
+import static constant.Constant.EDIT_DESC;
 
 public class Parser {
     /**
@@ -52,10 +79,10 @@ public class Parser {
             case COMMAND_ADD:
                 fields = new String[]{"description", "amount", "category", "date"};
                 String[] patterns = {
-                        "d/(.*?)(?:\\s+[act]/|$)", // description
-                        "a/(.*?)(?:\\s+[dct]/|$)", // amount
-                        "c/(.*?)(?:\\s+[dat]/|$)", // category
-                        "t/(.*?)(?:\\s+[dac]/|$)", // date (optional)
+                    "d/(.*?)(?:\\s+[act]/|$)", // description
+                    "a/(.*?)(?:\\s+[dct]/|$)", // amount
+                    "c/(.*?)(?:\\s+[dat]/|$)", // category
+                    "t/(.*?)(?:\\s+[dac]/|$)", // date (optional)
                 };
 
                 String[] results = new String[fields.length];
@@ -126,7 +153,7 @@ public class Parser {
             case COMMAND_CLEAR:
                 transactions.clear();
                 storage.saveTransactions(transactions.getTransactions());
-                ui.PrintClear();
+                ui.printClear();
                 break;
             case COMMAND_SET_BUDGET:
                 details = parts[1].split(IDENTIFIER_AMOUNT, 2);
@@ -151,9 +178,9 @@ public class Parser {
             case COMMAND_NOTIFY:
                 String[] detail = {"description", "category", "date"};
                 String[] notifyPatterns = {
-                        "d/(.*?)(?:\\s+[ac]/|$)", // d/
-                        "c/(.*?)(?:\\s+[at]/|$)",  // c/
-                        "t/(.*?)(?:\\s+[da]/|$)"  // t/
+                    "d/(.*?)(?:\\s+[ac]/|$)", // d/
+                    "c/(.*?)(?:\\s+[at]/|$)",  // c/
+                    "t/(.*?)(?:\\s+[da]/|$)"  // t/
                 };
 
                 String[] result = new String[detail.length];
@@ -208,7 +235,8 @@ public class Parser {
                         LocalDate end = LocalDate.parse(matcher.group(2));
                         new SummaryCommand(start, end, transactions, ui);
                     } else {
-                        throw new InvalidCommand("Invalid summary command format. Follow this input format: summary from/YYYY-MM-DD to/YYYY-MM-DD");
+                        throw new InvalidCommand("Invalid summary command format. " +
+                                "Follow this input format: summary from/YYYY-MM-DD to/YYYY-MM-DD");
                     }
                 } catch (DateTimeParseException e) {
                     throw new InvalidCommand("Invalid date format. Follow this format: YYYY-MM-DD.");
@@ -358,8 +386,9 @@ public class Parser {
                     return Category.values()[selected - 1];
                 }
             } catch (NumberFormatException ignored) {
+                System.out.println("Invalid selection. " +
+                        "Please enter a number between 1 and " + Category.values().length + ".");
             }
-            System.out.println("Invalid selection. Please enter a number between 1 and " + Category.values().length + ".");
         }
     }
 
@@ -379,8 +408,9 @@ public class Parser {
                     return Currency.values()[selected - 1]; // Return the selected currency
                 }
             } catch (NumberFormatException ignored) {
+                System.out.println("Invalid selection. " +
+                        "Please enter a number between 1 and " + Category.values().length + ".");
             }
-            System.out.println("Invalid selection. Please enter a number between 1 and " + Category.values().length + ".");
         }
     }
 
@@ -401,6 +431,7 @@ public class Parser {
             try {
                 return LocalDate.parse(input.trim(), format);
             } catch (DateTimeParseException ignored) {
+                throw new InvalidCommand("Invalid date format. Please use yyyy-MM-dd or dd/MM/yyyy.");
             }
         }
         throw new InvalidCommand("Invalid date format. Please use yyyy-MM-dd or dd/MM/yyyy.");
