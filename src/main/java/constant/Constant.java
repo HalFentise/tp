@@ -47,6 +47,11 @@ public class Constant {
     public static final String COMMAND_SET_PRIORITY = "priority";
 
     /**
+     * Command keyword for modifying savings
+     */
+    public static final String COMMAND_SUMMARY = "summary";
+
+    /**
      * Command keyword for unmarking a task (marking it as incomplete)
      */
     public static final String COMMAND_UNTICK = "untick";
@@ -149,7 +154,7 @@ public class Constant {
     /**
      * Command keyword for changing default currency
      */
-    public static final String CURRENCY = "currency";
+    public static final String COMMAND_CURRENCY = "currency";
 
 
     /**

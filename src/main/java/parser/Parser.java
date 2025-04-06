@@ -11,6 +11,7 @@ import seedu.duke.SavingMode;
 import seedu.duke.budget.BudgetMode;
 import enumStructure.Category;
 import ui.Ui;
+
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +25,7 @@ import static constant.Constant.*;
 public class Parser {
     /**
      * Parses the user input and returns the corresponding command.
+     *
      * @param userInput The raw user input string.
      */
     public static void parser(String userInput, Ui ui, TransactionManager transactions,
@@ -137,16 +139,15 @@ public class Parser {
                 String time = parts[1];
                 transactions.getUpcomingTransactions(time);
                 break;
-            case CURRENCY:
+            case COMMAND_CURRENCY:
                 Currency currency = parseCurrency(ui);
                 transactions.setDefaultCurrency(currency);
                 storage.saveDefaultCurrency(currency);
                 break;
             case COMMAND_NOTIFY:
-                String[] detail = {"description", "amount", "category", "date"};
+                String[] detail = {"description", "category", "date"};
                 String[] notifyPatterns = {
                         "d/(.*?)(?:\\s+[ac]/|$)", // d/
-                        "a/(.*?)(?:\\s+[dc]/|$)", // a/
                         "c/(.*?)(?:\\s+[at]/|$)",  // c/
                         "t/(.*?)(?:\\s+[da]/|$)"  // t/
                 };
@@ -164,8 +165,8 @@ public class Parser {
                     }
                 }
 
-                String categoryString = result[2].toUpperCase();
-                date = parseToLocalDate(result[3]);
+                String categoryString = result[1].toUpperCase();
+                date = parseToLocalDate(result[2]);
 
                 new NotifyCommand(result[0], categoryString, date, transactions, ui);
                 storage.saveTransactions(transactions.getTransactions());
@@ -178,7 +179,6 @@ public class Parser {
                 storage.saveTransactions(transactions.getTransactions());
                 break;
 
-
             case COMMAND_SET_PRIORITY:
                 try {
                     details = parts[1].split(" ", 2);
@@ -190,6 +190,27 @@ public class Parser {
                 }
                 storage.saveTransactions(transactions.getTransactions());
                 break;
+            case COMMAND_SUMMARY:
+                try {
+                    if (parts.length < 2) {
+                        throw new InvalidCommand("Missing date range. Use: summary from/YYYY-MM-DD to/YYYY-MM-DD");
+                    }
+
+                    Pattern pattern = Pattern.compile("from/(\\d{4}-\\d{2}-\\d{2})\\s+to/(\\d{4}-\\d{2}-\\d{2})");
+                    Matcher matcher = pattern.matcher(parts[1]);
+
+                    if (matcher.matches()) {
+                        LocalDate start = LocalDate.parse(matcher.group(1));
+                        LocalDate end = LocalDate.parse(matcher.group(2));
+                        new SummaryCommand(start, end, transactions, ui);
+                    } else {
+                        throw new InvalidCommand("Invalid summary command format. Follow this input format: summary from/YYYY-MM-DD to/YYYY-MM-DD");
+                    }
+                } catch (DateTimeParseException e) {
+                    throw new InvalidCommand("Invalid date format. Follow this format: YYYY-MM-DD.");
+                }
+                break;
+
             case COMMAND_RECUR:
                 int slashIndex = parts[1].indexOf("/");
                 try {
@@ -323,7 +344,7 @@ public class Parser {
         while (true) {
             ui.printCategoryHint();
             String choice = scanner.nextLine();
-            if(choice.equals("exit")) {
+            if (choice.equals("exit")) {
                 return Category.OTHER;
             }
             try {
@@ -344,7 +365,7 @@ public class Parser {
         while (true) {
             ui.printCurrencyHint();
             String choice = scanner.nextLine();
-            if(choice.equals("exit")) {
+            if (choice.equals("exit")) {
                 return Currency.SGD;
             }
             try {
@@ -353,7 +374,8 @@ public class Parser {
                     ui.printCurrencySetting();
                     return Currency.values()[selected - 1]; // Return the selected currency
                 }
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
             System.out.println("Invalid selection. Please enter a number between 1 and " + Category.values().length + ".");
         }
     }

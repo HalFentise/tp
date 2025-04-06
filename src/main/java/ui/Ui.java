@@ -8,6 +8,7 @@ import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.List;
@@ -173,6 +174,17 @@ public class Ui {
         if (!hasHighPriority) {
             System.out.println("No high priority transactions found.");
         }
+    }
+
+    public void printSummary(List<Transaction> transactions, double total, LocalDate start, LocalDate end) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        System.out.println("Expense Summary from " + start.format(formatter) + " to " + end.format(formatter));
+        System.out.println("--------------------------------------------------");
+        for (Transaction t : transactions) {
+            System.out.printf("%s | %s | %.2f\n", t.getDate(), t.getDescription(), t.getAmount());
+        }
+        System.out.println("--------------------------------------------------");
+        System.out.printf("Total Expenses: %.2f\n", total);
     }
 
     public void printTransactions(ArrayList<Transaction> transactions) {
