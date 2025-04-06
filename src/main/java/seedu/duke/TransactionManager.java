@@ -8,9 +8,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
 
 import constant.Constant;
-import enumStructure.Category;
-import enumStructure.Currency;
-import enumStructure.Status;
+import enums.Category;
+import enums.Currency;
+import enums.Status;
 import exceptions.InvalidCommand;
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
@@ -25,6 +25,10 @@ public class TransactionManager {
 
     private Storage storage;
     private int currentMaxId = 0;
+
+    public TransactionManager() {
+        transactions = new ArrayList<>();
+    }
 
     public void setStorage(Storage storage) {
         this.storage = storage;
@@ -51,10 +55,6 @@ public class TransactionManager {
 
     public void setBudgetList(BudgetList budgetList) {
         this.budgetList = budgetList;
-    }
-
-    public TransactionManager() {
-        transactions = new ArrayList<>();
     }
 
     public void setDefaultCurrency(Currency defaultCurrency) {
@@ -166,7 +166,8 @@ public class TransactionManager {
         }
 
         System.out.println("Budget limit set to " + budgetLimit + " " + defaultCurrency);
-        System.out.println("The remaining Budget amount is " + (budgetLimit - totalTransactionAmount) + " " + defaultCurrency + "\n");
+        System.out.println("The remaining Budget amount is " +
+                (budgetLimit - totalTransactionAmount) + " " + defaultCurrency + "\n");
     }
 
     public void clear() {
@@ -275,7 +276,9 @@ public class TransactionManager {
 
     public void setRecur(int id, int period) {
         Transaction t = searchTransaction(id);
-        if (t != null) t.setRecurringPeriod(period);
+        if (t != null) {
+            t.setRecurringPeriod(period);
+        }
     }
 
     public void sortTransactions(ArrayList<Transaction> list) {
@@ -336,19 +339,33 @@ public class TransactionManager {
     }
 
     public void editInfo(int id, String value, int type) throws Exception {
-        if (checkIdEmpty(id)) return;
+        if (checkIdEmpty(id)) {
+            return;
+        }
         Transaction t = searchTransaction(id);
-        if (t == null) return;
+        if (t == null) {
+            return;
+        }
 
         switch (type) {
-        case 0 -> t.setDescription(value);
-        case 1 -> t.setCategory(Category.valueOf(value));
-        case 2 -> {
+        case 0:
+            t.setDescription(value);
+            break;
+        case 1:
+            t.setCategory(Category.valueOf(value));
+            break;
+        case 2:
             int val = Integer.parseInt(value);
-            if (val < 0) throw new InvalidCommand("Expense cannot be negative!");
+            if (val < 0) {
+                throw new InvalidCommand("Expense cannot be negative!");
+            }
             t.setAmount(val);
-        }
-        case 3 -> t.setCurrency(Currency.valueOf(value));
+            break;
+        case 3:
+            t.setCurrency(Currency.valueOf(value));
+            break;
+        default:
+            break;
         }
     }
 
@@ -388,5 +405,4 @@ public class TransactionManager {
     public BudgetList getBudgetList() {
         return budgetList;
     }
-
 }

@@ -9,7 +9,7 @@ It covers data saving, data parsing and data analysis.
 ### Code Contributions:
 Can view my code contribution from [here](https://nus-cs2113-ay2425s2.github.io/tp-dashboard/?search=Luka&breakdown=true&sort=groupTitle%20dsc&sortWithin=title&since=2025-02-21&timeframe=commit&mergegroup=&groupSelect=groupByRepos&checkedFileTypes=docs~functional-code~test-code~other)
 
-I implemented five main functional features of this product, such as deletion, set budget and priorities, notification and alert.
+I implemented five main functional features of this product, such as deletion, set budget and priorities, notification, alert and summary.
 
 ---
 **Feature Description:**
@@ -95,26 +95,16 @@ public SetPriorityCommand(int index, String priorityStr, TransactionManager tran
     ui.PrintPriority(transcations.getTransactions(), index);
 }
 
-public class SummaryCommand extends Command {
-    private final LocalDate startDate;
-    private final LocalDate endDate;
-    private final TransactionManager transactions;
 
-    public SummaryCommand(LocalDate start, LocalDate end, TransactionManager transactions, Ui ui) {
-        this.startDate = start;
-        this.endDate = end;
-        this.transactions = transactions;
-        List<Transaction> filteredTransactions = transactions.getTransactionsBetween(start, end);
-        double total = filteredTransactions.stream()
-                .mapToDouble(Transaction::getAmount)
-                .sum();
-        ui.printSummary(filteredTransactions, total, start, end);
-
-    }
+public SummaryCommand(LocalDate start, LocalDate end, TransactionManager transactions, Ui ui) {
+    List<Transaction> filteredTransactions = transactions.getTransactionsBetween(start, end);
+    double total = filteredTransactions.stream()
+            .mapToDouble(Transaction::getAmount)
+            .sum();
+    ui.printSummary(filteredTransactions, total, start, end);
 }
-    
 ```
-
+    
 **Design Consideration:**
 
 The `deletion`, `budget limit` and `notification` features are designed to improve financial awareness and discipline.
@@ -123,6 +113,7 @@ Users can monitor their spending relative to a predefined threshold and receive 
 Priority levels help users organize and focus on transactions based on importance or urgency.  
 Spending alerts consolidate relevant financial insights—notifications, recurring transactions, and budget status—into
 one unified interface for quick decision-making.
+
 Expense Summaries: The summary feature provides users with quick, insightful overviews of their spending patterns 
 within a selected time frame, enhancing their ability to review and adjust financial behavior promptly.
 
@@ -131,8 +122,8 @@ and clear visual cues for overspending or pending transactions.
 ---
 
 ### Enhancements implemented:
-For the set budget feature, I try to modify the logic that the user needs to check the current budget limit is exceeded or not before adding the new transaction. 
-If not, the transaction can be added successfully, else there will be a warning message shown up and the user needs to set the budget properly before adding next transaction. 
+For the budget feature, logic enhancement ensures users verify current budget conditions before adding transactions. 
+Users receive immediate feedback if a transaction exceeds the budget limit, encouraging proactive adjustments.
 
 ### Contributions to the UG:
 I contribute the user command part of UG. I listed the features implemented by myself and gave a simple description and the input command format and examples.

@@ -162,12 +162,14 @@ Format: `currency`
 
 ---
 
-### Viewing summary of expenses: `summary`
-Sets reminders for upcoming expenses.
+### Viewing a summary of expenses: `summary`
+Viewing a summary of expenses for a selected time frame.
 
 Format: `summary from/START_DATE to/END_DATE` <br><br>
 Example:
-* `summary from/2025-03-01 to/2025-03-29` (Displays a summary of expenses for the selected time period)
+* `summary from/2025-03-02 to/2025-03-29` (Displays a summary of expenses for the selected time period)
+
+---
 
 ---
 
@@ -181,7 +183,7 @@ Example:
 ---
 
 ### Prioritizing specific expenses: `priority`
-Marks an expense based on different priorities including high, medium and low, default set to be low.
+Marks an expense based on different priorities, default set to be low.
 
 Format: `priority INDEX priority_level` <br><br>
 Example:
