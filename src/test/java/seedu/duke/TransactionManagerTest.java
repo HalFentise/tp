@@ -33,7 +33,7 @@ public class TransactionManagerTest {
 
     @Test
     public void testAddTransactionWithParams() {
-        manager.addTransaction(2, "Snacks", 5.0, Category.FOOD,null);
+        manager.addTransaction("Snacks", 5.0, Category.FOOD,null);
         ArrayList<Transaction> transactions = manager.getTransactions();
         assertEquals(1, transactions.size());
         assertEquals("Snacks", transactions.get(0).getDescription());
@@ -54,8 +54,8 @@ public class TransactionManagerTest {
 
     @Test
     public void testClearTransactions() {
-        manager.addTransaction(4, "Book", 20.0, Category.EDUCATION,null);
-        manager.addTransaction(5, "Groceries", 30.0, Category.FOOD,null);
+        manager.addTransaction("Book", 20.0, Category.EDUCATION,null);
+        manager.addTransaction("Groceries", 30.0, Category.FOOD,null);
         assertEquals(2, manager.getTransactions().size());
 
         manager.clear();

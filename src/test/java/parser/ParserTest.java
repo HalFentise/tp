@@ -88,7 +88,7 @@ class ParserTest {
         try {
             Parser.parser(userInput, ui, transactions, goal, storage);
             // Add a transaction to search for
-            transactions.addTransaction(1, "Test Transaction", 100, Category.FOOD,null);
+            transactions.addTransaction("Test Transaction", 100, Category.FOOD,null);
             // Assuming that searchTransactionList correctly finds the transaction by id
             assertEquals(1, transactions.searchTransactionList(true, "1").size());
         } catch (Exception e) {
@@ -101,7 +101,7 @@ class ParserTest {
         // Simulate tick command
         String userInput = "tick 1";
         try {
-            transactions.addTransaction(1, "Test Transaction", 100, Category.FOOD,null);
+            transactions.addTransaction("Test Transaction", 100, Category.FOOD,null);
             Parser.parser(userInput, ui, transactions, goal, storage);
             Transaction transaction = transactions.searchTransaction(1);
             assertTrue(transaction.isCompleted());

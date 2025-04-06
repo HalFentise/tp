@@ -12,7 +12,6 @@ import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
 import exceptions.InvalidCommand;
-import jdk.jshell.execution.LoaderDelegate;
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
 
@@ -109,7 +108,8 @@ public class TransactionManager {
         }
     }
 
-    public boolean addTransaction(int id, String description, double amount, Category category, LocalDate date) {
+    public boolean addTransaction(String description, double amount, Category category, LocalDate date) {
+        int id = getNextAvailableId();
         LocalDate now = LocalDate.now();
         Transaction transaction;
         if (date == null) {
@@ -319,7 +319,7 @@ public class TransactionManager {
         return result;
     }
 
-    public void getUpcomingTransactions(String period) throws Exception {
+    public void getUpcomingTransactions(String period) {
         switch (period.toLowerCase()) {
         case "today" -> System.out.println(getTransactionsOnDate(LocalDate.now()));
         case "week" -> System.out.println(getTransactionsThisWeek());

@@ -1,6 +1,11 @@
 package parser;
 
-import command.*;
+import command.AlertCommand;
+import command.DeleteCommand;
+import command.NotifyCommand;
+import command.SummaryCommand;
+import command.SetBudgetCommand;
+import command.SetPriorityCommand;
 import enumStructure.Currency;
 import exceptions.NullException;
 import exceptions.InvalidCommand;
@@ -131,7 +136,7 @@ public class Parser {
                     System.out.println("Invalid input: amount is too large, too small, or not a number.");
                 }
 
-                new SetBudgetCommand(amount, transactions, ui);
+                new SetBudgetCommand(amount, transactions);
                 storage.saveTransactions(transactions.getTransactions());
                 break;
             case FIND_DATE:

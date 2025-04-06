@@ -1,6 +1,9 @@
 package ui;
 
-import static ui.ConsoleFormatter.*;
+import static ui.ConsoleFormatter.printLine;
+import static ui.ConsoleFormatter.printCenteredLine;
+import static ui.ConsoleFormatter.printCenteredTitle;
+import static ui.ConsoleFormatter.printLeftAlignedLine;
 
 import enumStructure.Category;
 import enumStructure.Currency;
@@ -235,7 +238,7 @@ public class Ui {
             String completedMark = t.isCompleted() ? "    ✔" : "    ✖";
             String row = String.format(INNER_ROW_FORMAT,
                     t.getId(),
-                    limitWithEllipsis(t.getDescription(),15),
+                    limitWithEllipsis(t.getDescription()),
                     t.getAmount(),
                     t.getCurrency().toString(),
                     t.getCategory().toString(),
@@ -250,10 +253,10 @@ public class Ui {
         printLine();
     }
 
-    private static String limitWithEllipsis(String input, int maxLength) {
+    private static String limitWithEllipsis(String input) {
         if (input == null) return "";
-        if (input.length() <= maxLength) return input;
-        return input.substring(0, maxLength - 3) + "...";
+        if (input.length() <= 15) return input;
+        return input.substring(0, 15 - 3) + "...";
     }
 
 

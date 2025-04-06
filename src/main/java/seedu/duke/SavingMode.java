@@ -43,7 +43,7 @@ public class SavingMode {
 
         switch (command) {
             case "help":
-                printHelp(ui);
+                printHelp();
                 break;
 
             case "set":
@@ -96,7 +96,7 @@ public class SavingMode {
     }
 
 
-    private static void printHelp(Ui ui) {
+    private static void printHelp() {
         ConsoleFormatter.printLine();
         System.out.println("Saving Mode Commands:");
         System.out.println("- set: Create a new saving goal interactively");
