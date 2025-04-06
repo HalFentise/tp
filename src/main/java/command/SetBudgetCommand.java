@@ -4,8 +4,6 @@ import exceptions.NullException;
 import ui.Ui;
 import seedu.duke.TransactionManager;
 
-import java.math.BigDecimal;
-
 public class SetBudgetCommand extends Command {
 
     /**
@@ -15,7 +13,7 @@ public class SetBudgetCommand extends Command {
      * @param amount The int representing the budget to set.
      * @throws NullException If the date format is invalid.
      */
-    public SetBudgetCommand(double amount, TransactionManager transactions, Ui ui) throws NullException {
+    public SetBudgetCommand(double amount, TransactionManager transactions) throws NullException {
 
         try {
             if (amount >= 0) {

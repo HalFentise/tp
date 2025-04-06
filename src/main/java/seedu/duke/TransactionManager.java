@@ -12,7 +12,6 @@ import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
 import exceptions.InvalidCommand;
-import jdk.jshell.execution.LoaderDelegate;
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
 
@@ -320,7 +319,7 @@ public class TransactionManager {
         return result;
     }
 
-    public void getUpcomingTransactions(String period) throws Exception {
+    public void getUpcomingTransactions(String period) {
         switch (period.toLowerCase()) {
         case "today" -> System.out.println(getTransactionsOnDate(LocalDate.now()));
         case "week" -> System.out.println(getTransactionsThisWeek());

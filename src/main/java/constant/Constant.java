@@ -1,10 +1,6 @@
 package constant;
 
 public class Constant {
-    public static final String LINE_SEPARATOR = "____________________________________________________________";
-
-    public static final String INDENT = "%s";
-
     // Command keywords
     /**
      * Command keyword for adding a new expense
@@ -82,11 +78,6 @@ public class Constant {
     public static final String COMMAND_RECUR = "recur";
 
     /**
-     * Command keyword for modifying savings
-     */
-    public static final String COMMAND_SAVE = "save";
-
-    /**
      * Command prefix for goal-related actions
      */
     public static final String COMMAND_GOAL = "goal";
@@ -120,10 +111,6 @@ public class Constant {
      * Command tag for creating a new goal
      */
     public static final String GOAL_NEW = "new";
-    /**
-     * Command keyword for setting a period for a transaction to be recurring
-     */
-    public static final String COMMAND_CHANGECATE = "changecate";
 
     /**
      * Command tag for looking up tasks in a given time period.
@@ -171,19 +158,4 @@ public class Constant {
      * Identifier for setting a budget amount in user input
      */
     public static final String IDENTIFIER_AMOUNT = "a/";
-
-    /**
-     * Identifier for specifying a description in user input
-     */
-    public static final String IDENTIFIER_DESCRIPTION = " d/";
-
-    /**
-     * Identifier for specifying a category type in user input
-     */
-    public static final String IDENTIFIER_CATEGORY = " c/";
-
-    /**
-     * Identifier for specifying a category type in user input
-     */
-    public static final String IDENTIFIER_DATE = " t/";
 }

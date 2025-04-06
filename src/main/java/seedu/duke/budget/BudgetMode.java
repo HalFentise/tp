@@ -43,14 +43,14 @@ public class BudgetMode {
         String command = parts[0].toLowerCase();
 
         switch (command) {
-            case "help" -> printHelp(ui);
+            case "help" -> printHelp();
             case "set" -> handleSetBudget(ui, list, storage);
             case "list" -> list.printAllBudgets(ui);
             case "check" -> handleCheckBudget(parts, ui, list);
-            case "add" -> handleAddAmount(parts, list, ui, storage);
-            case "deduct" -> handleDeductAmount(parts, list, ui, storage);
+            case "add" -> handleAddAmount(parts, list, storage);
+            case "deduct" -> handleDeductAmount(parts, list, storage);
             case "modify" -> handleModify(parts, list, ui, storage);
-            case "delete" -> handleDelete(parts, list, ui, storage);
+            case "delete" -> handleDelete(parts, list, storage);
             default -> throw new Exception("Unknown command in Budget Mode. Type 'help' for available commands.");
         }
     }
@@ -89,7 +89,7 @@ public class BudgetMode {
             }
         }
 
-        Category category = null;
+        Category category;
         while (true) {
             System.out.println("Choose category:");
             Category[] categories = Category.values();
@@ -124,7 +124,7 @@ public class BudgetMode {
         list.printBudgetDetail(index, ui);
     }
 
-    private static void handleAddAmount(String[] parts, BudgetList list, Ui ui, Storage storage) throws Exception {
+    private static void handleAddAmount(String[] parts, BudgetList list, Storage storage) throws Exception {
         if (!parts[1].matches("i/\\d+ a/\\d+(\\.\\d+)?")) {
             throw new Exception("Usage: add i/INDEX a/AMOUNT");
         }
@@ -138,7 +138,7 @@ public class BudgetMode {
         ConsoleFormatter.printLine();
     }
 
-    private static void handleDeductAmount(String[] parts, BudgetList list, Ui ui, Storage storage) throws Exception {
+    private static void handleDeductAmount(String[] parts, BudgetList list, Storage storage) throws Exception {
         if (!parts[1].matches("i/\\d+ a/\\d+(\\.\\d+)?")) {
             throw new Exception("Usage: deduct i/INDEX a/AMOUNT");
         }
@@ -182,7 +182,7 @@ public class BudgetMode {
         list.printBudgetDetail(index, ui);
     }
 
-    private static void handleDelete(String[] parts, BudgetList list, Ui ui, Storage storage) throws Exception {
+    private static void handleDelete(String[] parts, BudgetList list, Storage storage) throws Exception {
         if (parts.length < 2 || !parts[1].startsWith("i/")) {
             throw new Exception("Usage: delete i/INDEX");
         }
@@ -198,7 +198,7 @@ public class BudgetMode {
         ConsoleFormatter.printLine();
     }
 
-    private static void printHelp(Ui ui) {
+    private static void printHelp() {
         ConsoleFormatter.printLine();
         System.out.println("📘 Budget Mode Commands:");
         System.out.println("- set: Interactively create a new budget");
