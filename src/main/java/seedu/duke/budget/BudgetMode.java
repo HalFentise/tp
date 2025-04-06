@@ -10,7 +10,6 @@ import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class BudgetMode {
-
     public static void enter(Ui ui, BudgetList budgetList, Storage storage) {
         Scanner scanner = new Scanner(System.in);
         ConsoleFormatter.printLine();
@@ -134,8 +133,9 @@ public class BudgetMode {
                     category = categories[index - 1];
                     break;
                 }
-            } catch (NumberFormatException ignored) {}
-            ui.showError("Invalid selection.");
+            } catch (NumberFormatException ignored) {
+                ui.showError("Invalid selection.");
+            }
         }
 
         Budget budget = new Budget(name, totalAmount, endDate, category);
@@ -192,17 +192,13 @@ public class BudgetMode {
         for (String token : tokens) {
             if (token.startsWith("i/")) {
                 index = Integer.parseInt(token.substring(2)) - 1;
-            }
-            else if (token.startsWith("n/")) {
+            } else if (token.startsWith("n/")) {
                 name = token.substring(2);
-            }
-            else if (token.startsWith("a/")) {
+            } else if (token.startsWith("a/")) {
                 amount = Double.parseDouble(token.substring(2));
-            }
-            else if (token.startsWith("e/")) {
+            } else if (token.startsWith("e/")) {
                 endDate = LocalDate.parse(token.substring(2));
-            }
-            else if (token.startsWith("c/")) {
+            } else if (token.startsWith("c/")) {
                 category = Category.valueOf(token.substring(2).toUpperCase());
             }
         }

@@ -77,8 +77,8 @@ public class SavingMode {
         storage.saveGoal(goal);
     }
 
-    private static void handleSubtractFromSavings
-            (String[] parts, FinancialGoal goal, Storage storage) throws Exception {
+    private static void handleSubtractFromSavings(String[] parts
+            , FinancialGoal goal, Storage storage) throws Exception {
         if (parts.length < 2 || !parts[1].startsWith("a/")) {
             throw new Exception("Usage: deduct a/AMOUNT");
         }
