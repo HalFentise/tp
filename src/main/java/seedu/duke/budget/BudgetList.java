@@ -57,7 +57,7 @@ public class BudgetList {
     }
 
     public void printAllBudgets(Ui ui) {
-        final int TOTAL_WIDTH = 81;
+        final int TOTAL_WIDTH = 121;
         final String HEADER_FORMAT = "| %-2s | %-14s | %9s | %-10s | %-10s |";
         final String ROW_FORMAT    = "| %2d | %-14s | %9.2f | %-10s | %-10s |";
 

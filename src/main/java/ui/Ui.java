@@ -192,11 +192,16 @@ public class Ui {
     }
 
     public void printTransactionsTable(List<Transaction> transactions) {
-        final int TOTAL_WIDTH = 81;
-        final String INNER_HEADER_FORMAT = "| %-2s | %-12s | %9s | %-8s | %-9s | %-8s |";
-        final String INNER_ROW_FORMAT    = "| %2d | %-12s | %9.2f | %-8s | %-9s | %-8s |";
+        final int TOTAL_WIDTH = 121;
+        final String INNER_HEADER_FORMAT = "| %-2s | %-12s | %9s | %-8s | %-9s | %-10s | %-11s | %-8s |";
+        final String INNER_ROW_FORMAT    = "| %2d | %-12s | %9.2f | %-8s | %-9s | %-10s | %-11s | %-8s |";
 
-        String sampleHeader = String.format(INNER_HEADER_FORMAT, "ID", "Description", "Amount", "Currency", "Category", "Priority");
+        String sampleHeader = String.format(INNER_HEADER_FORMAT,
+                "ID", "Description", "Amount", "Currency", "Category", "Date", "Completed", "Priority");
+
+
+
+
         int tableWidth = sampleHeader.length(); // ~64
         int spaceInsideBox = TOTAL_WIDTH - 4;   // 外框两侧 || 各占2
         int sidePadding = (spaceInsideBox - tableWidth) / 2;
@@ -218,14 +223,19 @@ public class Ui {
 
         // 每一行打印
         for (Transaction t : transactions) {
+            String completedMark = t.isCompleted() ? " [ ● ] " : " [ ○ ] ";
             String row = String.format(INNER_ROW_FORMAT,
                     t.getId(),
                     t.getDescription(),
                     t.getAmount(),
-                    t.getCurrency(),
-                    t.getCategory(),
-                    t.getPriority());
+                    t.getCurrency().toString(),
+                    t.getCategory().toString(),
+                    t.getDate() == null ? "N/A" : t.getDate().toString(),
+                    completedMark,
+                    t.getPriority().toString());
+
             printTableLine(row, sidePadding);
+
         }
 
         // 打印底边框
@@ -236,7 +246,7 @@ public class Ui {
      * 打印表格行，包裹 || 并居中填充空格
      */
     public void printTableLine(String content, int sidePadding) {
-        final int TOTAL_WIDTH = 81;
+        final int TOTAL_WIDTH = 121;
         int contentWidth = TOTAL_WIDTH - 4;
         int rightPadding = contentWidth - sidePadding - content.length();
         String line = "| " + " ".repeat(sidePadding) + content + " ".repeat(Math.max(0, rightPadding)) + " |";

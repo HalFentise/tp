@@ -1,7 +1,7 @@
 package ui;
 
 public class ConsoleFormatter {
-    private static final int DEFAULT_WIDTH = 81;
+    private static final int DEFAULT_WIDTH = 121;
 
     public static void printLine() {
         System.out.println("+" + "-".repeat(DEFAULT_WIDTH - 2) + "+");
@@ -20,7 +20,7 @@ public class ConsoleFormatter {
     }
 
     public static void printLeftAlignedLine(String text) {
-        final int DEFAULT_WIDTH = 81;
+        final int DEFAULT_WIDTH = 121;
         final int contentWidth = DEFAULT_WIDTH - 2;
         final int indentSpaces = 14;
         final String indent = " ".repeat(indentSpaces);

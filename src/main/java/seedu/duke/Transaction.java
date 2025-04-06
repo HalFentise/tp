@@ -62,8 +62,17 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return id + "," + description + "," + amount + "," + currency + "," + category + "," + priority;
+        return id + "," +
+                description + "," +
+                amount + "," +
+                currency + "," +
+                category + "," +
+                priority + "," +     // 第6列
+                status + "," +       // 第7列
+                (date == null ? "N/A" : date.toString());  // 第8列
     }
+
+
 
 
 
