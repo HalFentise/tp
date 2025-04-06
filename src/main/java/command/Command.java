@@ -10,7 +10,6 @@ public abstract class Command {
      *
      * @param transactions The task list to operate on.
      * @param ui       The user interface for displaying messages.
-     //* @param storage  The storage for saving the updated task list.
      * @throws NullException If an error occurs during execution.
      */
     public abstract void execute(TransactionManager transactions, Ui ui) throws NullException;

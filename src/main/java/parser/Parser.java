@@ -22,7 +22,6 @@ import static constant.Constant.*;
 public class Parser {
     /**
      * Parses the user input and returns the corresponding command.
-     *
      * @param userInput The raw user input string.
      * @throws NullException If the input is invalid or missing required details.
      */

@@ -28,7 +28,6 @@ public class AlertCommand extends Command{
      *
      * @param transactions The task list containing all tasks.
      * @param ui           The user interface for displaying results.
-     *                     //* @param storage  The storage system (not used in this command).
      * @throws NullException If an error occurs while processing the command.
      */
     @Override
