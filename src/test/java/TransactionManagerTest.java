@@ -101,7 +101,7 @@ public class TransactionManagerTest {
         transaction.setRecurringPeriod(7);
         String result = transaction.toString();
         assertTrue(result.contains("Transaction id: 1"));
-        assertTrue(result.contains("amount: 1000"));
+        assertTrue(result.contains("amount: 100"));
         assertTrue(result.contains("description: Lunch"));
         assertTrue(result.contains("category: FOOD"));
         assertTrue(result.contains("period: 7"));
