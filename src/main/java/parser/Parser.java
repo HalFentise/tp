@@ -12,6 +12,9 @@ import enumStructure.Category;
 import ui.Ui;
 import ui.ConsoleFormatter;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +25,6 @@ public class Parser {
     /**
      * Parses the user input and returns the corresponding command.
      * @param userInput The raw user input string.
-     * @throws NullException If the input is invalid or missing required details.
      */
     public static void parser(String userInput, Ui ui, TransactionManager transactions,
                               FinancialGoal goal, Storage storage) {
@@ -32,6 +34,7 @@ public class Parser {
         double amount;
         int index;
         int id;
+        LocalDate date;
         String[] fields;
 
         try {
@@ -40,29 +43,35 @@ public class Parser {
                 ui.help();
                 break;
             case COMMAND_ADD:
-                fields = new String[]{"description", "amount", "category"};
+                fields = new String[]{"description", "amount", "category", "date"};
                 String[] patterns = {
-                        "d/(.*?)(?:\\s+[ace]/|$)", // d/
-                        "a/(.*?)(?:\\s+[dce]/|$)", // a/
-                        "c/(.*?)(?:\\s+[dae]/|$)"  // c/
+                        "d/(.*?)(?:\\s+[act]/|$)", // description
+                        "a/(.*?)(?:\\s+[dct]/|$)", // amount
+                        "c/(.*?)(?:\\s+[dat]/|$)", // category
+                        "t/(.*?)(?:\\s+[dac]/|$)", // date (optional)
                 };
 
                 String[] results = new String[fields.length];
-                //match pattern
+
                 for (int i = 0; i < fields.length; i++) {
                     Pattern pattern = Pattern.compile(patterns[i]);
                     Matcher matcher = pattern.matcher(parts[1]);
 
                     if (matcher.find()) {
                         results[i] = matcher.group(1).trim();
-                    } else {
+                    } else if (!fields[i].equals("date")) {
                         throw new InvalidCommand("No " + fields[i] + " found");
+                    } else {
+                        results[i] = null; // date is optional
                     }
                 }
+
                 amount = Double.parseDouble(results[1]);
                 Category category = parseCategory(results[2], ui);
+                date = parseToLocalDate(results[3]);
 
-                boolean success = transactions.addTransaction(transactions.getNum() + 1, results[0], amount, category);
+                boolean success = transactions.addTransaction(transactions.getNum() + 1,
+                        results[0], amount, category, date);
 
                 if (success) {
                     ui.add(transactions.searchTransaction(transactions.getNum()));
@@ -103,12 +112,11 @@ public class Parser {
                 }
                 storage.saveTransactions(transactions.getTransactions());
                 break;
-                case COMMAND_DELETE:
-                    id = Integer.parseInt(parts[1]);
-                    new DeleteCommand(id, transactions, ui);
-                    storage.saveTransactions(transactions.getTransactions());
-                    break;
-
+            case COMMAND_DELETE:
+                id = Integer.parseInt(parts[1]);
+                new DeleteCommand(id, transactions, ui);
+                storage.saveTransactions(transactions.getTransactions());
+                break;
             case COMMAND_CLEAR:
                 transactions.clear();
                 storage.saveTransactions(transactions.getTransactions());
@@ -146,11 +154,10 @@ public class Parser {
                     }
                 }
 
-                amount = Double.parseDouble(result[1]);
                 String categoryString = result[2].toUpperCase();
-                String date = result[3];
+                date = parseToLocalDate(result[3]);
 
-                new NotifyCommand(result[0], amount, categoryString, date, transactions, ui);
+                new NotifyCommand(result[0], categoryString, date, transactions, ui);
                 storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_ALERT:
@@ -191,12 +198,11 @@ public class Parser {
                 System.exit(0);
                 break;
             case "saving":
-                    SavingMode.enter(ui, goal, storage);
-                    break;
+                SavingMode.enter(ui, goal, storage);
+                break;
             case "budget":
                 BudgetMode.enter(ui, transactions.getBudgetList(), storage);
                 break;
-
             case COMMAND_GOAL:
                 goal.updateExpenses(transactions);
                 try {
@@ -328,4 +334,24 @@ public class Parser {
         }
     }
 
+    private static LocalDate parseToLocalDate(String input) throws InvalidCommand {
+        if (input == null || input.isBlank()) {
+            return null;
+        }
+
+        DateTimeFormatter[] formats = new DateTimeFormatter[]{
+                DateTimeFormatter.ofPattern("yyyy-MM-dd"),
+                DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+                DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+                DateTimeFormatter.ofPattern("yyyy/MM/dd")
+        };
+
+        for (DateTimeFormatter format : formats) {
+            try {
+                return LocalDate.parse(input.trim(), format);
+            } catch (DateTimeParseException ignored) {
+            }
+        }
+        throw new InvalidCommand("Invalid date format. Please use yyyy-MM-dd or dd/MM/yyyy.");
+    }
 }

@@ -10,13 +10,12 @@ import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
 import exceptions.InvalidCommand;
-import exceptions.NullException;
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
 
 public class TransactionManager {
     private ArrayList<Transaction> transactions;
-    private Currency defaultCurrency = Currency.SGD;
+    private final Currency defaultCurrency = Currency.SGD;
     private double budgetLimit = -1;
     private boolean isBudgetSet = false;
 
@@ -73,9 +72,14 @@ public class TransactionManager {
         }
     }
 
-    public boolean addTransaction(int id, String description, double amount, Category category) {
-        LocalDate date = LocalDate.now();
-        Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
+    public boolean addTransaction(int id, String description, double amount, Category category, LocalDate date) {
+        LocalDate now = LocalDate.now();
+        Transaction transaction;
+        if (date == null) {
+            transaction = new Transaction(id, description, amount, defaultCurrency, category, now, Status.PENDING);
+        } else {
+            transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
+        }
 
         if (isBudgetSet && (getTotalTransactionAmount() + amount > budgetLimit)) {
             return false;
@@ -174,7 +178,7 @@ public class TransactionManager {
         }
     }
 
-    public ArrayList<Transaction> sortRecurringTransactions(ArrayList<Transaction> list) {
+    public void sortRecurringTransactions(ArrayList<Transaction> list) {
         for (Transaction t : list) {
             int period = t.getRecurringPeriod();
             while (t.getDate().isBefore(LocalDate.now())) {
@@ -182,15 +186,13 @@ public class TransactionManager {
             }
         }
         list.sort(Comparator.comparing(Transaction::getDate));
-        return list;
     }
 
-    public void notify(String desc, double amount, String category, String date) {
-        LocalDate due = LocalDate.parse(date);
+    public void notify(String desc, String category,LocalDate date) {
         Category cat = Category.valueOf(category);
         for (Transaction t : transactions) {
             if (t.getDescription().equals(desc) && t.getCategory() == cat) {
-                t.setDate(due);
+                t.setDate(date);
             }
         }
     }
@@ -200,7 +202,7 @@ public class TransactionManager {
         if (transaction != null) {
             transaction.complete();
         } else {
-            throw new InvalidCommand("Transaction not found! Complete failed.");
+            throw new InvalidCommand("Transaction not found! Please type a valid id");
         }
     }
 
@@ -209,7 +211,7 @@ public class TransactionManager {
         if (transaction != null) {
             transaction.notComplete();
         } else {
-            throw new InvalidCommand("Transaction not found!");
+            throw new InvalidCommand("Transaction not found! Please type a valid id");
         }
     }
 
@@ -218,9 +220,8 @@ public class TransactionManager {
         if (t != null) t.setRecurringPeriod(period);
     }
 
-    public ArrayList<Transaction> sortTransactions(ArrayList<Transaction> list) {
+    public void sortTransactions(ArrayList<Transaction> list) {
         list.sort(Comparator.comparing(Transaction::getDate, Comparator.nullsLast(Comparator.naturalOrder())));
-        return list;
     }
 
     public ArrayList<Transaction> getTransactionsOnDate(LocalDate date) {
@@ -260,7 +261,7 @@ public class TransactionManager {
         return result;
     }
 
-    public void getUpcomingTransactions(String period) {
+    public void getUpcomingTransactions(String period) throws Exception{
         switch (period.toLowerCase()) {
             case "today" -> System.out.println(getTransactionsOnDate(LocalDate.now()));
             case "week" -> System.out.println(getTransactionsThisWeek());
@@ -270,7 +271,7 @@ public class TransactionManager {
                     LocalDate date = LocalDate.parse(period);
                     System.out.println(getTransactionsOnDate(date));
                 } catch (Exception e) {
-                    System.out.println("Invalid period. Use 'today', 'week', 'month', or a date (yyyy-mm-dd)");
+                    throw new InvalidCommand("Invalid period. Use 'today', 'week', 'month', or a date (yyyy-mm-dd)");
                 }
             }
         }
@@ -310,7 +311,7 @@ public class TransactionManager {
         for (Transaction t : transactions) {
             if (!t.isDeleted() && t.getRecurringPeriod() > 0) {
                 long days = ChronoUnit.DAYS.between(t.getDate(), LocalDate.now());
-                sum += t.getAmount() * (days / t.getRecurringPeriod() + 1);
+                sum += t.getAmount() * ((double) days / t.getRecurringPeriod() + 1);
             }
         }
         return sum;

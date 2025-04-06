@@ -149,7 +149,6 @@ public class Storage {
                 throw new StorageParseException("Invalid priority: " + parts[10]);
             }
 
-            // Build transaction
             Transaction transaction = new Transaction(id, description, amount, currency, category, date, status);
             transaction.setRecurringPeriod(recurringPeriod);
             transaction.setPriority(priority);
@@ -282,7 +281,6 @@ public class Storage {
         } catch (IOException | NumberFormatException e) {
             System.out.println("Error loading budgets: " + e.getMessage());
         }
-
         return budgetList;
     }
 }
