@@ -175,4 +175,7 @@ public class Constant {
      * Identifier for specifying a category type in user input
      */
     public static final String IDENTIFIER_DATE = " t/";
+
+    public static final String COMMAND_STATUS = "status";
+
 }

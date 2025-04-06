@@ -38,6 +38,7 @@ public class Duke {
     public void run() {
         ui.printWelcomeMessage();
         ui.printSavingOverview(goal);
+        ui.printStatisticsOverview(transactions);
         transactions.remindRecurringTransactions();
 
         while (true) {

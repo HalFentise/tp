@@ -8,28 +8,33 @@ public enum Currency {
     JPY("Japanese Yen", 111.14),
     GBP("British Pound", 0.58);
 
-    private final String fullName; // full name
-    private final double rate;
+    private final String fullName;
+    private double rate;
 
-    //Constructor
+    // Constructor
     Currency(String fullName, double rate) {
         this.fullName = fullName;
         this.rate = rate;
     }
 
-    //Display full name
-    String getFullName() {
+    // Display full name
+    public String getFullName() {
         return fullName;
     }
 
-    //Display rate
+    // Display rate
     public double getRate() {
         return rate;
     }
 
-    //Convert method
+    // ✅ Setter for dynamic update
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
+    // Convert method
     public double convertTo(double money, Currency target) {
-        double sgMoney = money * 1/rate;
+        double sgMoney = money / rate;
         return target.getRate() * sgMoney;
     }
 

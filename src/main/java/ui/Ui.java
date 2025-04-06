@@ -12,6 +12,10 @@ import java.util.List;
 import java.time.format.DateTimeFormatter;
 
 import static constant.Constant.*;
+import enumStructure.Currency;
+import java.util.Map;
+import enumStructure.Category;
+
 
 public class Ui {
     private final Scanner scanner;
@@ -21,7 +25,7 @@ public class Ui {
     }
 
     public String readCommand() {
-        System.out.println("Enter your command:");
+        System.out.print(">");
         return scanner.nextLine();
     }
 
@@ -38,38 +42,47 @@ public class Ui {
     }
 
     public void help() {
-        printCenteredTitle("Help");
-        printLeftAlignedLine("add: Adds a new transaction");
-        printLeftAlignedLine("  Usage: add d/<description> a/<amount> c/<category>");
-        printLeftAlignedLine("  Example: add 'Grocery Shopping' 50.0 SGD Groceries");
-        printLeftAlignedLine("           2025-04-01 Pending");
-        printLeftAlignedLine("");
-        printLeftAlignedLine("delete: Deletes an existing transaction by ID");
-        printLeftAlignedLine("  Usage: delete <transaction_id>");
-        printLeftAlignedLine("  Example: delete 1");
-        printLeftAlignedLine("");
-        printLeftAlignedLine("list: Lists all transactions");
-        printLeftAlignedLine("  Usage: list");
-        printLeftAlignedLine("  Example: list");
-        printLeftAlignedLine("");
-        printLeftAlignedLine("search: Searches transactions based on a query (description)");
-        printLeftAlignedLine("  Usage: search <query>");
-        printLeftAlignedLine("  Example: search 'Groceries'");
-        printLeftAlignedLine("");
-        printLeftAlignedLine("update: edit an existing transaction's details");
-        printLeftAlignedLine("  Usage: edit <transaction_id>");
-        printLeftAlignedLine("         <description|amount|currency|category|status>");
-        printLeftAlignedLine("         <new_value>");
-        printLeftAlignedLine("  Example: edit 1 description 'Monthly Groceries'");
-        printLeftAlignedLine("");
-        printLeftAlignedLine("remind: Sets up reminders for recurring transactions");
-        printLeftAlignedLine("  Usage: remind");
-        printLeftAlignedLine("  Example: remind");
-        printLeftAlignedLine("");
-        printLeftAlignedLine("exit: Exits the application");
-        printLeftAlignedLine("  Usage: exit");
+        printCenteredTitle("NoteUrSavings - Help Menu");
+
+        printLeftAlignedLine("General Commands:");
+        printLeftAlignedLine("  help                - Show this help menu");
+        printLeftAlignedLine("  exit                - Exit the application");
+
+        printLine();
+        printLeftAlignedLine("Transaction Commands:");
+        printLeftAlignedLine("  add                 - Start guided wizard to add a transaction");
+        printLeftAlignedLine("  edit                - Edit a transaction step by step (wizard)");
+        printLeftAlignedLine("  status              - Mark/unmark transaction complete/incomplete");
+        printLeftAlignedLine("  list                - Show all transactions");
+        printLeftAlignedLine("  view <id>           - View full details of a specific transaction");
+        printLeftAlignedLine("  search <text>       - Search transactions by keyword");
+        printLeftAlignedLine("  delete <id>         - Delete a transaction by ID");
+
+        printLine();
+        printLeftAlignedLine("Statistics & Balance:");
+        printLeftAlignedLine("  stats               - Show overview of your finances by category/status");
+        printLeftAlignedLine("  balance             - Show total balance (based on completed transactions)");
+        printLeftAlignedLine("  currency            - View all exchange rates to SGD");
+        printLeftAlignedLine("  currency XXX RATE   - Update exchange rate for currency XXX (e.g. USD 0.75)");
+
+        printLine();
+        printLeftAlignedLine("Saving Mode:");
+        printLeftAlignedLine("  saving              - Enter interactive Saving Mode");
+        printLeftAlignedLine("    - set              - Create or update saving goal");
+        printLeftAlignedLine("    - list             - Show saving goal details");
+        printLeftAlignedLine("    - contribute a/X   - Add funds from balance (simulate expense)");
+        printLeftAlignedLine("    - deduct a/X       - Withdraw from savings (simulate income)");
+        printLeftAlignedLine("    - exit             - Return to main menu");
+
+        printLine();
+        printLeftAlignedLine("Budget Mode:");
+        printLeftAlignedLine("  budget              - Enter interactive Budget Mode (not detailed here)");
+
+        printLine();
+        printCenteredLine("Type commands directly. Fields will be prompted in wizard mode.");
         printLine();
     }
+
 
     public void printExit() {
         printLine();
@@ -176,71 +189,77 @@ public class Ui {
     }
 
     public void printTransactions(ArrayList<Transaction> transactions) {
-        printLine();
         if (transactions.isEmpty()) {
-            System.out.println("No transaction found.");
+            printCenteredTitle("View Transaction");
+            printCenteredLine("No transaction found.");
             printLine();
             return;
         }
-        System.out.println("Here is the list of transactions:");
         printTransactionsTable(transactions);
-        printLine();
     }
 
     public void printTransaction(Transaction transaction) {
-        System.out.println(transaction);
+        viewTransactionDetail(transaction);
     }
 
     public void printTransactionsTable(List<Transaction> transactions) {
         final int TOTAL_WIDTH = 121;
         final String INNER_HEADER_FORMAT = "| %-2s | %-12s | %9s | %-8s | %-9s | %-10s | %-11s | %-8s |";
-        final String INNER_ROW_FORMAT    = "| %2d | %-12s | %9.2f | %-8s | %-9s | %-10s | %-11s | %-8s |";
+        final String INNER_ROW_FORMAT    = "| %2d | %-12s | %9s | %-8s | %-9s | %-10s | %-11s | %-8s |";
 
         String sampleHeader = String.format(INNER_HEADER_FORMAT,
                 "ID", "Description", "Amount", "Currency", "Category", "Date", "Completed", "Priority");
 
-
-
-
-        int tableWidth = sampleHeader.length(); // ~64
-        int spaceInsideBox = TOTAL_WIDTH - 4;   // 外框两侧 || 各占2
+        int tableWidth = sampleHeader.length();
+        int spaceInsideBox = TOTAL_WIDTH - 4;
         int sidePadding = (spaceInsideBox - tableWidth) / 2;
 
-        // 打印顶边框
-        printLine();
+        printCenteredTitle("View Transaction");
 
         if (transactions.isEmpty()) {
-            printLeftAlignedLine("No transaction found.");
+            printCenteredLine("No transaction found.");
             printLine();
             return;
         }
 
-        // 打印表头
         printTableLine(sampleHeader, sidePadding);
-
-        // 表头下横线
         printTableLine("-".repeat(tableWidth), sidePadding);
 
-        // 每一行打印
         for (Transaction t : transactions) {
             String completedMark = t.isCompleted() ? " [ ● ] " : " [ ○ ] ";
+
+            // ✨ 内容字段超长截断
+            String desc = trimToFit(t.getDescription(), 12);
+            String curr = trimToFit(t.getCurrency().toString(), 8);
+            String cat  = trimToFit(t.getCategory().toString(), 9);
+            String date = trimToFit(t.getDate() == null ? "N/A" : t.getDate().toString(), 10);
+            String prio = trimToFit(t.getPriority().toString(), 8);
+
+            // ✨ 数值字段过大转科学计数法
+            String amountFormatted;
+            if (Math.abs(t.getAmount()) >= 1e7 || Math.abs(t.getAmount()) < 0.01 && t.getAmount() != 0) {
+                amountFormatted = String.format("%9.2E", t.getAmount());
+            } else {
+                amountFormatted = String.format("%9.2f", t.getAmount());
+            }
+
             String row = String.format(INNER_ROW_FORMAT,
                     t.getId(),
-                    t.getDescription(),
-                    t.getAmount(),
-                    t.getCurrency().toString(),
-                    t.getCategory().toString(),
-                    t.getDate() == null ? "N/A" : t.getDate().toString(),
+                    desc,
+                    amountFormatted,
+                    curr,
+                    cat,
+                    date,
                     completedMark,
-                    t.getPriority().toString());
+                    prio
+            );
 
             printTableLine(row, sidePadding);
-
         }
 
-        // 打印底边框
         printLine();
     }
+
 
     /**
      * 打印表格行，包裹 || 并居中填充空格
@@ -252,6 +271,17 @@ public class Ui {
         String line = "| " + " ".repeat(sidePadding) + content + " ".repeat(Math.max(0, rightPadding)) + " |";
         System.out.println(line);
     }
+
+    private String trimToFit(String content, int maxLength) {
+        if (content.length() <= maxLength) {
+            return content;
+        } else if (maxLength >= 3) {
+            return content.substring(0, maxLength - 3) + "...";
+        } else {
+            return content.substring(0, maxLength); // fallback
+        }
+    }
+
 
 
 
@@ -272,7 +302,8 @@ public class Ui {
 
     public void add(Transaction transaction) {
         printLine();
-        System.out.println("I have added the following transaction:");
+        printCenteredTitle("Added the following transaction Successful:");
+        printLine();
         printTransaction(transaction);
         printLine();
     }
@@ -407,8 +438,8 @@ public class Ui {
         printCenteredTitle("Saving Overview");
 
         if (goal.isBlank()) {
-            printLeftAlignedLine("💰 You haven't set a saving goal yet.");
-            printLeftAlignedLine("💡 Tip: Use 'saving > set' to create one and start tracking!");
+            printLeftAlignedLine("You haven't set a saving goal yet.");
+            printLeftAlignedLine("Tip: Use 'saving > set' to create one and start tracking!");
             printLine();
             return;
         }
@@ -448,5 +479,97 @@ public class Ui {
 
         printLine();
     }
+
+    public void viewTransactionDetail(Transaction t) {
+        printCenteredTitle("Transaction Details");
+
+        printLeftAlignedLine("ID:            " + t.getId());
+        printLeftAlignedLine("Description:   " + t.getDescription());
+
+        String typeLabel = t.getAmount() < 0 ? "Expense" : "Income";
+        String amountStr = String.format("%.2f %s (%s)", t.getAmount(), t.getCurrency(), typeLabel);
+        printLeftAlignedLine("Amount:        " + amountStr);
+
+        printLeftAlignedLine("Category:      " + t.getCategory());
+        printLeftAlignedLine("Date:          " + (t.getDate() == null ? "N/A" : t.getDate().toString()));
+        printLeftAlignedLine("Priority:      " + t.getPriority());
+
+        printLeftAlignedLine("Completed:     " + (t.isCompleted() ? "[ YES ]" : "[ NO ]"));
+
+//        String recurringStr = (t.getRecurringPeriod() > 0)
+//                ? "Every " + t.getRecurringPeriod() + " days"
+//                : "No";
+//        printLeftAlignedLine("Recurring:     " + recurringStr);
+//
+//        String tags = t.getTags().isEmpty()
+//                ? "(none)"
+//                : String.join(", ", t.getTags());
+//        printLeftAlignedLine("Tags:          " + tags);
+
+        printLine(); // 底部边框
+    }
+
+    public void printCurrencyRates() {
+        printCenteredTitle("Currency Rates (Base: SGD)");
+
+        for (Currency currency : Currency.values()) {
+            if (!currency.equals(Currency.SGD)) {
+                printLeftAlignedLine("1 SGD = " + currency.getRate() + " " + currency);
+            }
+        }
+
+        printLine();
+    }
+
+    public void showMessage(String message) {
+        printLine();
+        printLeftAlignedLine(message);
+        printLine();
+    }
+
+    public void printBalanceOverview(double balance) {
+        printCenteredTitle("Account Balance Overview");
+
+        printLeftAlignedLine("Net Completed Balance:    " + String.format("%.2f SGD", balance));
+        printLeftAlignedLine("");
+
+        if (balance > 0) {
+            printLeftAlignedLine("Analysis: Positive net savings. Keep up the good work!");
+        } else if (balance == 0) {
+            printLeftAlignedLine("Analysis: Net balance is zero. Consider reviewing your expenses.");
+        } else {
+            printLeftAlignedLine("Analysis: You’ve spent more than your earnings. Be cautious!");
+        }
+
+        printLine();
+    }
+
+    public void printStatisticsOverview(TransactionManager tm) {
+        printCenteredTitle("Transaction Statistics");
+
+        // Completion Stats
+        int[] stats = tm.getCompletionStats();
+        printLeftAlignedLine("Completed:     " + stats[0]);
+        printLeftAlignedLine("Incomplete:    " + stats[1]);
+
+        // Per-category
+        printLeftAlignedLine("Completed Amount per Category (in SGD):");
+        Map<Category, Double> categoryMap = tm.getCompletedAmountPerCategory();
+
+        double total = 0;
+        if (categoryMap.isEmpty()) {
+            printLeftAlignedLine("  (empty)");
+        } else {
+            for (Map.Entry<Category, Double> entry : categoryMap.entrySet()) {
+                printLeftAlignedLine("  - " + entry.getKey() + ": " + String.format("%.2f", entry.getValue()));
+                total += entry.getValue();
+            }
+        }
+
+        printLeftAlignedLine("");
+        printLeftAlignedLine("Total Completed Amount (in SGD): " + String.format("%.2f", total));
+        printLine();
+    }
+
 
 }

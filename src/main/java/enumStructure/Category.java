@@ -1,5 +1,7 @@
 package enumStructure;
 
+import seedu.duke.SavingMode;
+
 public enum Category {
     FOOD,
     EDUCATION,
@@ -9,5 +11,8 @@ public enum Category {
     HEALTHCARE,
     HOUSING,
     OTHER,
-    GROCERIES
+    GROCERIES,
+    SAVING,
+    BUDGET
+
 }

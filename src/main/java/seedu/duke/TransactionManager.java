@@ -2,17 +2,24 @@ package seedu.duke;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import constant.Constant;
 import enumStructure.Category;
 import enumStructure.Currency;
+import enumStructure.Priority;
 import enumStructure.Status;
 import exceptions.InvalidCommand;
 import exceptions.NullException;
+import parser.Parser;
+import ui.ConsoleFormatter;
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
+import java.util.Map;
+import java.util.HashMap;
+
 
 public class TransactionManager {
     private ArrayList<Transaction> transactions;
@@ -30,7 +37,7 @@ public class TransactionManager {
         this.currentMaxId = storage.loadMaxTransactionId();
     }
 
-    private int getNextAvailableId() {
+    public int getNextAvailableId() {
         currentMaxId += 1;
         if (storage != null) {
             storage.saveMaxTransactionId(currentMaxId);
@@ -86,10 +93,10 @@ public class TransactionManager {
         LocalDate date = LocalDate.now();
         Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
 
-        if (isBudgetSet) {
-            double projected = getTotalTransactionAmount() + amount;
-            if (projected > budgetLimit) {
-                System.out.println("Cannot add new transaction! Budget limit exceeded!");
+        if (isBudgetSet && amount < 0) {
+            double projectedSpending = getTotalSpending() + (-amount); // 负号让支出为正
+            if (projectedSpending > budgetLimit) {
+                System.out.println("Cannot add transaction! Budget limit exceeded!");
                 return false;
             }
         }
@@ -306,7 +313,6 @@ public class TransactionManager {
             case 1 -> t.setCategory(Category.valueOf(value));
             case 2 -> {
                 int val = Integer.parseInt(value);
-                if (val < 0) throw new InvalidCommand("Expense cannot be negative!");
                 t.setAmount(val);
             }
             case 3 -> t.setCurrency(Currency.valueOf(value));
@@ -349,4 +355,53 @@ public class TransactionManager {
     public BudgetList getBudgetList() {
         return budgetList;
     }
+
+    public double getTotalSpending() {
+        double sum = 0;
+        for (Transaction t : transactions) {
+            if (!t.isDeleted() && t.getAmount() < 0) {
+                sum += -t.getAmount(); // 支出按正值累加
+            }
+        }
+        return sum;
+    }
+
+    public double getCurrentBalanceInSGD() {
+        double balance = 0;
+        for (Transaction t : transactions) {
+            if (!t.isDeleted() && t.isCompleted()) {
+                double amountInSGD = t.getCurrency().convertTo(t.getAmount(), Currency.SGD);
+                balance += amountInSGD;
+            }
+        }
+        return balance;
+    }
+
+    public Map<Category, Double> getCompletedAmountPerCategory() {
+        Map<Category, Double> result = new HashMap<>();
+        for (Transaction t : transactions) {
+            if (!t.isDeleted() && t.isCompleted()) {
+                double amt = t.getCurrency().convertTo(t.getAmount(), Currency.SGD);
+                result.put(t.getCategory(), result.getOrDefault(t.getCategory(), 0.0) + amt);
+            }
+        }
+        return result;
+    }
+
+    public int[] getCompletionStats() {
+        int complete = 0, incomplete = 0;
+        for (Transaction t : transactions) {
+            if (!t.isDeleted()) {
+                if (t.isCompleted()) complete++;
+                else incomplete++;
+            }
+        }
+        return new int[]{complete, incomplete};
+    }
+
+
+
+
+
+
 }

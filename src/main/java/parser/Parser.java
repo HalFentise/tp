@@ -5,6 +5,7 @@ import exceptions.NullException;
 import exceptions.InvalidCommand;
 import seedu.duke.FinancialGoal;
 import seedu.duke.TransactionManager;
+import seedu.duke.Transaction;
 import seedu.duke.Storage;
 import seedu.duke.SavingMode;
 import seedu.duke.budget.BudgetMode;
@@ -12,6 +13,8 @@ import enumStructure.Category;
 import ui.Ui;
 import ui.ConsoleFormatter;
 import java.util.Scanner;
+import enumStructure.Currency;
+
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,52 +44,14 @@ public class Parser {
                 ui.help();
                 break;
             case COMMAND_ADD:
-                fields = new String[]{"description", "amount", "category"};
-                String[] patterns = {
-                        "d/(.*?)(?:\\s+[ace]/|$)", // d/
-                        "a/(.*?)(?:\\s+[dce]/|$)", // a/
-                        "c/(.*?)(?:\\s+[dae]/|$)"  // c/
-                };
-
-                String[] results = new String[fields.length];
-                //match pattern
-                for (int i = 0; i < fields.length; i++) {
-                    Pattern pattern = Pattern.compile(patterns[i]);
-                    Matcher matcher = pattern.matcher(parts[1]);
-
-                    if (matcher.find()) {
-                        results[i] = matcher.group(1).trim();
-                    } else {
-                        throw new InvalidCommand("No " + fields[i] + " found");
-                    }
-                }
-                amount = Double.parseDouble(results[1]);
-                Category category = parseCategory(results[2], ui);
-
-                boolean success = transactions.addTransaction(transactions.getNum() + 1, results[0], amount, category);
-
-                if (success) {
-                    ui.add(transactions.searchTransaction(transactions.getNum()));
+                    new AddWizardCommand().execute(transactions, ui);
                     storage.saveTransactions(transactions.getTransactions());
-                }
-                break;
+                    break;
             case COMMAND_LIST:
                 if (parts.length > 1) {
                     throw new InvalidCommand("Invalid command");
                 }
                 ui.printTransactions(transactions.getTransactions());
-                break;
-            case COMMAND_TICK:
-                id = Integer.parseInt(parts[1]);
-                transactions.tickTransaction(id);
-                ui.tickTransaction(transactions.searchTransaction(id));
-                storage.saveTransactions(transactions.getTransactions());
-                break;
-            case COMMAND_UNTICK:
-                id = Integer.parseInt(parts[1]);
-                transactions.unTickTransaction(id);
-                ui.unTickTransaction(transactions.searchTransaction(id));
-                storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_SEARCH:
                 boolean isIndex = parts[1].startsWith("id-");
@@ -95,24 +60,59 @@ public class Parser {
                 ui.printTransactions(transactions.searchTransactionList(isIndex, keyWord));
                 break;
             case COMMAND_EDIT:
-                try {
-                    parseEditCommands(parts[1], ui, transactions);
-                } catch (Exception e) {
-                    throw new InvalidCommand("Format invalid, try again! (edit [attribute] [id] [value])");
-                }
+                new EditWizardCommand().execute(transactions, ui);
                 storage.saveTransactions(transactions.getTransactions());
                 break;
-                case COMMAND_DELETE:
-                    id = Integer.parseInt(parts[1]);
-                    new DeleteCommand(id, transactions, ui);
+
+            case COMMAND_STATUS:
+                new StatusWizardCommand().execute(transactions, ui);
+                storage.saveTransactions(transactions.getTransactions());
+                break;
+
+            case COMMAND_DELETE:
+                    index = Integer.parseInt(parts[1]);
+                    new DeleteCommand(index, transactions, ui);
                     storage.saveTransactions(transactions.getTransactions());
                     break;
 
+                case "currency":
+                    if (parts.length == 1) {
+                        ui.printCurrencyRates(); // 展示
+                    } else {
+                        String[] currencyParts = parts[1].split(" ");
+                        if (currencyParts.length != 2)
+                            throw new InvalidCommand("Usage: currency <CURRENCY_CODE> <RATE>");
+
+                        String targetCurrency = currencyParts[0].toUpperCase();
+                        double newRate = Double.parseDouble(currencyParts[1]);
+
+                        try {
+                            Currency.valueOf(targetCurrency).setRate(newRate);
+                            ui.showMessage("Updated " + targetCurrency + " rate to SGD: " + newRate);
+                        } catch (IllegalArgumentException e) {
+                            throw new InvalidCommand("Unsupported currency.");
+                        }
+                    }
+                    break;
+
+                case "balance":
+                    double bal = transactions.getCurrentBalanceInSGD();
+                    ui.printBalanceOverview(bal);
+                    break;
+
+                case "stats":
+                    ui.printStatisticsOverview(transactions);
+                    break;
+
+
+
+            /*
             case COMMAND_CLEAR:
                 transactions.clear();
                 storage.saveTransactions(transactions.getTransactions());
                 ui.PrintClear();
                 break;
+
             case COMMAND_SET_BUDGET:
                 details = parts[1].split(IDENTIFIER_AMOUNT, 2);
                 amount = Integer.parseInt(details[1]);
@@ -184,14 +184,28 @@ public class Parser {
                 }
                 storage.saveTransactions(transactions.getTransactions());
                 break;
-            case COMMAND_EXIT:
+
+             */
+
+                case "view":
+                    try {
+                        id = Integer.parseInt(parts[1].trim());
+                        Transaction t = transactions.searchTransaction(id);
+                        if (t == null) throw new InvalidCommand("Transaction not found.");
+                        ui.viewTransactionDetail(t);
+                    } catch (Exception e) {
+                        throw new InvalidCommand("Usage: view <id>");
+                    }
+                    break;
+
+                case COMMAND_EXIT:
                 ui.printExit();
                 storage.saveTransactions(transactions.getTransactions());
                 System.exit(0);
                 break;
             case "saving":
-                    SavingMode.enter(ui, goal, storage);
-                    break;
+                SavingMode.enter(ui, goal, transactions, storage);
+                break;
             case "budget":
                 BudgetMode.enter(ui, transactions.getBudgetList(), storage);
                 break;
