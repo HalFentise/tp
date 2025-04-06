@@ -362,7 +362,7 @@ public class TransactionManager {
             t.setCategory(Category.valueOf(value));
             break;
         case 2:
-            int val = Integer.parseInt(value);
+            double val = Double.parseDouble(value);
             if (val < 0) {
                 throw new InvalidCommand("Expense cannot be negative!");
             }

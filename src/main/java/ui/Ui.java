@@ -428,7 +428,8 @@ public class Ui {
         printLine();
         System.out.println("Done! The " + type
                 + " of the target transaction has been updated to:\n"
-                + (typeId == 3 ? Currency.valueOf(value).toString() : value));
+                + (typeId == 3 ? Currency.valueOf(value).toString()
+                : (typeId == 2) ? Double.parseDouble(value) : value));
         printLine();
     }
 
