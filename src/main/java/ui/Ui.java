@@ -26,11 +26,17 @@ public class Ui {
     }
 
     public String readCommand() {
-        if (!scanner.hasNextLine()) {
-            throw new NoSuchElementException("No line found in input.");
+        try {
+            if (!scanner.hasNextLine()) {
+                return "";
+            }
+            return scanner.nextLine();
+        } catch (NoSuchElementException e) {
+            System.out.println("Error: No input found");
+            return "";
         }
-        return scanner.nextLine();
     }
+
 
     public void printWelcomeMessage() {
         printLine();
