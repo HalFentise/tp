@@ -191,8 +191,8 @@ public class Ui {
 
     public void printTransactionsTable(List<Transaction> transactions) {
         final int TOTAL_WIDTH = 121;
-        final String INNER_HEADER_FORMAT = "| %-2s | %-12s | %9s | %-8s | %-9s | %-10s | %-11s | %-8s |";
-        final String INNER_ROW_FORMAT    = "| %2d | %-12s | %9.2f | %-8s | %-9s | %-10s | %-11s | %-8s |";
+        final String INNER_HEADER_FORMAT = "| %-2s | %-15s | %-9s | %-19s | %-9s | %-10s | %-9s | %-8s |";
+        final String INNER_ROW_FORMAT    = "| %2d | %-15s | %-9.2f | %-19s | %-9s | %-10s | %-9s | %-8s |";
 
         String sampleHeader = String.format(INNER_HEADER_FORMAT,
                 "ID", "Description", "Amount", "Currency", "Category", "Date", "Completed", "Priority");
@@ -218,10 +218,10 @@ public class Ui {
 
         // 每一行打印
         for (Transaction t : transactions) {
-            String completedMark = t.isCompleted() ? " [ ● ] " : " [ ○ ] ";
+            String completedMark = t.isCompleted() ? "    ✔" : "    ✖";
             String row = String.format(INNER_ROW_FORMAT,
                     t.getId(),
-                    t.getDescription(),
+                    limitWithEllipsis(t.getDescription(),15),
                     t.getAmount(),
                     t.getCurrency().toString(),
                     t.getCategory().toString(),
@@ -232,10 +232,16 @@ public class Ui {
             printTableLine(row, sidePadding);
 
         }
-
         // 打印底边框
         printLine();
     }
+
+    private static String limitWithEllipsis(String input, int maxLength) {
+        if (input == null) return "";
+        if (input.length() <= maxLength) return input;
+        return input.substring(0, maxLength - 3) + "...";
+    }
+
 
     /**
      * 打印表格行，包裹 || 并居中填充空格

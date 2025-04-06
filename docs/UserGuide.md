@@ -14,17 +14,21 @@
 ### Adding an expense: `add`
 Adds an expense entry to the budget tracker.
 
-Format: `add d/DESCRIPTION a/AMOUNT c/CATEGORY [t/TAG]`
+Format: `add d/DESCRIPTION a/AMOUNT c/CATEGORY [t/DATE]`
 
 * `DESCRIPTION` refers to the name of the expense.
 * `AMOUNT` is the cost of the expense.
 * `CATEGORY` is the category of spending (e.g., food, transport, entertainment).
-* `TAG` (optional) can be used for additional labeling.
+* `DATE` (optional) is your expense date, support the following format:
+  * `dd-mm-yyyy`
+  * `dd/mm/yyyy`
+  * `yyyy-mm-dd`
+  * `yyyy/mm/dd`
 
 Examples: 
 
 `add d/Dinner a/15.50 c/Food`  
-`add d/Netflix Subscription a/12.99 c/Entertainment t/Monthly`
+`add d/Netflix Subscription a/12.99 c/Entertainment t/04-06-2025`
 
 ---
 
@@ -136,6 +140,15 @@ Marks an expense as paid or completed.
 Format: `tick INDEX` <br><br>
 Example:
 * `tick 3` (Marks the 3rd expense as completed)
+
+---
+
+### Undo Tick off: `untick`
+If you tick one expense but wish to undo, use `untick`.
+
+Format: `untick INDEX` <br><br>
+Example:
+* `untick 3` (Marks the 3rd expense as not completed)
 
 ---
 
