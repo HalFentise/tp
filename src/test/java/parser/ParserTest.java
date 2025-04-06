@@ -7,7 +7,7 @@ import seedu.duke.Storage;
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
 import ui.Ui;
-import enumStructure.Category;
+import enumstructure.Category;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

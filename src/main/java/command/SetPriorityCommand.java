@@ -1,6 +1,6 @@
 package command;
 
-import enumStructure.Priority;
+import enumstructure.Priority;
 import exceptions.NullException;
 import seedu.duke.TransactionManager;
 import ui.Ui;
@@ -11,7 +11,8 @@ public class SetPriorityCommand extends Command {
      * @param priorityStr The string representing the priority level want to set.
      * @throws NullException If the date format is invalid.
      */
-    public SetPriorityCommand(int index, String priorityStr, TransactionManager transactions, Ui ui) throws NullException {
+    public SetPriorityCommand(int index, String priorityStr,
+                              TransactionManager transactions, Ui ui) throws NullException {
         Priority priority = Priority.valueOf(priorityStr.toUpperCase());
 
         try {
@@ -19,7 +20,7 @@ public class SetPriorityCommand extends Command {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        ui.PrintPriority(transactions.getTransactions(), index);
+        ui.printPriority(transactions.getTransactions(), index);
     }
 
     /**
@@ -28,7 +29,6 @@ public class SetPriorityCommand extends Command {
      *
      * @param transactions The task list containing all tasks.
      * @param ui           The user interface for displaying results.
-     *                     //* @param storage  The storage system (not used in this command).
      * @throws NullException If an error occurs while processing the command.
      */
     @Override

@@ -5,8 +5,8 @@ import static ui.ConsoleFormatter.printCenteredLine;
 import static ui.ConsoleFormatter.printCenteredTitle;
 import static ui.ConsoleFormatter.printLeftAlignedLine;
 
-import enumStructure.Category;
-import enumStructure.Currency;
+import enumstructure.Category;
+import enumstructure.Currency;
 import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
@@ -95,7 +95,7 @@ public class Ui {
         printLine();
     }
 
-    public void PrintBudgetLimit(TransactionManager transaction) {
+    public void printBudgetLimit(TransactionManager transaction) {
         printLine();
         if (transaction.getTransactions().isEmpty()) {
             System.out.println("Please add a transaction first before you set the budget!");
@@ -106,7 +106,7 @@ public class Ui {
         printLine();
     }
 
-    public void PrintClear() {
+    public void printClear() {
         printLine();
         System.out.println("All transactions have been cleared!");
         printLine();
@@ -151,12 +151,13 @@ public class Ui {
         }
     }
 
-    public void PrintPriority(ArrayList<Transaction> transactions, int index) {
+    public void printPriority(ArrayList<Transaction> transactions, int index) {
         printLine();
         if (transactions.isEmpty()) {
             System.out.println("Please add a transaction first before you set the priority!");
         } else {
-            System.out.println("Priority is set to " + transactions.get(index).getPriority() + " for current transaction.");
+            System.out.println("Priority is set to " +
+                    transactions.get(index).getPriority() + " for current transaction.");
         }
         printLine();
     }
@@ -165,7 +166,8 @@ public class Ui {
         String defaultPriority = "HIGH";
         boolean hasHighPriority = false;
         for (Transaction transaction : upcomingTransactions) {
-            if (transaction.getPriority() != null && transaction.getPriority().toString().equalsIgnoreCase(defaultPriority)) {
+            if (transaction.getPriority() != null && transaction.
+                    getPriority().toString().equalsIgnoreCase(defaultPriority)) {
                 if (!hasHighPriority) {
                     System.out.println("Following transactions have the high priority:");
                     hasHighPriority = true;
@@ -207,15 +209,15 @@ public class Ui {
     }
 
     public void printTransactionsTable(List<Transaction> transactions) {
-        final int TOTAL_WIDTH = 121;
-        final String INNER_HEADER_FORMAT = "| %-2s | %-15s | %-9s | %-19s | %-9s | %-10s | %-9s | %-8s |";
-        final String INNER_ROW_FORMAT    = "| %2d | %-15s | %-9.2f | %-19s | %-9s | %-10s | %-9s | %-8s |";
+        final int totalWidth = 121;
+        final String innerHeaderFormat = "| %-2s | %-15s | %-9s | %-19s | %-9s | %-10s | %-9s | %-8s |";
+        final String innerRowFormat = "| %2d | %-15s | %-9.2f | %-19s | %-9s | %-10s | %-9s | %-8s |";
 
-        String sampleHeader = String.format(INNER_HEADER_FORMAT,
+        String sampleHeader = String.format(innerHeaderFormat,
                 "ID", "Description", "Amount", "Currency", "Category", "Date", "Completed", "Priority");
 
         int tableWidth = sampleHeader.length(); // ~64
-        int spaceInsideBox = TOTAL_WIDTH - 4;   // 外框两侧 || 各占2
+        int spaceInsideBox = totalWidth - 4;   // 外框两侧 || 各占2
         int sidePadding = (spaceInsideBox - tableWidth) / 2;
 
         // 打印顶边框
@@ -236,7 +238,7 @@ public class Ui {
         // 每一行打印
         for (Transaction t : transactions) {
             String completedMark = t.isCompleted() ? "    ✔" : "    ✖";
-            String row = String.format(INNER_ROW_FORMAT,
+            String row = String.format(innerRowFormat,
                     t.getId(),
                     limitWithEllipsis(t.getDescription()),
                     t.getAmount(),
@@ -254,8 +256,12 @@ public class Ui {
     }
 
     private static String limitWithEllipsis(String input) {
-        if (input == null) return "";
-        if (input.length() <= 15) return input;
+        if (input == null) {
+            return "";
+        }
+        if (input.length() <= 15) {
+            return input;
+        }
         return input.substring(0, 15 - 3) + "...";
     }
 
@@ -264,8 +270,8 @@ public class Ui {
      * 打印表格行，包裹 || 并居中填充空格
      */
     public void printTableLine(String content, int sidePadding) {
-        final int TOTAL_WIDTH = 121;
-        int contentWidth = TOTAL_WIDTH - 4;
+        final int totalWidth = 121;
+        int contentWidth = totalWidth - 4;
         int rightPadding = contentWidth - sidePadding - content.length();
         String line = "| " + " ".repeat(sidePadding) + content + " ".repeat(Math.max(0, rightPadding)) + " |";
         System.out.println(line);
@@ -391,12 +397,22 @@ public class Ui {
     }
 
     public void printEdited(String value, int typeId) {
-        String type = switch (typeId) {
-            case 0 -> "description";
-            case 1 -> "category";
-            case 2 -> "amount";
-            case 3 -> "currency";
-            default -> "";
+        String type;
+        switch (typeId) {
+        case 0:
+            type = "description";
+            break;
+        case 1:
+            type =  "category";
+            break;
+        case 2:
+            type = "amount";
+            break;
+        case 3:
+            type = "currency";
+            break;
+        default:
+            type = "";
         };
 
         printLine();

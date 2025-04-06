@@ -12,10 +12,10 @@ import java.util.Scanner;
 import java.time.format.DateTimeParseException;
 
 import exceptions.StorageParseException;
-import enumStructure.Category;
-import enumStructure.Currency;
-import enumStructure.Priority;
-import enumStructure.Status;
+import enumstructure.Category;
+import enumstructure.Currency;
+import enumstructure.Priority;
+import enumstructure.Status;
 import seedu.duke.budget.Budget;
 import seedu.duke.budget.BudgetList;
 
@@ -53,7 +53,9 @@ public class Storage {
     public ArrayList<Transaction> loadTransactions() {
         ArrayList<Transaction> transactions = new ArrayList<>();
         File file = new File(FILE_PATH);
-        if (!file.exists()) return transactions;
+        if (!file.exists()) {
+            return transactions;
+        }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
@@ -66,7 +68,6 @@ public class Storage {
         } catch (IOException e) {
             System.out.println("Error loading transactions: " + e.getMessage());
         }
-
         return transactions;
     }
 
@@ -159,9 +160,12 @@ public class Storage {
             Transaction transaction = new Transaction(id, description, amount, currency, category, date, status);
             transaction.setRecurringPeriod(recurringPeriod);
             transaction.setPriority(priority);
-
-            if (isDeleted) transaction.delete();
-            if (isCompleted) transaction.complete();
+            if (isDeleted) {
+                transaction.delete();
+            }
+            if (isCompleted) {
+                transaction.complete();
+            }
 
             return transaction;
 
@@ -221,7 +225,9 @@ public class Storage {
 
     public FinancialGoal loadGoal() {
         File file = new File(GOAL_FILE_PATH);
-        if (!file.exists()) return new FinancialGoal();
+        if (!file.exists()) {
+            return new FinancialGoal();
+        }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = reader.readLine();
@@ -267,13 +273,17 @@ public class Storage {
     public BudgetList loadBudgets() {
         BudgetList budgetList = new BudgetList();
         File file = new File(BUDGET_FILE_PATH);
-        if (!file.exists()) return budgetList;
+        if (!file.exists()) {
+            return budgetList;
+        }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",", 5);
-                if (parts.length != 5) continue;
+                if (parts.length != 5) {
+                    continue;
+                }
 
                 String name = parts[0];
                 double total = Double.parseDouble(parts[1]);
@@ -347,7 +357,9 @@ public class Storage {
     // Load budget limit
     public double loadBudgetLimit() {
         File file = new File("budget.txt");
-        if (!file.exists()) return -1;
+        if (!file.exists()) {
+            return -1;
+        }
 
         try (Scanner scanner = new Scanner(file)) {
             return scanner.hasNextDouble() ? scanner.nextDouble() : -1;

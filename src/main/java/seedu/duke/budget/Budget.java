@@ -1,6 +1,6 @@
 package seedu.duke.budget;
 
-import enumStructure.Category;
+import enumstructure.Category;
 
 import java.time.LocalDate;
 

@@ -57,9 +57,9 @@ public class BudgetList {
     }
 
     public void printAllBudgets(Ui ui) {
-        final int TOTAL_WIDTH = 121;
-        final String HEADER_FORMAT = "| %-2s | %-14s | %9s | %-10s | %-10s |";
-        final String ROW_FORMAT    = "| %2d | %-14s | %9.2f | %-10s | %-10s |";
+        final int totalWidth = 121;
+        final String headerFormat = "| %-2s | %-14s | %9s | %-10s | %-10s |";
+        final String rowFormat = "| %2d | %-14s | %9.2f | %-10s | %-10s |";
 
         if (budgets.isEmpty()) {
             ConsoleFormatter.printLine();
@@ -68,21 +68,21 @@ public class BudgetList {
             return;
         }
 
-        String headerLine = String.format(HEADER_FORMAT, "#", "Name", "Amount", "End Date", "Category");
+        String headerLine = String.format(headerFormat, "#", "Name", "Amount", "End Date", "Category");
         int tableWidth = headerLine.length();
-        int spaceInsideBox = TOTAL_WIDTH - 4;
+        int spaceInsideBox = totalWidth - 4;
         int sidePadding = (spaceInsideBox - tableWidth) / 2;
 
         ConsoleFormatter.printLine();
 
-        int headerLeftPad = (TOTAL_WIDTH - headerLine.length()) / 2;
+        int headerLeftPad = (totalWidth - headerLine.length()) / 2;
         System.out.println(" ".repeat(headerLeftPad) + headerLine);
 
         ui.printTableLine("-".repeat(tableWidth), sidePadding);
 
         for (int i = 0; i < budgets.size(); i++) {
             Budget b = budgets.get(i);
-            String row = String.format(ROW_FORMAT,
+            String row = String.format(rowFormat,
                     i + 1,
                     b.getName(),
                     b.getTotalAmount(),

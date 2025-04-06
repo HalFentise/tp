@@ -1,13 +1,18 @@
 package seedu.duke;
 
-import org.junit.jupiter.api.*;
-import java.io.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import enumStructure.Category;
-import enumStructure.Currency;
-import enumStructure.Status;
-import enumStructure.Priority;
+import enumstructure.Category;
+import enumstructure.Currency;
+import enumstructure.Status;
+import enumstructure.Priority;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,7 +24,7 @@ public class StorageTest {
     private File testFile;
 
     @BeforeEach
-    public void setUp() throws IOException {
+    public void setUp() {
         storage = new Storage();
         testFolder = new File("data");
         testFile = new File("data/transactions.csv");

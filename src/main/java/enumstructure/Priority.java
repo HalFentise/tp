@@ -1,4 +1,4 @@
-package enumStructure;
+package enumstructure;
 
 public enum Priority {
     HIGH,

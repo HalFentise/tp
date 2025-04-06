@@ -1,6 +1,6 @@
 package seedu.duke.budget;
 
-import enumStructure.Category;
+import enumstructure.Category;
 import ui.Ui;
 import ui.ConsoleFormatter;
 import seedu.duke.Storage;
@@ -38,20 +38,39 @@ public class BudgetMode {
     }
 
     private static void parseBudgetCommand(String input, Ui ui, BudgetList list, Storage storage) throws Exception {
-        if (input.isBlank()) return;
+        if (input.isBlank()) {
+            return;
+        }
         String[] parts = input.split(" ", 2);
         String command = parts[0].toLowerCase();
 
         switch (command) {
-            case "help" -> printHelp();
-            case "set" -> handleSetBudget(ui, list, storage);
-            case "list" -> list.printAllBudgets(ui);
-            case "check" -> handleCheckBudget(parts, ui, list);
-            case "add" -> handleAddAmount(parts, list, storage);
-            case "deduct" -> handleDeductAmount(parts, list, storage);
-            case "modify" -> handleModify(parts, list, ui, storage);
-            case "delete" -> handleDelete(parts, list, storage);
-            default -> throw new Exception("Unknown command in Budget Mode. Type 'help' for available commands.");
+        case "help":
+            printHelp();
+            break;
+        case "set":
+            handleSetBudget(ui, list, storage);
+            break;
+        case "list":
+            list.printAllBudgets(ui);
+            break;
+        case "check":
+            handleCheckBudget(parts, ui, list);
+            break;
+        case "add":
+            handleAddAmount(parts, list, storage);
+            break;
+        case "deduct":
+            handleDeductAmount(parts, list, storage);
+            break;
+        case "modify":
+            handleModify(parts, list, ui, storage);
+            break;
+        case "delete":
+            handleDelete(parts, list, storage);
+            break;
+        default:
+            throw new Exception("Unknown command in Budget Mode. Type 'help' for available commands.");
         }
     }
 
@@ -60,16 +79,22 @@ public class BudgetMode {
         ConsoleFormatter.printLine();
         System.out.println("Enter budget name (or 'cancel' to abort):");
         String name = scanner.nextLine().trim();
-        if (name.equalsIgnoreCase("cancel")) return;
+        if (name.equalsIgnoreCase("cancel")) {
+            return;
+        }
 
         double totalAmount;
         while (true) {
             System.out.println("Enter total amount (or 'cancel'):");
             String input = scanner.nextLine().trim();
-            if (input.equalsIgnoreCase("cancel")) return;
+            if (input.equalsIgnoreCase("cancel")) {
+                return;
+            }
             try {
                 totalAmount = Double.parseDouble(input);
-                if (totalAmount <= 0) throw new NumberFormatException();
+                if (totalAmount <= 0) {
+                    throw new NumberFormatException();
+                }
                 break;
             } catch (NumberFormatException e) {
                 ui.showError("Invalid amount. Please enter a positive number.");
@@ -80,7 +105,9 @@ public class BudgetMode {
         while (true) {
             System.out.println("Enter end date (yyyy-MM-dd) or 'cancel':");
             String dateStr = scanner.nextLine().trim();
-            if (dateStr.equalsIgnoreCase("cancel")) return;
+            if (dateStr.equalsIgnoreCase("cancel")) {
+                return;
+            }
             try {
                 endDate = LocalDate.parse(dateStr);
                 break;
@@ -98,7 +125,9 @@ public class BudgetMode {
             }
             System.out.print("Enter number (or 'cancel'): ");
             String choice = scanner.nextLine().trim();
-            if (choice.equalsIgnoreCase("cancel")) return;
+            if (choice.equalsIgnoreCase("cancel")) {
+                return;
+            }
             try {
                 int index = Integer.parseInt(choice);
                 if (index >= 1 && index <= categories.length) {
@@ -161,20 +190,40 @@ public class BudgetMode {
         Category category = null;
 
         for (String token : tokens) {
-            if (token.startsWith("i/")) index = Integer.parseInt(token.substring(2)) - 1;
-            else if (token.startsWith("n/")) name = token.substring(2);
-            else if (token.startsWith("a/")) amount = Double.parseDouble(token.substring(2));
-            else if (token.startsWith("e/")) endDate = LocalDate.parse(token.substring(2));
-            else if (token.startsWith("c/")) category = Category.valueOf(token.substring(2).toUpperCase());
+            if (token.startsWith("i/")) {
+                index = Integer.parseInt(token.substring(2)) - 1;
+            }
+            else if (token.startsWith("n/")) {
+                name = token.substring(2);
+            }
+            else if (token.startsWith("a/")) {
+                amount = Double.parseDouble(token.substring(2));
+            }
+            else if (token.startsWith("e/")) {
+                endDate = LocalDate.parse(token.substring(2));
+            }
+            else if (token.startsWith("c/")) {
+                category = Category.valueOf(token.substring(2).toUpperCase());
+            }
         }
 
-        if (index == -1) throw new Exception("Missing budget index. Use i/INDEX");
+        if (index == -1) {
+            throw new Exception("Missing budget index. Use i/INDEX");
+        }
 
         Budget b = list.get(index);
-        if (name != null) b.setName(name);
-        if (amount != null) b.setTotalAmount(amount);
-        if (endDate != null) b.setEndDate(endDate);
-        if (category != null) b.setCategory(category);
+        if (name != null) {
+            b.setName(name);
+        }
+        if (amount != null) {
+            b.setTotalAmount(amount);
+        }
+        if (endDate != null) {
+            b.setEndDate(endDate);
+        }
+        if (category != null) {
+            b.setCategory(category);
+        }
 
         storage.saveBudgets(list);
         ConsoleFormatter.printLine();

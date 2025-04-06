@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.List;
-import enumStructure.Category;
-import enumStructure.Currency;
-import enumStructure.Status;
-import enumStructure.Priority;
+import enumstructure.Category;
+import enumstructure.Currency;
+import enumstructure.Status;
+import enumstructure.Priority;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

@@ -1,4 +1,4 @@
-package enumStructure;
+package enumstructure;
 
 public enum Currency {
     USD("United State Dollar", 0.74),
