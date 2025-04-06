@@ -162,12 +162,23 @@ Format: `currency`
 
 ---
 
+### Viewing a summary of expenses: `summary`
+Viewing a summary of expenses for a selected time frame.
+
+Format: `summary from/START_DATE to/END_DATE` <br><br>
+Example:
+* `summary from/2025-03-02 to/2025-03-29` (Displays a summary of expenses for the selected time period)
+
+---
+
+---
+
 ### Setting notifications for upcoming payments: `notify`
 Sets reminders for upcoming expenses.
 
-Format: `notify d/DESCRIPTION a/AMOUNT c/CATEGORY t/DATE` <br><br>
+Format: `notify d/DESCRIPTION c/CATEGORY t/DATE` <br><br>
 Example:
-* `notify d/Rent a/1000 c/Housing t/2025-03-01` (Sets a reminder for rent payment on March 1st, 2025)
+* `notify d/Dinner c/Food t/2025-03-01` (Sets a reminder for dinner payment on March 1st, 2025)
 
 ---
 
