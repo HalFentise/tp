@@ -70,8 +70,7 @@ public class Parser {
                 Category category = parseCategory(results[2], ui);
                 date = parseToLocalDate(results[3]);
 
-                boolean success = transactions.addTransaction(transactions.getNum() + 1,
-                        results[0], amount, category, date);
+                boolean success = transactions.addTransaction(results[0], amount, category, date);
 
                 if (success) {
                     ui.add(transactions.searchTransaction(transactions.getNum()));

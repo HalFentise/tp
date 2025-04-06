@@ -1,7 +1,11 @@
 package seedu.duke;
 
+import enumStructure.Currency;
+import seedu.duke.budget.BudgetList;
 import ui.Ui;
 import parser.Parser;
+
+import java.util.ArrayList;
 
 public class Duke {
     private TransactionManager transactions;

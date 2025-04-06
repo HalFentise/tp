@@ -61,7 +61,7 @@ public class TransactionManager {
     }
 
     public int getNum() {
-        return transactions.size();
+        return currentMaxId;
     }
 
     public int getSize() {
@@ -164,6 +164,8 @@ public class TransactionManager {
 
     public void clear() {
         transactions.clear();
+        currentMaxId = 0;
+        storage.saveMaxTransactionId(currentMaxId);
         budgetList.clear();
     }
 
@@ -225,19 +227,18 @@ public class TransactionManager {
         list.sort(Comparator.comparing(Transaction::getDate));
     }
 
-    public void notify(String description, double amount, String category, String date) {
+    public void notify(String description, String category,LocalDate date) {
         try {
-            LocalDate dueDate = LocalDate.parse(date);
 
             LocalDate minDate = LocalDate.of(2020, 1, 1);
-            if (dueDate.isBefore(minDate)) {
+            if (date.isBefore(minDate)) {
                 throw new IllegalArgumentException("Date cannot be before January 1, 2020");
             }
 
             Category cat = Category.valueOf(category);
             for (Transaction t : transactions) {
                 if (t.getDescription().equals(description) && t.getCategory() == cat) {
-                    t.setDate(dueDate);
+                    t.setDate(date);
                 }
             }
         } catch (DateTimeParseException e) {
