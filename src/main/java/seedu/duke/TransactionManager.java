@@ -109,7 +109,8 @@ public class TransactionManager {
         }
     }
 
-    public boolean addTransaction(int id, String description, double amount, Category category, LocalDate date) {
+    public boolean addTransaction(String description, double amount, Category category, LocalDate date) {
+        int id = getNextAvailableId();
         LocalDate now = LocalDate.now();
         Transaction transaction;
         if (date == null) {
