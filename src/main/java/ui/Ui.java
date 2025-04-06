@@ -235,7 +235,8 @@ public class Ui {
 
         // 每一行打印
         for (Transaction t : transactions) {
-            String completedMark = t.isCompleted() ? "    ✔" : "    ✖";
+            String completedMark = t.getRecurringPeriod() > 0 ? "  R (" + t.getRecurringPeriod() + ")"
+                    : t.isCompleted() ? "    ✔" : "    ✖";
             String row = String.format(INNER_ROW_FORMAT,
                     t.getId(),
                     limitWithEllipsis(t.getDescription()),

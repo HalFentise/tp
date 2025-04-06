@@ -273,9 +273,13 @@ public class TransactionManager {
         }
     }
 
-    public void setRecur(int id, int period) {
+    public void setRecur(int id, int period) throws Exception{
         Transaction t = searchTransaction(id);
-        if (t != null) t.setRecurringPeriod(period);
+        if (t != null) {
+            t.setRecurringPeriod(period);
+        } else {
+            throw new Exception();
+        }
     }
 
     public void sortTransactions(ArrayList<Transaction> list) {
