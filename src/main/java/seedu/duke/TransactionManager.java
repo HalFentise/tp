@@ -369,7 +369,7 @@ public class TransactionManager {
             t.setAmount(val);
             break;
         case 3:
-            t.setCurrency(Currency.valueOf(value));
+            t.setCurrency(Currency.valueOf(value.toUpperCase()));
             break;
         default:
             break;
