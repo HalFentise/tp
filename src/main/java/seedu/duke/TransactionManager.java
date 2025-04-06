@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.stream.Collectors;
 
 import constant.Constant;
 import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
 import exceptions.InvalidCommand;
+import jdk.jshell.execution.LoaderDelegate;
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
 
@@ -107,8 +109,7 @@ public class TransactionManager {
         }
     }
 
-    public boolean addTransaction(String description, double amount, Category category, LocalDate date) {
-        int id = getNextAvailableId();
+    public boolean addTransaction(int id, String description, double amount, Category category, LocalDate date) {
         LocalDate now = LocalDate.now();
         Transaction transaction;
         if (date == null) {
@@ -140,6 +141,12 @@ public class TransactionManager {
         }
         sortTransactions(existTransactions);
         return existTransactions;
+    }
+
+    public ArrayList<Transaction> getTransactionsBetween(LocalDate start, LocalDate end) {
+        return (ArrayList<Transaction>) transactions.stream()
+                .filter(t -> !t.getDate().isBefore(start) && !t.getDate().isAfter(end))
+                .collect(Collectors.toList());
     }
 
     public void deleteExpense(int id) {
@@ -227,7 +234,8 @@ public class TransactionManager {
         list.sort(Comparator.comparing(Transaction::getDate));
     }
 
-    public void notify(String description, String category,LocalDate date) {
+
+    public void notify(String description, String category, LocalDate date) {
         try {
 
             LocalDate minDate = LocalDate.of(2020, 1, 1);
@@ -247,7 +255,7 @@ public class TransactionManager {
         }
     }
 
-    public void tickTransaction(int id) throws Exception{
+    public void tickTransaction(int id) throws Exception {
         Transaction transaction = searchTransaction(id);
         if (transaction != null) {
             transaction.complete();
@@ -256,7 +264,7 @@ public class TransactionManager {
         }
     }
 
-    public void unTickTransaction(int id) throws Exception{
+    public void unTickTransaction(int id) throws Exception {
         Transaction transaction = searchTransaction(id);
         if (transaction != null) {
             transaction.notComplete();
@@ -311,7 +319,7 @@ public class TransactionManager {
         return result;
     }
 
-    public void getUpcomingTransactions(String period) throws Exception{
+    public void getUpcomingTransactions(String period) throws Exception {
         switch (period.toLowerCase()) {
         case "today" -> System.out.println(getTransactionsOnDate(LocalDate.now()));
         case "week" -> System.out.println(getTransactionsThisWeek());
@@ -380,4 +388,5 @@ public class TransactionManager {
     public BudgetList getBudgetList() {
         return budgetList;
     }
+
 }

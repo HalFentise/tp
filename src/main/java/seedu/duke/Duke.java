@@ -1,4 +1,5 @@
 package seedu.duke;
+import java.util.ArrayList;
 
 import enumStructure.Currency;
 import seedu.duke.budget.BudgetList;
