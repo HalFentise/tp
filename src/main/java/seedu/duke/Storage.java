@@ -20,6 +20,7 @@ public class Storage {
     private static final String GOAL_FILE_PATH = FOLDER_PATH + "/goal.csv";
     private static final String BUDGET_FILE_PATH = FOLDER_PATH + "/budgets.csv";
     private static final String META_FILE_PATH = FOLDER_PATH + "/meta.txt";
+    private static final String SETTINGS_FILE_PATH = FOLDER_PATH + "/settings.csv";
 
     private void createDataFolderIfNeeded() {
         File folder = new File(FOLDER_PATH);
@@ -150,7 +151,6 @@ public class Storage {
                 throw new StorageParseException("Invalid priority: " + parts[10]);
             }
 
-            // Build transaction
             Transaction transaction = new Transaction(id, description, amount, currency, category, date, status);
             transaction.setRecurringPeriod(recurringPeriod);
             transaction.setPriority(priority);
@@ -283,8 +283,51 @@ public class Storage {
         } catch (IOException | NumberFormatException e) {
             System.out.println("Error loading budgets: " + e.getMessage());
         }
-
         return budgetList;
+    }
+
+    //Settings
+
+    public void saveDefaultCurrency(Currency currency) {
+        createDataFolderIfNeeded();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(SETTINGS_FILE_PATH))) {
+            writer.write("default_currency=" + currency.name());
+            writer.newLine();
+        } catch (IOException e) {
+            System.out.println("Error saving default currency: " + e.getMessage());
+        }
+    }
+
+    public Currency loadDefaultCurrency() {
+        File file = new File(SETTINGS_FILE_PATH);
+        if (!file.exists()) {
+            return Currency.SGD;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("default_currency=")) {
+                    String value = line.substring("default_currency=".length()).trim();
+                    return Currency.valueOf(value.toUpperCase());
+                }
+            }
+        } catch (IOException | IllegalArgumentException e) {
+            System.out.println("Error loading default currency: " + e.getMessage());
+        }
+        return Currency.SGD;
+    }
+
+    // load
+    public void load(TransactionManager transactions) {
+        ArrayList<Transaction> savedTransactions = loadTransactions();
+        for (Transaction t : savedTransactions) {
+            transactions.addTransaction(t);
+        }
+        BudgetList loadedBudgets = loadBudgets();
+        transactions.setBudgetList(loadedBudgets);
+        Currency defaultCurrency = loadDefaultCurrency();
+        transactions.setDefaultCurrency(defaultCurrency);
     }
 
     // Save budget limit

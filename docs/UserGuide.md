@@ -5,7 +5,7 @@
 1. Ensure that you have Java 17 or above installed.
 2. Down the latest version of `NoteUrSavings.jar` from [here](http://link.to/duke).
 > (Optional) Ideally, relocate the `.jar` file to somewhere easy to find first.
-3. Click on the `.jar` file to run.
+1. Click on the `.jar` file to run.
 > If the above does not work, right-click the file and select `Copy as path`. <br>
 > Open CMD and run `java -jar [path you just copied]`.
 
@@ -14,17 +14,21 @@
 ### Adding an expense: `add`
 Adds an expense entry to the budget tracker.
 
-Format: `add d/DESCRIPTION a/AMOUNT c/CATEGORY [t/TAG]`
+Format: `add d/DESCRIPTION a/AMOUNT c/CATEGORY [t/DATE]`
 
 * `DESCRIPTION` refers to the name of the expense.
 * `AMOUNT` is the cost of the expense.
 * `CATEGORY` is the category of spending (e.g., food, transport, entertainment).
-* `TAG` (optional) can be used for additional labeling.
+* `DATE` (optional) is your expense date, support the following format:
+  * `dd-mm-yyyy`
+  * `dd/mm/yyyy`
+  * `yyyy-mm-dd`
+  * `yyyy/mm/dd`
 
 Examples: 
 
 `add d/Dinner a/15.50 c/Food`  
-`add d/Netflix Subscription a/12.99 c/Entertainment t/Monthly`
+`add d/Netflix Subscription a/12.99 c/Entertainment t/04-06-2025`
 
 ---
 
@@ -139,6 +143,22 @@ Example:
 
 ---
 
+### Undo Tick off: `untick`
+If you tick one expense but wish to undo, use `untick`.
+
+Format: `untick INDEX` <br><br>
+Example:
+* `untick 3` (Marks the 3rd expense as not completed)
+
+---
+
+### Change default currency: `currency`  
+Change default currency of the program.
+
+Format: `currency`
+
+---
+
 ### Setting notifications for upcoming payments: `notify`
 Sets reminders for upcoming expenses.
 
@@ -158,13 +178,12 @@ Example:
 ---
 
 ### Setting alerts for higher spending: `alert`
-Marks an expense based on differe[team](team)nt priorities, default set to be low.
+Marks an expense based on different [team](team) priorities, default set to be low.
 
 
 Format: `alert` <br><br>
 Example: <br>
 ![My Diagram](Screenshoots/Alert_demo.png)
-
 
 ---
 

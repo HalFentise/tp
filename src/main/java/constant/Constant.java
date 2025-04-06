@@ -147,6 +147,12 @@ public class Constant {
     public static final String EDIT_CURR = "curr";
 
     /**
+     * Command keyword for changing default currency
+     */
+    public static final String CURRENCY = "currency";
+
+
+    /**
      * Represents an invalid input exception
      */
     public static final String INVALID_INPUT = "OOPS!!! I'm sorry, but I don't know what that means :-(";

@@ -2,6 +2,8 @@ package ui;
 
 import static ui.ConsoleFormatter.*;
 
+import enumStructure.Category;
+import enumStructure.Currency;
 import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
@@ -10,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
-
-import static constant.Constant.*;
 
 public class Ui {
     private final Scanner scanner;
@@ -79,7 +79,7 @@ public class Ui {
 
     public void showError(String message) {
         printLine();
-        printLeftAlignedLine("Error: " + message);
+        printLeftAlignedLine("Failed: " + message);
         printLine();
     }
 
@@ -193,14 +193,11 @@ public class Ui {
 
     public void printTransactionsTable(List<Transaction> transactions) {
         final int TOTAL_WIDTH = 121;
-        final String INNER_HEADER_FORMAT = "| %-2s | %-12s | %9s | %-8s | %-9s | %-10s | %-11s | %-8s |";
-        final String INNER_ROW_FORMAT    = "| %2d | %-12s | %9.2f | %-8s | %-9s | %-10s | %-11s | %-8s |";
+        final String INNER_HEADER_FORMAT = "| %-2s | %-15s | %-9s | %-19s | %-9s | %-10s | %-9s | %-8s |";
+        final String INNER_ROW_FORMAT    = "| %2d | %-15s | %-9.2f | %-19s | %-9s | %-10s | %-9s | %-8s |";
 
         String sampleHeader = String.format(INNER_HEADER_FORMAT,
                 "ID", "Description", "Amount", "Currency", "Category", "Date", "Completed", "Priority");
-
-
-
 
         int tableWidth = sampleHeader.length(); // ~64
         int spaceInsideBox = TOTAL_WIDTH - 4;   // 外框两侧 || 各占2
@@ -223,10 +220,10 @@ public class Ui {
 
         // 每一行打印
         for (Transaction t : transactions) {
-            String completedMark = t.isCompleted() ? " [ ● ] " : " [ ○ ] ";
+            String completedMark = t.isCompleted() ? "    ✔" : "    ✖";
             String row = String.format(INNER_ROW_FORMAT,
                     t.getId(),
-                    t.getDescription(),
+                    limitWithEllipsis(t.getDescription(),15),
                     t.getAmount(),
                     t.getCurrency().toString(),
                     t.getCategory().toString(),
@@ -237,10 +234,16 @@ public class Ui {
             printTableLine(row, sidePadding);
 
         }
-
         // 打印底边框
         printLine();
     }
+
+    private static String limitWithEllipsis(String input, int maxLength) {
+        if (input == null) return "";
+        if (input.length() <= maxLength) return input;
+        return input.substring(0, maxLength - 3) + "...";
+    }
+
 
     /**
      * 打印表格行，包裹 || 并居中填充空格
@@ -252,9 +255,6 @@ public class Ui {
         String line = "| " + " ".repeat(sidePadding) + content + " ".repeat(Math.max(0, rightPadding)) + " |";
         System.out.println(line);
     }
-
-
-
 
     public void tickTransaction(Transaction transaction) {
         printLine();
@@ -272,7 +272,7 @@ public class Ui {
 
     public void add(Transaction transaction) {
         printLine();
-        System.out.println("I have added the following transaction:");
+        System.out.println("I have added the following transaction to the list:");
         printTransaction(transaction);
         printLine();
     }
@@ -422,18 +422,16 @@ public class Ui {
         int filled = (int) (percent * barLength);
         int empty = barLength - filled;
 
-        StringBuilder bar = new StringBuilder("[");
-        bar.append("█".repeat(filled));
-        bar.append(" ".repeat(empty));
-        bar.append("]");
+        String bar = "[" + "█".repeat(filled) +
+                " ".repeat(empty) +
+                "]";
 
         printLeftAlignedLine("Goal:         \"" + goal.getGoal() + "\"");
         printLeftAlignedLine("Description:  " + goal.getDescription());
         printLeftAlignedLine("");
 
         printLeftAlignedLine("Status:       You're currently at:"+String.format("  %s  %.1f%% complete",
-                bar.toString(), percent * 100, current, target));
-
+                bar, percent * 100, current, target));
         if (percent >= 1.0) {
             printLeftAlignedLine("Analysis:     Amazing! You've achieved your savings goal. Time to celebrate!");
         } else if (percent >= 0.75) {
@@ -445,8 +443,49 @@ public class Ui {
         } else {
             printLeftAlignedLine("Analysis:     You haven't started saving yet. Let's begin today!");
         }
-
         printLine();
     }
 
+    public void printCurrencyChoice() {
+        ConsoleFormatter.printLine();
+        System.out.println("You can enter exit to quit choose progress");
+        System.out.println("Please choose a valid currency from the list below:");
+
+        int index = 1;
+        for (Currency currency : Currency.values()) {
+            System.out.println(index + ". " + currency.name());
+            index++;
+        }
+        ConsoleFormatter.printLine();
+    }
+
+    public void printCurrencyHint() {
+        System.out.print("Enter currency number (1-" + Currency.values().length + "): ");
+    }
+
+    public void printCurrencySetting() {
+        System.out.println("Set your default currency successfully!");
+        ConsoleFormatter.printLine();
+    }
+
+    public void printCategoryChoice() {
+        ConsoleFormatter.printLine();
+        System.out.println("You can enter exit to quit choose progress");
+        System.out.println("Please choose a valid category from the list below:");
+        int index = 1;
+        for (Category category : Category.values()) {
+            System.out.println(index + ". " + category.name());
+            index++;
+        }
+        ConsoleFormatter.printLine();
+    }
+
+    public void printCategoryHint() {
+        System.out.print("Enter category number (1-" + Category.values().length + "): ");
+    }
+
+    public void printCategoryChoose() {
+        System.out.println("Choose category successfully!");
+        ConsoleFormatter.printLine();
+    }
 }

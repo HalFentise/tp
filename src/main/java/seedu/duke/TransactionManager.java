@@ -11,7 +11,6 @@ import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
 import exceptions.InvalidCommand;
-
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
 
@@ -24,7 +23,7 @@ public class TransactionManager {
     private BudgetList budgetList = new BudgetList();
 
     private Storage storage;
-    private int currentMaxId = 0;  // 永久自增ID
+    private int currentMaxId = 0;
 
     public void setStorage(Storage storage) {
         this.storage = storage;
@@ -57,14 +56,18 @@ public class TransactionManager {
         transactions = new ArrayList<>();
     }
 
+    public void setDefaultCurrency(Currency defaultCurrency) {
+        this.defaultCurrency = defaultCurrency;
+    }
+
     public int getNum() {
         return transactions.size();
     }
 
     public int getSize() {
         int count = 0;
-        for (Transaction t : transactions) {
-            if (!t.isDeleted()) {
+        for (Transaction transaction : transactions) {
+            if (!transaction.isDeleted()) {
                 count++;
             }
         }
@@ -104,30 +107,17 @@ public class TransactionManager {
         }
     }
 
-    public boolean addTransaction(String description, double amount, Category category) {
+    public boolean addTransaction(String description, double amount, Category category, LocalDate date) {
         int id = getNextAvailableId();
-        LocalDate date = LocalDate.now();
-        Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
-
-        if (isBudgetSet) {
-            double projected = getTotalTransactionAmount() + amount;
-            if (projected > budgetLimit) {
-                System.out.println("Cannot add new transaction! Budget limit exceeded!");
-                return false;
-            }
+        LocalDate now = LocalDate.now();
+        Transaction transaction;
+        if (date == null) {
+            transaction = new Transaction(id, description, amount, defaultCurrency, category, now, Status.PENDING);
+        } else {
+            transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
         }
 
-        transactions.add(transaction);
-        return true;
-    }
-
-
-    public boolean addTransaction(int id, String description, double amount, Category category) {
-        LocalDate date = LocalDate.now();
-        Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
-
         if (isBudgetSet && (getTotalTransactionAmount() + amount > budgetLimit)) {
-            System.out.println("Cannot add new transaction! Budget limit exceeded!");
             return false;
         }
 
@@ -142,14 +132,14 @@ public class TransactionManager {
     }
 
     public ArrayList<Transaction> getTransactions() {
-        ArrayList<Transaction> active = new ArrayList<>();
-        for (Transaction t : transactions) {
-            if (!t.isDeleted()) {
-                active.add(t);
+        ArrayList<Transaction> existTransactions = new ArrayList<>();
+        for (Transaction transaction : transactions) {
+            if (!transaction.isDeleted()) {
+                existTransactions.add(transaction);
             }
         }
-        sortTransactions(active);
-        return active;
+        sortTransactions(existTransactions);
+        return existTransactions;
     }
 
     public void deleteExpense(int id) {
@@ -178,12 +168,11 @@ public class TransactionManager {
     }
 
     public Transaction searchTransaction(int id) {
-        for (Transaction t : transactions) {
-            if (t.getId() == id && !t.isDeleted()) {
-                return t;
+        for (Transaction transaction : transactions) {
+            if (transaction.getId() == id && !transaction.isDeleted()) {
+                return transaction;
             }
         }
-        System.out.println("Transaction is invalid");
         return null;
     }
 
@@ -226,7 +215,7 @@ public class TransactionManager {
         }
     }
 
-    public ArrayList<Transaction> sortRecurringTransactions(ArrayList<Transaction> list) {
+    public void sortRecurringTransactions(ArrayList<Transaction> list) {
         for (Transaction t : list) {
             int period = t.getRecurringPeriod();
             while (t.getDate().isBefore(LocalDate.now())) {
@@ -234,7 +223,6 @@ public class TransactionManager {
             }
         }
         list.sort(Comparator.comparing(Transaction::getDate));
-        return list;
     }
 
     public void notify(String description, double amount, String category, String date) {
@@ -258,14 +246,22 @@ public class TransactionManager {
         }
     }
 
-    public void tickTransaction(int id) {
-        Transaction t = searchTransaction(id);
-        if (t != null) t.complete();
+    public void tickTransaction(int id) throws Exception{
+        Transaction transaction = searchTransaction(id);
+        if (transaction != null) {
+            transaction.complete();
+        } else {
+            throw new InvalidCommand("Transaction not found! Please type in a valid id");
+        }
     }
 
-    public void unTickTransaction(int id) {
-        Transaction t = searchTransaction(id);
-        if (t != null) t.notComplete();
+    public void unTickTransaction(int id) throws Exception{
+        Transaction transaction = searchTransaction(id);
+        if (transaction != null) {
+            transaction.notComplete();
+        } else {
+            throw new InvalidCommand("Transaction not found! Please type in a valid id");
+        }
     }
 
     public void setRecur(int id, int period) {
@@ -273,9 +269,8 @@ public class TransactionManager {
         if (t != null) t.setRecurringPeriod(period);
     }
 
-    public ArrayList<Transaction> sortTransactions(ArrayList<Transaction> list) {
+    public void sortTransactions(ArrayList<Transaction> list) {
         list.sort(Comparator.comparing(Transaction::getDate, Comparator.nullsLast(Comparator.naturalOrder())));
-        return list;
     }
 
     public ArrayList<Transaction> getTransactionsOnDate(LocalDate date) {
@@ -315,7 +310,7 @@ public class TransactionManager {
         return result;
     }
 
-    public void getUpcomingTransactions(String period) {
+    public void getUpcomingTransactions(String period) throws Exception{
         switch (period.toLowerCase()) {
         case "today" -> System.out.println(getTransactionsOnDate(LocalDate.now()));
         case "week" -> System.out.println(getTransactionsThisWeek());
@@ -365,7 +360,7 @@ public class TransactionManager {
         for (Transaction t : transactions) {
             if (!t.isDeleted() && t.getRecurringPeriod() > 0) {
                 long days = ChronoUnit.DAYS.between(t.getDate(), LocalDate.now());
-                sum += t.getAmount() * (days / t.getRecurringPeriod() + 1);
+                sum += t.getAmount() * ((double) days / t.getRecurringPeriod() + 1);
             }
         }
         return sum;

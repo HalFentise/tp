@@ -33,14 +33,14 @@ public class TransactionManagerTest {
 
     @Test
     public void testAddTransactionWithParams() {
-        manager.addTransaction(2, "Snacks", 5.0, Category.FOOD);
+        manager.addTransaction(2, "Snacks", 5.0, Category.FOOD,null);
         ArrayList<Transaction> transactions = manager.getTransactions();
         assertEquals(1, transactions.size());
         assertEquals("Snacks", transactions.get(0).getDescription());
     }
 
     @Test
-    public void testTickAndUnTickTransaction() {
+    public void testTickAndUnTickTransaction() throws Exception {
         Transaction t = new Transaction(3, "Netflix", 15.0, Currency.SGD,
                 Category.ENTERTAINMENT, LocalDate.now(), Status.PENDING);
         manager.addTransaction(t);
@@ -54,8 +54,8 @@ public class TransactionManagerTest {
 
     @Test
     public void testClearTransactions() {
-        manager.addTransaction(4, "Book", 20.0, Category.EDUCATION);
-        manager.addTransaction(5, "Groceries", 30.0, Category.FOOD);
+        manager.addTransaction(4, "Book", 20.0, Category.EDUCATION,null);
+        manager.addTransaction(5, "Groceries", 30.0, Category.FOOD,null);
         assertEquals(2, manager.getTransactions().size());
 
         manager.clear();
@@ -65,7 +65,7 @@ public class TransactionManagerTest {
     @Test
     public void testDeleteTransaction() {
         Transaction t = new Transaction(6, "Taxi", 10.0, Currency.SGD,
-                Category.TRANSPORTATION, LocalDate.now(), Status.PENDING);
+                Category.TRANSPORT, LocalDate.now(), Status.PENDING);
         manager.addTransaction(t);
 
         assertEquals(1, manager.getTransactions().size());

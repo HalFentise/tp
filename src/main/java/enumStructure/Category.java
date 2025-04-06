@@ -3,7 +3,7 @@ package enumStructure;
 public enum Category {
     FOOD,
     EDUCATION,
-    TRANSPORTATION,
+    TRANSPORT,
     SHOPPING,
     ENTERTAINMENT,
     HEALTHCARE,
