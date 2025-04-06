@@ -153,14 +153,15 @@ public class Parser {
                 storage.saveTransactions(transactions.getTransactions());
                 break;
             case COMMAND_ALERT:
-                if (parts.length > 1) {
-                    throw new InvalidCommand("Invalid command");
-                }
-                new AlertCommand(transactions, ui);
-                storage.saveTransactions(transactions.getTransactions());
-                break;
+                    if (parts.length > 1 && !parts[1].trim().isEmpty()) {
+                        throw new InvalidCommand("Invalid command");
+                    }
+                    new AlertCommand(transactions, ui);
+                    storage.saveTransactions(transactions.getTransactions());
+                    break;
 
-            case COMMAND_SET_PRIORITY:
+
+                case COMMAND_SET_PRIORITY:
                 try {
                     details = parts[1].split(" ", 2);
                     index = Integer.parseInt(details[0]);
