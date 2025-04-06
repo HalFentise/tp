@@ -13,6 +13,7 @@ import seedu.duke.TransactionManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +26,9 @@ public class Ui {
     }
 
     public String readCommand() {
-        System.out.println("Enter your command:");
+        if (!scanner.hasNextLine()) {
+            throw new NoSuchElementException("No line found in input.");
+        }
         return scanner.nextLine();
     }
 
