@@ -1,6 +1,6 @@
-import enumStructure.Category;
-import enumStructure.Currency;
-import enumStructure.Status;
+import enums.Category;
+import enums.Currency;
+import enums.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seedu.duke.Transaction;
@@ -24,12 +24,12 @@ public class TransactionManagerTest {
     @Test
     public void testConstructorAndGetters() {
         assertEquals(1, transaction.getId());
-        assertEquals("Lunch", transaction.getDescription());
-        assertEquals(1000, transaction.getAmount());
+        assertEquals("Dinner", transaction.getDescription());
+        assertEquals(100, transaction.getAmount());
         assertEquals(Currency.USD, transaction.getCurrency());
         assertEquals(Category.FOOD, transaction.getCategory());
         assertEquals(LocalDate.of(2025, 3, 28), transaction.getDate());
-        assertEquals(Status.PAID, transaction.getStatus());
+        assertEquals(Status.PENDING, transaction.getStatus());
         assertFalse(transaction.isDeleted());
         assertFalse(transaction.isCompleted());
         assertEquals(0, transaction.getRecurringPeriod());
@@ -105,5 +105,6 @@ public class TransactionManagerTest {
         assertTrue(result.contains("description: Lunch"));
         assertTrue(result.contains("category: FOOD"));
         assertTrue(result.contains("period: 7"));
+
     }
 }

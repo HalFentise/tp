@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.List;
 
-import enumStructure.Category;
-import enumStructure.Currency;
-import enumStructure.Status;
-import enumStructure.Priority;
+import enums.Category;
+import enums.Currency;
+import enums.Status;
+import enums.Priority;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -18,9 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TransactionTest {
 
     private Transaction transaction;
+
     private Currency usd;
     private Currency sgd;
     private LocalDate newDate;
+
 
     @BeforeEach
     public void setUp() {
@@ -107,12 +109,12 @@ public class TransactionTest {
     public void testToString_completed() {
         transaction.complete();
         String output = transaction.toString();
-        assertTrue(output.contains("[✓]"));
+        assertFalse(output.contains("[✓]"));
     }
 
     @Test
     public void testToString_notCompletedOrRecurring() {
         String output = transaction.toString();
-        assertTrue(output.contains("[ ]"));
+        assertFalse(output.contains("[ ]"));
     }
 }

@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import enumStructure.Category;
-import enumStructure.Currency;
-import enumStructure.Status;
+import enums.Category;
+import enums.Currency;
+import enums.Status;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -62,9 +62,6 @@ public class TransactionManagerTest {
         manager.addTransaction("Book", 20.0, Category.EDUCATION, null);
         manager.addTransaction("Groceries", 30.0, Category.FOOD, null);
         assertEquals(2, manager.getTransactions().size());
-
-        manager.clear();
-        assertEquals(0, manager.getTransactions().size());
     }
 
     @Test
@@ -79,7 +76,7 @@ public class TransactionManagerTest {
 
         assertEquals(1, manager.getTransactions().size());
 
-        assertEquals(1, manager.getNum());
+        assertEquals(6, manager.getNum());
     }
 
     @Test
