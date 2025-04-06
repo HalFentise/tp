@@ -7,8 +7,10 @@ import seedu.duke.FinancialGoal;
 import seedu.duke.TransactionManager;
 import seedu.duke.Storage;
 import seedu.duke.SavingMode;
+import seedu.duke.budget.BudgetMode;
 import enumStructure.Category;
 import ui.Ui;
+import ui.ConsoleFormatter;
 import java.util.Scanner;
 
 import java.util.regex.Matcher;
@@ -100,11 +102,12 @@ public class Parser {
                 }
                 storage.saveTransactions(transactions.getTransactions());
                 break;
-            case COMMAND_DELETE:
-                index = Integer.parseInt(parts[1]);
-                new DeleteCommand(index - 1, transactions, ui);
-                storage.saveTransactions(transactions.getTransactions());
-                break;
+                case COMMAND_DELETE:
+                    id = Integer.parseInt(parts[1]);
+                    new DeleteCommand(id, transactions, ui);
+                    storage.saveTransactions(transactions.getTransactions());
+                    break;
+
             case COMMAND_CLEAR:
                 transactions.clear();
                 storage.saveTransactions(transactions.getTransactions());
@@ -188,6 +191,10 @@ public class Parser {
             case "saving":
                     SavingMode.enter(ui, goal, storage);
                     break;
+            case "budget":
+                BudgetMode.enter(ui, transactions.getBudgetList(), storage);
+                break;
+
             case COMMAND_GOAL:
                 goal.updateExpenses(transactions);
                 try {
@@ -295,14 +302,14 @@ public class Parser {
         ui.showError("Invalid category: \"" + userInput + "\"");
 
         // Show available options
-        ui.showLine();
+        ConsoleFormatter.printLine();
         System.out.println("Please choose a valid category from the list below:");
         int index = 1;
         for (Category category : Category.values()) {
             System.out.println(index + ". " + category.name());
             index++;
         }
-        ui.showLine();
+        ConsoleFormatter.printLine();
 
         // Prompt for selection
         Scanner scanner = new Scanner(System.in);
