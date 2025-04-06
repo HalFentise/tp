@@ -1,5 +1,6 @@
 package seedu.duke;
 
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.time.LocalDate;
@@ -10,14 +11,14 @@ import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Status;
 import exceptions.InvalidCommand;
-import exceptions.NullException;
+
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
 
 public class TransactionManager {
     private ArrayList<Transaction> transactions;
     private Currency defaultCurrency = Currency.SGD;
-    private double budgetLimit = -1;
+    private double budgetLimit = 0;
     private boolean isBudgetSet = false;
 
     private BudgetList budgetList = new BudgetList();
@@ -28,6 +29,16 @@ public class TransactionManager {
     public void setStorage(Storage storage) {
         this.storage = storage;
         this.currentMaxId = storage.loadMaxTransactionId();
+    }
+
+    public void loadBudgetFromStorage() {
+        if (storage != null) {
+            double savedBudget = storage.loadBudgetLimit();
+            if (savedBudget > 0) {
+                this.budgetLimit = savedBudget;
+                this.isBudgetSet = true;
+            }
+        }
     }
 
     private int getNextAvailableId() {
@@ -60,14 +71,26 @@ public class TransactionManager {
         return count;
     }
 
+    public double getBudgetLimit() {
+        return budgetLimit;
+    }
+
+    public void setBudgetLimit(double budgetLimit) {
+        this.budgetLimit = budgetLimit;
+    }
+
+    public void setBudgetSet(boolean budgetSet) {
+        isBudgetSet = budgetSet;
+    }
+
     public double getTotalTransactionAmount() {
-        double sum = 0;
-        for (Transaction t : transactions) {
-            if (!t.isDeleted()) {
-                sum += t.getAmount();
+        double totalAmount = 0;
+        for (Transaction transaction : transactions) {
+            if (!transaction.isDeleted()) {
+                totalAmount += transaction.getAmount();
             }
         }
-        return sum;
+        return totalAmount;
     }
 
     public void addTransaction(Transaction transaction) {
@@ -82,7 +105,7 @@ public class TransactionManager {
     }
 
     public boolean addTransaction(String description, double amount, Category category) {
-        int id = getNextAvailableId(); // 自动分配唯一ID
+        int id = getNextAvailableId();
         LocalDate date = LocalDate.now();
         Transaction transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
 
@@ -130,22 +153,23 @@ public class TransactionManager {
     }
 
     public void deleteExpense(int id) {
-        Transaction t = searchTransaction(id);
-        if (t != null) {
-            t.delete();
+        Transaction transaction = searchTransaction(id);
+        if (transaction != null) {
+            transaction.delete();
         }
     }
 
-    public void checkBudgetLimit(double limit) {
-        double total = getTotalTransactionAmount();
-        if (total > limit) {
-            System.out.println("Warning: You have exceeded your budget limit!");
-            System.out.println("Current amount that exceed the budget are: " + (total - limit));
-        } else {
-            this.budgetLimit = limit;
-            this.isBudgetSet = true;
-            System.out.println("Budget limit set to " + limit + " " + defaultCurrency);
+    public void checkBudgetLimit(double budgetLimit) {
+        double totalTransactionAmount = getTotalTransactionAmount();
+        setBudgetLimit(budgetLimit);
+        setBudgetSet(true);
+
+        if (storage != null) {
+            storage.saveBudgetLimit(budgetLimit);
         }
+
+        System.out.println("Budget limit set to " + budgetLimit + " " + defaultCurrency);
+        System.out.println("The remaining Budget amount is " + (budgetLimit - totalTransactionAmount) + " " + defaultCurrency + "\n");
     }
 
     public void clear() {
@@ -165,7 +189,7 @@ public class TransactionManager {
 
     public ArrayList<Transaction> searchTransactionList(boolean isIndex, String searchTerm) throws Exception {
         try {
-          ArrayList<Transaction> result = new ArrayList<>();
+            ArrayList<Transaction> result = new ArrayList<>();
             if (isIndex) {
                 int id = Integer.parseInt(searchTerm);
                 for (Transaction t : transactions) {
@@ -213,13 +237,24 @@ public class TransactionManager {
         return list;
     }
 
-    public void notify(String desc, double amount, String category, String date) {
-        LocalDate due = LocalDate.parse(date);
-        Category cat = Category.valueOf(category);
-        for (Transaction t : transactions) {
-            if (t.getDescription().equals(desc) && t.getCategory() == cat) {
-                t.setDate(due);
+    public void notify(String description, double amount, String category, String date) {
+        try {
+            LocalDate dueDate = LocalDate.parse(date);
+
+            LocalDate minDate = LocalDate.of(2020, 1, 1);
+            if (dueDate.isBefore(minDate)) {
+                throw new IllegalArgumentException("Date cannot be before January 1, 2020");
             }
+
+            Category cat = Category.valueOf(category);
+            for (Transaction t : transactions) {
+                if (t.getDescription().equals(description) && t.getCategory() == cat) {
+                    t.setDate(dueDate);
+                }
+            }
+        } catch (DateTimeParseException e) {
+            // Handle invalid date format
+            throw new IllegalArgumentException("Invalid date format. Please use YYYY-MM-DD format", e);
         }
     }
 
@@ -282,17 +317,17 @@ public class TransactionManager {
 
     public void getUpcomingTransactions(String period) {
         switch (period.toLowerCase()) {
-            case "today" -> System.out.println(getTransactionsOnDate(LocalDate.now()));
-            case "week" -> System.out.println(getTransactionsThisWeek());
-            case "month" -> System.out.println(getTransactionsThisMonth());
-            default -> {
-                try {
-                    LocalDate date = LocalDate.parse(period);
-                    System.out.println(getTransactionsOnDate(date));
-                } catch (Exception e) {
-                    System.out.println("Invalid period. Use 'today', 'week', 'month', or a date (yyyy-mm-dd)");
-                }
+        case "today" -> System.out.println(getTransactionsOnDate(LocalDate.now()));
+        case "week" -> System.out.println(getTransactionsThisWeek());
+        case "month" -> System.out.println(getTransactionsThisMonth());
+        default -> {
+            try {
+                LocalDate date = LocalDate.parse(period);
+                System.out.println(getTransactionsOnDate(date));
+            } catch (Exception e) {
+                System.out.println("Invalid period. Use 'today', 'week', 'month', or a date (yyyy-mm-dd)");
             }
+        }
         }
     }
 
@@ -302,14 +337,14 @@ public class TransactionManager {
         if (t == null) return;
 
         switch (type) {
-            case 0 -> t.setDescription(value);
-            case 1 -> t.setCategory(Category.valueOf(value));
-            case 2 -> {
-                int val = Integer.parseInt(value);
-                if (val < 0) throw new InvalidCommand("Expense cannot be negative!");
-                t.setAmount(val);
-            }
-            case 3 -> t.setCurrency(Currency.valueOf(value));
+        case 0 -> t.setDescription(value);
+        case 1 -> t.setCategory(Category.valueOf(value));
+        case 2 -> {
+            int val = Integer.parseInt(value);
+            if (val < 0) throw new InvalidCommand("Expense cannot be negative!");
+            t.setAmount(val);
+        }
+        case 3 -> t.setCurrency(Currency.valueOf(value));
         }
     }
 

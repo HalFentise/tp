@@ -125,6 +125,7 @@ public class Transaction {
         return isCompleted;
     }
 
+
     //set method
     public void setDescription(String description) {
         this.description = description;

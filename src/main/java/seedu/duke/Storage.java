@@ -3,6 +3,7 @@ package seedu.duke;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.time.format.DateTimeParseException;
 
 import exceptions.StorageParseException;
@@ -284,5 +285,27 @@ public class Storage {
         }
 
         return budgetList;
+    }
+
+    // Save budget limit
+    public void saveBudgetLimit(double limit) {
+        try (FileWriter writer = new FileWriter("budget.txt")) {
+            writer.write(String.valueOf(limit));
+        } catch (IOException e) {
+            System.out.println("Failed to save budget limit.");
+        }
+    }
+
+    // Load budget limit
+    public double loadBudgetLimit() {
+        File file = new File("budget.txt");
+        if (!file.exists()) return -1;
+
+        try (Scanner scanner = new Scanner(file)) {
+            return scanner.hasNextDouble() ? scanner.nextDouble() : -1;
+        } catch (IOException e) {
+            System.out.println("Failed to load budget limit.");
+            return -1;
+        }
     }
 }

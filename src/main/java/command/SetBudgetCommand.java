@@ -4,6 +4,8 @@ import exceptions.NullException;
 import ui.Ui;
 import seedu.duke.TransactionManager;
 
+import java.math.BigDecimal;
+
 public class SetBudgetCommand extends Command {
 
     /**
@@ -16,9 +18,8 @@ public class SetBudgetCommand extends Command {
     public SetBudgetCommand(double amount, TransactionManager transactions, Ui ui) throws NullException {
 
         try {
-            if (amount > 0) {
+            if (amount >= 0) {
                 transactions.checkBudgetLimit(amount);
-                //ui.PrintBudgetLimit(transactions, amount);
             } else {
                 throw new NullException("Invalid input amount, amount can not be negative!");
             }
