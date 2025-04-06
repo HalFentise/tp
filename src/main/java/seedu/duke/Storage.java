@@ -3,7 +3,9 @@ package seedu.duke;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.time.format.DateTimeParseException;
 
+import exceptions.StorageParseException;
 import enumStructure.Category;
 import enumStructure.Currency;
 import enumStructure.Priority;
@@ -70,32 +72,99 @@ public class Storage {
 
     private Transaction parseTransaction(String line) {
         try {
-            String[] parts = line.split(",", -1);
-            if (parts.length != 11) return null;
+            if (line == null || line.trim().isEmpty()) {
+                throw new StorageParseException("Storage is empty.");
+            }
 
-            int id = Integer.parseInt(parts[0]);
+            String[] parts = line.split(",");
+            if (parts.length != 11) {
+                throw new StorageParseException("Storage format error.");
+            }
+
+            int id;
+            double amount;
+            int recurringPeriod;
+            boolean isDeleted;
+            boolean isCompleted;
+
+            try {
+                id = Integer.parseInt(parts[0]);
+            } catch (NumberFormatException e) {
+                throw new StorageParseException("Invalid ID format: " + parts[0]);
+            }
+
             String description = parts[1];
-            double amount = Double.parseDouble(parts[2]);
-            Currency currency = Currency.valueOf(parts[3]);
-            Category category = Category.valueOf(parts[4]);
-            LocalDate date = LocalDate.parse(parts[5]);
-            Status status = Status.valueOf(parts[6].toUpperCase());
-            int recurringPeriod = Integer.parseInt(parts[7]);
-            boolean isDeleted = Boolean.parseBoolean(parts[8]);
-            boolean isCompleted = Boolean.parseBoolean(parts[9]);
-            Priority priority = Priority.valueOf(parts[10]);
 
-            Transaction t = new Transaction(id, description, amount, currency, category, date, status);
-            t.setRecurringPeriod(recurringPeriod);
-            t.setPriority(priority);
-            if (isDeleted) t.delete();
-            if (isCompleted) t.complete();
-            return t;
+            try {
+                amount = Double.parseDouble(parts[2]);
+            } catch (NumberFormatException e) {
+                throw new StorageParseException("Invalid amount format: " + parts[2]);
+            }
+
+            Currency currency;
+            try {
+                currency = Currency.valueOf(parts[3]);
+            } catch (IllegalArgumentException e) {
+                throw new StorageParseException("Invalid currency type: " + parts[3]);
+            }
+
+            Category category;
+            try {
+                category = Category.valueOf(parts[4]);
+            } catch (IllegalArgumentException e) {
+                throw new StorageParseException("Invalid category type: " + parts[4]);
+            }
+
+            LocalDate date;
+            try {
+                date = LocalDate.parse(parts[5]);
+            } catch (DateTimeParseException e) {
+                throw new StorageParseException("Invalid date format: " + parts[5]);
+            }
+
+            Status status;
+            try {
+                status = Status.valueOf(parts[6].toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new StorageParseException("Invalid status value: " + parts[6]);
+            }
+
+            try {
+                recurringPeriod = Integer.parseInt(parts[7]);
+            } catch (NumberFormatException e) {
+                throw new StorageParseException("Invalid recurring period: " + parts[7]);
+            }
+
+            try {
+                isDeleted = Boolean.parseBoolean(parts[8]);
+                isCompleted = Boolean.parseBoolean(parts[9]);
+            } catch (Exception e) {
+                throw new StorageParseException("Invalid boolean value in deleted/completed status.");
+            }
+
+            Priority priority;
+            try {
+                priority = Priority.valueOf(parts[10].toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new StorageParseException("Invalid priority: " + parts[10]);
+            }
+
+            // Build transaction
+            Transaction transaction = new Transaction(id, description, amount, currency, category, date, status);
+            transaction.setRecurringPeriod(recurringPeriod);
+            transaction.setPriority(priority);
+
+            if (isDeleted) transaction.delete();
+            if (isCompleted) transaction.complete();
+
+            return transaction;
+
         } catch (Exception e) {
-            System.out.println("Error parsing transaction: " + line + " - " + e.getMessage());
+            System.out.println(e.getMessage());
             return null;
         }
     }
+  
 
     // 获取当前最大 Transaction ID
     public int loadMaxTransactionId() {
