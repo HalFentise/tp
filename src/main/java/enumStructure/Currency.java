@@ -37,4 +37,13 @@ public enum Currency {
     public String toString() {
         return fullName;
     }
+
+    public static Currency valueOfFullName(String fullName) {
+        for (Currency currency : Currency.values()) {
+            if (currency.getFullName().equals(fullName)) {
+                return currency;
+            }
+        }
+        throw new IllegalArgumentException("Can not load the following currency: " + fullName);
+    }
 }

@@ -63,7 +63,7 @@ public class TransactionManager {
     }
 
     public int getNum() {
-        return transactions.size();
+        return currentMaxId;
     }
 
     public int getSize() {
@@ -171,6 +171,8 @@ public class TransactionManager {
 
     public void clear() {
         transactions.clear();
+        currentMaxId = 0;
+        storage.saveMaxTransactionId(currentMaxId);
         budgetList.clear();
     }
 
@@ -231,6 +233,7 @@ public class TransactionManager {
         }
         list.sort(Comparator.comparing(Transaction::getDate));
     }
+
 
     public void notify(String description, String category, LocalDate date) {
         try {

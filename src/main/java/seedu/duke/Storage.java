@@ -105,7 +105,7 @@ public class Storage {
 
             Currency currency;
             try {
-                currency = Currency.valueOf(parts[3]);
+                currency = Currency.valueOfFullName(parts[3]);
             } catch (IllegalArgumentException e) {
                 throw new StorageParseException("Invalid currency type: " + parts[3]);
             }
