@@ -250,8 +250,10 @@ public class Parser {
                     int recurringPeriod = Integer.parseInt(parts[1].substring(slashIndex + 1).trim());
                     transactions.setRecur(transactionId, recurringPeriod);
                     ui.setPeriod(transactions.searchTransaction(transactionId), recurringPeriod);
-                } catch (Exception e) {
+                } catch (StringIndexOutOfBoundsException | NumberFormatException fe) {
                     throw new InvalidCommand("Format invalid, try again! (recur [id]/[period])");
+                } catch (Exception e) {
+                    throw new InvalidCommand("Transaction not found!");
                 }
                 storage.saveTransactions(transactions.getTransactions());
                 break;

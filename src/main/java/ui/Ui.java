@@ -246,8 +246,9 @@ public class Ui {
 
         // 每一行打印
         for (Transaction t : transactions) {
-            String completedMark = t.isCompleted() ? "    ✔" : "    ✖";
-            String row = String.format(innerRowFormat,
+            String completedMark = t.getRecurringPeriod() > 0 ? "  R (" + t.getRecurringPeriod() + ")"
+                    : t.isCompleted() ? "    ✔" : "    ✖";
+            String row = String.format(INNER_ROW_FORMAT,
                     t.getId(),
                     limitWithEllipsis(t.getDescription()),
                     t.getAmount(),
@@ -433,6 +434,11 @@ public class Ui {
     public static void printRecurringTransactions(ArrayList<Transaction> transactions) {
         DateTimeFormatter df = DateTimeFormatter.ofPattern("E, dd MMM yyyy");
         printLine();
+        if (transactions.isEmpty()) {
+            System.out.println("You have no recurring payments ahead.");
+            printLine();
+            return;
+        }
         System.out.println("Here is a list of your upcoming recurring payments:");
         int count = 1;
         for (Transaction transaction : transactions) {

@@ -212,20 +212,24 @@ public class TransactionManager {
         }
     }
 
-    public void remindRecurringTransactions() {
+    public ArrayList<Transaction> getRecurringTransactions() {
         ArrayList<Transaction> upcoming = new ArrayList<>();
         for (Transaction t : transactions) {
             if (!t.isDeleted() && t.getRecurringPeriod() > 0) {
                 upcoming.add(t);
             }
         }
+        return sortRecurringTransactions(upcoming);
+    }
+
+    public void remindRecurringTransactions() {
+        ArrayList<Transaction> upcoming = getRecurringTransactions();
         if (!upcoming.isEmpty()) {
-            sortRecurringTransactions(upcoming);
             Ui.printRecurringTransactions(upcoming);
         }
     }
 
-    public void sortRecurringTransactions(ArrayList<Transaction> list) {
+    public ArrayList<Transaction> sortRecurringTransactions(ArrayList<Transaction> list) {
         for (Transaction t : list) {
             int period = t.getRecurringPeriod();
             while (t.getDate().isBefore(LocalDate.now())) {
@@ -233,6 +237,7 @@ public class TransactionManager {
             }
         }
         list.sort(Comparator.comparing(Transaction::getDate));
+        return list;
     }
 
 
@@ -274,10 +279,12 @@ public class TransactionManager {
         }
     }
 
-    public void setRecur(int id, int period) {
+    public void setRecur(int id, int period) throws Exception{
         Transaction t = searchTransaction(id);
         if (t != null) {
             t.setRecurringPeriod(period);
+        } else {
+            throw new Exception();
         }
     }
 
