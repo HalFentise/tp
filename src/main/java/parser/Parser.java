@@ -102,11 +102,12 @@ public class Parser {
                 }
                 storage.saveTransactions(transactions.getTransactions());
                 break;
-            case COMMAND_DELETE:
-                index = Integer.parseInt(parts[1]);
-                new DeleteCommand(index - 1, transactions, ui);
-                storage.saveTransactions(transactions.getTransactions());
-                break;
+                case COMMAND_DELETE:
+                    id = Integer.parseInt(parts[1]);
+                    new DeleteCommand(id, transactions, ui);
+                    storage.saveTransactions(transactions.getTransactions());
+                    break;
+
             case COMMAND_CLEAR:
                 transactions.clear();
                 storage.saveTransactions(transactions.getTransactions());

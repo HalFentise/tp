@@ -96,7 +96,8 @@ public class Ui {
         if (transaction.getTransactions().isEmpty()) {
             System.out.println("Please add a transaction first before you set the budget!");
         } else {
-            transaction.checkBudgetLimit(transaction.getTotalAmount());
+            double total = transaction.getTotalTransactionAmount();
+            transaction.checkBudgetLimit(total);
         }
         printLine();
     }
