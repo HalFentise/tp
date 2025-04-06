@@ -3,7 +3,7 @@ package command;
 import exceptions.NullException;
 import seedu.duke.TransactionManager;
 import ui.Ui;
-import static ui.ConsoleFormatter.*;
+import static ui.ConsoleFormatter.printLine;
 
 public class AlertCommand extends Command{
     /**

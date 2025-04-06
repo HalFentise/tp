@@ -42,30 +42,25 @@ public class SavingMode {
         String command = parts[0].toLowerCase();
 
         switch (command) {
-            case "help":
-                printHelp();
-                break;
-
-            case "set":
-                goal.createNewGoal(ui);
-                storage.saveGoal(goal);  // 保存新设置的目标
-                break;
-
-            case "list":
-                ui.printGoal(goal);
-                break;
-
-            case "contribute":
-            case "save":  // alias
-                handleAddToSavings(parts, goal, storage);
-                break;
-
-            case "deduct":
-                handleSubtractFromSavings(parts, goal, storage);
-                break;
-
-            default:
-                throw new Exception("Unknown command in Saving Mode. Type 'help' for available commands.");
+        case "help":
+            printHelp();
+            break;
+        case "set":
+            goal.createNewGoal(ui);
+            storage.saveGoal(goal);  // 保存新设置的目标
+            break;
+        case "list":
+            ui.printGoal(goal);
+            break;
+        case "contribute":
+        case "save":  // alias
+            handleAddToSavings(parts, goal, storage);
+            break;
+        case "deduct":
+            handleSubtractFromSavings(parts, goal, storage);
+            break;
+        default:
+            throw new Exception("Unknown command in Saving Mode. Type 'help' for available commands.");
         }
     }
 
@@ -82,7 +77,8 @@ public class SavingMode {
         storage.saveGoal(goal);
     }
 
-    private static void handleSubtractFromSavings(String[] parts, FinancialGoal goal, Storage storage) throws Exception {
+    private static void handleSubtractFromSavings(String[] parts
+            , FinancialGoal goal, Storage storage) throws Exception {
         if (parts.length < 2 || !parts[1].startsWith("a/")) {
             throw new Exception("Usage: deduct a/AMOUNT");
         }
