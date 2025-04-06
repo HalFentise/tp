@@ -60,9 +60,11 @@ public class Transaction {
     }
 
 
+    @Override
     public String toString() {
-        return "Transaction id: " + id + " | " + description + " | " + amount + " " + currency + " | " + category + " | " + priority;
+        return id + "," + description + "," + amount + "," + currency + "," + category + "," + priority;
     }
+
 
 
     //get method

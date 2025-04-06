@@ -70,7 +70,7 @@ public AlertCommand(TransactionManager transcations, Ui ui) throws NullException
 
     try {
         ui.listNotifications(transcations.getTransactions());
-        Ui.showLine();
+        ConsoleFormatter.printLine();
         ui.listPriorities(transcations.getTransactions());
         Ui.printRecurringTransactions(transcations.getTransactions());
     } catch (Exception e) {

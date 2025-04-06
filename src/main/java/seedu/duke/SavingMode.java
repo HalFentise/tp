@@ -1,16 +1,17 @@
 package seedu.duke;
 
 import ui.Ui;
+import ui.ConsoleFormatter;
 import java.util.Scanner;
 
 public class SavingMode {
 
     public static void enter(Ui ui, FinancialGoal goal, Storage storage) {
         Scanner scanner = new Scanner(System.in);
-        ui.showLine();
+        ConsoleFormatter.printLine();
         System.out.println("You're now in Saving Mode!");
         System.out.println("Type 'help' to see saving commands. Type 'exit' to return.");
-        ui.showLine();
+        ConsoleFormatter.printLine();
         ui.printSavingOverview(goal);
 
         while (true) {
@@ -18,9 +19,9 @@ public class SavingMode {
             String input = scanner.nextLine().trim();
 
             if (input.equalsIgnoreCase("exit")) {
-                ui.showLine();
+                ConsoleFormatter.printLine();
                 System.out.println("Exiting Saving Mode...");
-                ui.showLine();
+                ConsoleFormatter.printLine();
                 break;
             }
 
@@ -96,7 +97,7 @@ public class SavingMode {
 
 
     private static void printHelp(Ui ui) {
-        ui.showLine();
+        ConsoleFormatter.printLine();
         System.out.println("Saving Mode Commands:");
         System.out.println("- set: Create a new saving goal interactively");
         System.out.println("- list: Show current saving goal details");
@@ -104,6 +105,6 @@ public class SavingMode {
         System.out.println("- save a/AMOUNT: (alias) Add funds to your goal");
         System.out.println("- deduct a/AMOUNT: Subtract funds from your goal");
         System.out.println("- exit: Return to main menu");
-        ui.showLine();
+        ConsoleFormatter.printLine();
     }
 }

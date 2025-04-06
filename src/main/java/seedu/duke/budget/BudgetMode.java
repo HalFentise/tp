@@ -2,6 +2,7 @@ package seedu.duke.budget;
 
 import enumStructure.Category;
 import ui.Ui;
+import ui.ConsoleFormatter;
 import seedu.duke.Storage;
 
 import java.time.LocalDate;
@@ -12,19 +13,19 @@ public class BudgetMode {
 
     public static void enter(Ui ui, BudgetList budgetList, Storage storage) {
         Scanner scanner = new Scanner(System.in);
-        ui.showLine();
+        ConsoleFormatter.printLine();
         System.out.println("You're now in Budget Mode!");
         System.out.println("Type 'help' to see budget commands. Type 'exit' to return.");
-        ui.showLine();
+        ConsoleFormatter.printLine();
 
         while (true) {
             System.out.print("budget> ");
             String input = scanner.nextLine().trim();
 
             if (input.equalsIgnoreCase("exit")) {
-                ui.showLine();
+                ConsoleFormatter.printLine();
                 System.out.println("Exiting Budget Mode...");
-                ui.showLine();
+                ConsoleFormatter.printLine();
                 break;
             }
 
@@ -56,7 +57,7 @@ public class BudgetMode {
 
     private static void handleSetBudget(Ui ui, BudgetList list, Storage storage) {
         Scanner scanner = new Scanner(System.in);
-        ui.showLine();
+        ConsoleFormatter.printLine();
         System.out.println("Enter budget name (or 'cancel' to abort):");
         String name = scanner.nextLine().trim();
         if (name.equalsIgnoreCase("cancel")) return;
@@ -112,7 +113,7 @@ public class BudgetMode {
         list.add(budget);
         storage.saveBudgets(list);
         System.out.println("✅ Budget added successfully.");
-        ui.showLine();
+        ConsoleFormatter.printLine();
     }
 
     private static void handleCheckBudget(String[] parts, Ui ui, BudgetList list) throws Exception {
@@ -132,9 +133,9 @@ public class BudgetMode {
         double amount = Double.parseDouble(tokens[1].substring(2));
         list.get(index).addAmount(amount);
         storage.saveBudgets(list);
-        ui.showLine();
+        ConsoleFormatter.printLine();
         System.out.println("✅ Added $" + amount + " to budget #" + (index + 1));
-        ui.showLine();
+        ConsoleFormatter.printLine();
     }
 
     private static void handleDeductAmount(String[] parts, BudgetList list, Ui ui, Storage storage) throws Exception {
@@ -146,9 +147,9 @@ public class BudgetMode {
         double amount = Double.parseDouble(tokens[1].substring(2));
         list.get(index).deductAmount(amount);
         storage.saveBudgets(list);
-        ui.showLine();
+        ConsoleFormatter.printLine();
         System.out.println("✅ Deducted $" + amount + " from budget #" + (index + 1));
-        ui.showLine();
+        ConsoleFormatter.printLine();
     }
 
     private static void handleModify(String[] parts, BudgetList list, Ui ui, Storage storage) throws Exception {
@@ -176,7 +177,7 @@ public class BudgetMode {
         if (category != null) b.setCategory(category);
 
         storage.saveBudgets(list);
-        ui.showLine();
+        ConsoleFormatter.printLine();
         System.out.println("✅ Budget modified successfully.");
         list.printBudgetDetail(index, ui);
     }
@@ -192,13 +193,13 @@ public class BudgetMode {
         Budget removed = list.get(index);
         list.remove(index);
         storage.saveBudgets(list);
-        ui.showLine();
+        ConsoleFormatter.printLine();
         System.out.println("🗑️ Deleted budget: " + removed.getName());
-        ui.showLine();
+        ConsoleFormatter.printLine();
     }
 
     private static void printHelp(Ui ui) {
-        ui.showLine();
+        ConsoleFormatter.printLine();
         System.out.println("📘 Budget Mode Commands:");
         System.out.println("- set: Interactively create a new budget");
         System.out.println("- list: List all budgets (basic info)");
@@ -208,6 +209,6 @@ public class BudgetMode {
         System.out.println("- modify i/INDEX [n/NAME] [a/AMOUNT] [e/DATE] [c/CATEGORY]: Modify fields");
         System.out.println("- delete i/INDEX: Delete a budget");
         System.out.println("- exit: Return to main menu");
-        ui.showLine();
+        ConsoleFormatter.printLine();
     }
 }
