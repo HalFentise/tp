@@ -202,7 +202,7 @@ public class TransactionManager {
         if (transaction != null) {
             transaction.complete();
         } else {
-            throw new InvalidCommand("Transaction not found! Please type a valid id");
+            throw new InvalidCommand("Transaction not found! Please type in a valid id");
         }
     }
 
@@ -211,7 +211,7 @@ public class TransactionManager {
         if (transaction != null) {
             transaction.notComplete();
         } else {
-            throw new InvalidCommand("Transaction not found! Please type a valid id");
+            throw new InvalidCommand("Transaction not found! Please type in a valid id");
         }
     }
 
