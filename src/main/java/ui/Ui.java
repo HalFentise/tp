@@ -252,7 +252,7 @@ public class Ui {
         // 每一行打印
         for (Transaction t : transactions) {
             String completedMark = t.getRecurringPeriod() > 0 ? "  R (" + t.getRecurringPeriod() + ")"
-                    : t.isCompleted() ? "    ✔" : "    ✖";
+                    : t.isCompleted() ? "    Y" : "    N";
             String row = String.format(innerRowFormat,
                     t.getId(),
                     limitWithEllipsis(t.getDescription()),
@@ -535,8 +535,8 @@ public class Ui {
         printCenteredTitle("Saving Overview");
 
         if (goal.isBlank()) {
-            printLeftAlignedLine("💰 You haven't set a saving goal yet.");
-            printLeftAlignedLine("💡 Tip: Use 'saving > set' to create one and start tracking!");
+            printLeftAlignedLine("You haven't set a saving goal yet.");
+            printLeftAlignedLine("Tip: Use 'saving > set' to create one and start tracking!");
             printLine();
             return;
         }

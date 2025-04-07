@@ -304,6 +304,7 @@ public class Parser {
      */
     public static void parseGoalCommands(String command, Ui ui, FinancialGoal goal) throws Exception {
         String[] parts = command.toLowerCase().split(" ", 2);
+        assert goal != null : "Goal must not be null";
 
         switch (parts[0]) {
         case GOAL_TARGET:
