@@ -6,6 +6,7 @@ import command.NotifyCommand;
 import command.SummaryCommand;
 import command.SetBudgetCommand;
 import command.SetPriorityCommand;
+
 import enums.Currency;
 import exceptions.NullException;
 import exceptions.InvalidCommand;
@@ -16,6 +17,7 @@ import seedu.duke.SavingMode;
 import seedu.duke.budget.BudgetMode;
 import enums.Category;
 import ui.Ui;
+
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -79,10 +81,10 @@ public class Parser {
             case COMMAND_ADD:
                 fields = new String[]{"description", "amount", "category", "date"};
                 String[] patterns = {
-                    "d/(.*?)(?:\\s+[act]/|$)", // description
-                    "a/(.*?)(?:\\s+[dct]/|$)", // amount
-                    "c/(.*?)(?:\\s+[dat]/|$)", // category
-                    "t/(.*?)(?:\\s+[dac]/|$)", // date (optional)
+                        "d/(.*?)(?:\\s+[act]/|$)", // description
+                        "a/(.*?)(?:\\s+[dct]/|$)", // amount
+                        "c/(.*?)(?:\\s+[dat]/|$)", // category
+                        "t/(.*?)(?:\\s+[dac]/|$)", // date (optional)
                 };
 
                 String[] results = new String[fields.length];
@@ -146,7 +148,11 @@ public class Parser {
                 }
                 storage.saveTransactions(transactions.getTransactions());
                 break;
+<<<<<<< HEAD
             //@@author
+=======
+            //@@author Lukapeng77
+>>>>>>> tp-v3.7
             case COMMAND_DELETE:
                 id = Integer.parseInt(parts[1]);
                 new DeleteCommand(id, transactions);
@@ -160,6 +166,7 @@ public class Parser {
             case COMMAND_SET_BUDGET:
                 details = parts[1].split(IDENTIFIER_AMOUNT, 2);
                 amount = Double.parseDouble(details[1]);
+                //@@author
 
                 if (Double.isInfinite(amount) || Double.isNaN(amount)) {
                     System.out.println("Invalid input: amount is too large, too small, or not a number.");
@@ -177,12 +184,13 @@ public class Parser {
                 transactions.setDefaultCurrency(currency);
                 storage.saveDefaultCurrency(currency);
                 break;
+            //@@author Lukapeng77
             case COMMAND_NOTIFY:
                 String[] detail = {"description", "category", "date"};
                 String[] notifyPatterns = {
-                    "d/(.*?)(?:\\s+[ac]/|$)", // d/
-                    "c/(.*?)(?:\\s+[at]/|$)",  // c/
-                    "t/(.*?)(?:\\s+[da]/|$)"  // t/
+                        "d/(.*?)(?:\\s+[ac]/|$)", // d/
+                        "c/(.*?)(?:\\s+[at]/|$)",  // c/
+                        "t/(.*?)(?:\\s+[da]/|$)"  // t/
                 };
 
                 String[] result = new String[detail.length];
@@ -244,7 +252,32 @@ public class Parser {
                     throw new InvalidCommand("Invalid date format. Follow this format: YYYY-MM-DD.");
                 }
                 break;
+<<<<<<< HEAD
             //@@author yangyi-zhu
+=======
+            case COMMAND_CONVERT:
+                try {
+                    Pattern pattern = Pattern.compile("id/(\\d+)\\s+to/(\\w+)", Pattern.CASE_INSENSITIVE);
+                    Matcher matcher = pattern.matcher(parts[1]);
+
+                    if (!matcher.find()) {
+                        throw new InvalidCommand("Invalid convert format. Use: convert id/TRANSACTION_ID to/CURRENCY");
+                    }
+
+                    int transactionId = Integer.parseInt(matcher.group(1).trim());
+                    Currency targetCurrency = Currency.valueOf(matcher.group(2).trim().toUpperCase());
+
+                    new ConvertCommand(transactionId, targetCurrency, transactions, ui);
+                    storage.saveTransactions(transactions.getTransactions());
+
+                } catch (IllegalArgumentException e) {
+                    throw new InvalidCommand("Invalid currency code provided.");
+                } catch (Exception e) {
+                    throw new InvalidCommand("Error processing convert command.");
+                }
+                break;
+            //@@author
+>>>>>>> tp-v3.7
             case COMMAND_RECUR:
                 int slashIndex = parts[1].indexOf("/");
                 try {
