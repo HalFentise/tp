@@ -1,10 +1,9 @@
 @startuml
-' 折线箭头
+
 skinparam linetype ortho
-' 横向展开
+
 left to right direction
 
-' 模块配色
 skinparam package {
     BackgroundColor<<UI>> #E3F2FD
     BackgroundColor<<Logic>> #E8F5E9
