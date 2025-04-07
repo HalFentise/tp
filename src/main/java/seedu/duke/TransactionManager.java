@@ -112,7 +112,9 @@ public class TransactionManager {
                 storage.saveMaxTransactionId(currentMaxId);
             }
         }
+        checkBudgetOverspending(transaction);
     }
+
 
     public boolean addTransaction(String description, double amount, Category category, LocalDate date) {
         int id = getNextAvailableId();
@@ -128,7 +130,14 @@ public class TransactionManager {
             return false;
         }
 
+        if (!isTransactionAllowedByBudget(transaction)) {
+            System.out.println("This transaction is blocked: it occurs before the budget's end date.");
+            return false;
+        }
+
         transactions.add(transaction);
+        checkBudgetOverspending(transaction);
+
         if (id > currentMaxId) {
             currentMaxId = id;
             if (storage != null) {
@@ -137,6 +146,37 @@ public class TransactionManager {
         }
         return true;
     }
+
+    private boolean isTransactionAllowedByBudget(Transaction t) {
+        if (t.getAmount() >= 0) {
+            return true;
+        }
+
+        for (seedu.duke.budget.Budget b : budgetList.getAll()) {
+            if (b.getCategory() == t.getCategory()) {
+                if (t.getDate().isAfter(b.getEndDate())) {
+                    return true;
+                }
+
+                double spent = 0;
+                for (Transaction existing : getTransactions()) {
+                    if (!existing.isDeleted() && existing.getCategory() == t.getCategory() && existing.getAmount() < 0
+                            && !existing.getDate().isAfter(b.getEndDate())) {
+                        spent += existing.getCurrency().convertTo(-existing.getAmount(), Currency.SGD);
+                    }
+                }
+
+                double newAmountSGD = t.getCurrency().convertTo(-t.getAmount(), Currency.SGD);
+
+                return spent + newAmountSGD <= b.getTotalAmount();
+            }
+        }
+
+        return true;
+    }
+
+
+
 
     public ArrayList<Transaction> getTransactions() {
         ArrayList<Transaction> existTransactions = new ArrayList<>();
@@ -518,4 +558,21 @@ public class TransactionManager {
         }
         return balance;
     }
+
+    private void checkBudgetOverspending(Transaction t) {
+        if (t.getAmount() >= 0) {
+            return;
+        }
+
+        for (seedu.duke.budget.Budget budget : budgetList.getAll()) {
+            if (budget.getCategory() == t.getCategory()) {
+                double remaining = budget.calculateRemaining(getTransactions());
+                if (remaining < 0) {
+                    System.out.printf("Warning: You have overspent your budget '%s' by $%.2f%n",
+                            budget.getName(), -remaining);
+                }
+            }
+        }
+    }
+
 }

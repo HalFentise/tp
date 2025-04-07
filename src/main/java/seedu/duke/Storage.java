@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.time.format.DateTimeParseException;
 
@@ -292,14 +293,15 @@ public class Storage {
 
     // ================= BUDGET =================
 
-    public void saveBudgets(BudgetList budgetList) {
+    public void saveBudgets(BudgetList list, List<Transaction> transactions) {
         createDataFolderIfNeeded();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(BUDGET_FILE_PATH))) {
-            for (Budget b : budgetList.getAll()) {
+            for (Budget b : list.getAll()) {
+                double remaining = b.calculateRemaining(transactions);
                 writer.write(String.format("%s,%f,%f,%s,%s",
                         b.getName(),
                         b.getTotalAmount(),
-                        b.getRemainingAmount(),
+                        remaining,
                         b.getEndDate(),
                         b.getCategory()));
                 writer.newLine();
@@ -326,12 +328,10 @@ public class Storage {
 
                 String name = parts[0];
                 double total = Double.parseDouble(parts[1]);
-                double remaining = Double.parseDouble(parts[2]);
                 LocalDate endDate = LocalDate.parse(parts[3]);
                 Category category = Category.valueOf(parts[4]);
 
                 Budget budget = new Budget(name, total, endDate, category);
-                budget.deductAmount(total - remaining);
                 budgetList.add(budget);
             }
         } catch (IOException | NumberFormatException e) {
@@ -339,6 +339,7 @@ public class Storage {
         }
         return budgetList;
     }
+
 
     //Settings
 

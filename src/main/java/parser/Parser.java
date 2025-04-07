@@ -304,7 +304,7 @@ public class Parser {
                     SavingMode.enter(ui, goal, transactions, storage);
                     break;
                 case "budget":
-                    BudgetMode.enter(ui, transactions.getBudgetList(), storage);
+                    BudgetMode.enter(ui, transactions.getBudgetList(), transactions, storage);
                     break;
                 //@@author yangyi-zhu
                 case COMMAND_GOAL:
