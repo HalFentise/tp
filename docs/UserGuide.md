@@ -197,7 +197,7 @@ Marks an expense based on different [team](team) priorities, default set to be l
 
 Format: `alert` <br><br>
 Example: <br>
-![My Diagram](Screenshoots/Alert_demo.png)
+![My Diagram](Images/Alert_demo.png)
 
 ---
 
@@ -213,6 +213,14 @@ Format: `exit`
 **Q**: How do I transfer my data to another computer? 
 
 **A**: {your answer here}
+
+## Enumerations
+| Type     | Supported Variations                                                                                                  |
+|----------|-----------------------------------------------------------------------------------------------------------------------|
+| Category | `EDUCATION`, `ENTERTAINMENT`, `FOOD`, `GROCERIES`, `HEALTH`, `HEALTHCARE`, `HOUSING`, `OTHER`, `SHOPPING`, `TRANSPORT`|
+| Currency | `CNY`, `EUR`, `GBP`, `JPY`, `SGD`, `USD`                                                                              |
+| Priority | `HIGH`, `MEDIUM`, `LOW`                                                                                               |
+
 
 ## Command Overview
 
