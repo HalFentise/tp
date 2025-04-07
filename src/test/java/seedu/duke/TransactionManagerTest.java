@@ -79,6 +79,8 @@ public class TransactionManagerTest {
         assertEquals(6, manager.getNum());
     }
 
+
+    //@@author Lukapeng77
     @Test
     void testSetAndGetBudgetLimit() {
         manager.setBudgetLimit(800.5);

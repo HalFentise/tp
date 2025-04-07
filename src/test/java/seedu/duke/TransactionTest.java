@@ -42,6 +42,8 @@ public class TransactionTest {
         assertFalse(transaction.isDeleted());
         assertTrue(transaction.getTags().isEmpty());
 
+
+        //@@author Lukapeng77
         newDate = LocalDate.of(2025, 4, 3);
         assertEquals(newDate, transaction.getDate());
 
@@ -53,6 +55,8 @@ public class TransactionTest {
         transaction.setAmount(20);
         transaction.setCategory(Category.ENTERTAINMENT);
         transaction.setRecurringPeriod(7);
+
+        //@@author Lukapeng77
         transaction.setPriority(Priority.HIGH);
         transaction.setDate(LocalDate.of(2025, 5, 10));
 
@@ -60,7 +64,12 @@ public class TransactionTest {
         assertEquals(20, transaction.getAmount());
         assertEquals(Category.ENTERTAINMENT, transaction.getCategory());
         assertEquals(7, transaction.getRecurringPeriod());
+
+        //@@author Lukapeng77
         assertEquals(Priority.HIGH, transaction.getPriority());
+        assertEquals(newDate, transaction.getDate());
+
+
     }
 
     @Test

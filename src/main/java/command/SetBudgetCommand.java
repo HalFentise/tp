@@ -4,6 +4,7 @@ import exceptions.NullException;
 import ui.Ui;
 import seedu.duke.TransactionManager;
 
+//@@author Lukapeng77
 public class SetBudgetCommand extends Command {
 
     /**
@@ -37,10 +38,5 @@ public class SetBudgetCommand extends Command {
      */
     @Override
     public void execute(TransactionManager transactions, Ui ui) throws NullException {
-        // Check for whether exceed the budget limit or not.
-        //transactions.checkBudgetLimit();
-
-        // Display the budget limit
-        //ui.PrintBudgetLimit(transactions.getTransactions(), budgetLimit);
     }
 }
