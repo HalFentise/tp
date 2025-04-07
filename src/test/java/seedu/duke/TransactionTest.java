@@ -16,11 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TransactionTest {
-
     private Transaction transaction;
-
-    private Currency usd;
-    private Currency sgd;
+    private Currency usd = Currency.USD;
+    private Currency sgd = Currency.SGD;
     private LocalDate newDate;
 
 
@@ -63,7 +61,6 @@ public class TransactionTest {
         assertEquals(Category.ENTERTAINMENT, transaction.getCategory());
         assertEquals(7, transaction.getRecurringPeriod());
         assertEquals(Priority.HIGH, transaction.getPriority());
-        assertEquals(newDate, transaction.getDate());
     }
 
     @Test

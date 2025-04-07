@@ -9,5 +9,6 @@ public enum Category {
     HEALTHCARE,
     HOUSING,
     OTHER,
-    GROCERIES
+    GROCERIES,
+    HEALTH
 }
