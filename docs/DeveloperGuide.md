@@ -202,7 +202,7 @@ persistence.
 
 ---
 
-### Transaction Management Features: Delete, Set Budget Limit and Notifications
+### Transaction Management Features: Delete, Set Budget Limit, Notifications and Summary
 
 ##### Deletion
 ![DeleteCommand](Images/DeleteCommand.png)
@@ -210,71 +210,31 @@ persistence.
 #### Set Budget
 ![SetBudget](Images/SetBudget.png)
 
-#### Notify 
+#### Notification 
 ![NotifyCommand](Images/NotifyCommand.png)
 
-**Feature Description:**  
-`Peng Ziyi` added three main functionalities to delete transaction, set budget limit and notifications for transactions:
+#### Summary 
+![Summary](Images/Summary.png)
+
+**Feature Description:**
 * Delete Transaction (delete): Lets users remove unwanted or erroneous transaction entries using their index in the displayed list.
 * Set Budget Limit (setBudget): Enables users to define a spending cap to avoid overspending. Once the total recorded expenses exceed this limit, a warning is displayed to alert the user.
 * Set Notifications for Upcoming Payments (notify): Allows users to schedule reminders for future expenses based on the transaction's description, amount, category, and due date.
-
-```java
-/**
-     * Deletes a transaction from the transaction list.
-     *
-     * @param id the index of the transaction to be removed.
-     */
-    public void deleteExpense(int id) {
-        if (checkIdEmpty(id)) {
-            return;
-        }
-        transactions.remove(id);
-    }
-
-/** 
-    *function to record and trace the total budget limit
-    */
-    public void checkBudgetLimit(int budgetLimit) {
-        int totalAmount = 0;
-        for (Transaction transaction : transactions) {
-            if (!transaction.isDeleted()) {
-                totalAmount += transaction.getAmount();
-            }
-        }
-        if (totalAmount > budgetLimit) {
-            System.out.println("Warning: You have exceeded your budget limit!");
-        }
-    }
-    
-/** 
-    *Sets a notification for an upcoming transaction
-    */
-    public void notify(String description, int amount, String categoryString, String date) {
-        LocalDate dueDate = LocalDate.parse(date);
-
-        Category category = Category.valueOf(categoryString);
-
-        for (Transaction transaction : transactions) {
-            if (transaction.getDescription().equals(description) && transaction.getCategory().equals(category)) {
-                transaction.setDate(dueDate);
-            }
-        }
-    }
-```
+* Summary of Expenses (summary): Provides an overview of expenses for a specified time frame, enabling quick and effective financial review.
 
 **Design Consideration:**  
 
-
 The `deletion`, `budget limit` and `notification` features are designed to improve financial awareness and discipline.
 Users can monitor their spending relative to a predefined threshold and receive timely reminders for future payments.
+
+Expense summaries provide users with quick, insightful overviews of their spending patterns within a selected time frame, enhancing their ability to review and adjust financial behavior promptly.
 
 These capabilities integrate seamlessly with the transaction management system, enhancing the user experience through automation
 and clear visual cues for overspending or pending transactions.
 
 ---
 
-### Transaction Management Features: Alert and Set Priority
+### Transaction Management Features: Alert, Set Priority and Convert Currency function 
 
 ##### Alert Operation  
 ![Alert Command](Images/AlertCommand.png)
@@ -282,40 +242,15 @@ and clear visual cues for overspending or pending transactions.
 ##### Set Priority  
 ![Set Priority](Images/SetPriority.png)
 
-**Feature Description:**  
-`Peng Ziyi` added two main functionalities to view spending alerts, set different priorities for transactions:
+##### Convert Currency
+![Convert Currency](Images/Convert.png)
+
+**Feature Description:**
 * Set Priority (priority): Allows users to assign a priority level (low, medium, or high) to a transaction. By default, all expenses are low priority. This helps users focus on the most urgent or important expenses.
 
 * View Spending Alerts (alert): Displays an overview of upcoming expenses, recurring payments, current remaining budget, and whether the spending has exceeded the set budget limit. This command combines notification, priority, and budget insights in a single view.
 
-```java
-public AlertCommand(TransactionManager transactions, Ui ui) throws NullException {
-
-    try {
-        ui.listNotifications(transactions.getTransactions());
-        ConsoleFormatter.printLine();
-        ui.listPriorities(transactions.getTransactions());
-        Ui.printRecurringTransactions(transactions.getTransactions());
-    } catch (Exception e) {
-        System.out.println(e.getMessage());
-    }
-}
-
-/**
- * @param index       The index for the corresponding transaction.
- * @param priorityStr The string representing the priority level want to set.
- */
-public SetPriorityCommand(int index, String priorityStr, TransactionManager transactions, Ui ui) throws NullException {
-    Priority priority = Priority.valueOf(priorityStr.toUpperCase());
-
-    try {
-        transactions.getTransactions().get(index).setPriority(priority);
-    } catch (Exception e) {
-        System.out.println(e.getMessage());
-    }
-    ui.PrintPriority(transactions.getTransactions(), index);
-}
-```
+* Convert Currency (convert): Allows users to convert the amount of a transaction from its original currency to a specified target currency. This is particularly useful for users tracking multi-currency expenses or international purchases.
 
 **Design Consideration:**
 
@@ -323,6 +258,9 @@ Priority levels help users organize and focus on transactions based on importanc
 
 Spending alerts consolidate relevant financial insights—notifications, recurring transactions, and budget status—into 
 one unified interface for quick decision-making.
+
+The convert feature adds a layer of flexibility for users dealing with multiple currencies. It simplifies financial tracking by converting values into a uniform currency for easier comparison and understanding. It is designed with immediate feedback through the UI to help users understand how currency changes affect their recorded transactions. 
+The conversion is performed using the transaction's stored data and is integrated directly into the TransactionManager, ensuring that currency changes do not interfere with other transaction attributes or analytical features.
 
 ---
 
