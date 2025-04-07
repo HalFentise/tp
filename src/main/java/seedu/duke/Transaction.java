@@ -9,9 +9,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
- * Represents a financial transaction with various attributes including amount, currency,
+ * Represents a financial transaction with various attributes including amount,
+ * currency,
  * date, category, status, priority, tags, and recurrence.
- * Each transaction has a unique immutable ID and can be marked as deleted or completed.
+ * Each transaction has a unique immutable ID and can be marked as deleted or
+ * completed.
  */
 public class Transaction {
     private final int id;
@@ -41,7 +43,7 @@ public class Transaction {
      * @param status      Status of the transaction (e.g., pending, confirmed).
      */
     public Transaction(int id, String description, double amount, Currency currency,
-                       Category category, LocalDate date, Status status) {
+            Category category, LocalDate date, Status status) {
         assert description != null : "Description cannot be null";
         assert currency != null : "Currency cannot be null";
         assert category != null : "Category cannot be null";
@@ -136,7 +138,7 @@ public class Transaction {
     }
 
     /** @return Date of the transaction. */
-    //@@author Lukapeng77
+    // @@author Lukapeng77
     public LocalDate getDate() {
         return date;
     }
@@ -145,7 +147,7 @@ public class Transaction {
     public Priority getPriority() {
         return priority;
     }
-    //@@author
+    // @@author
 
     /** @return List of tags associated with the transaction. */
     public ArrayList<String> getTags() {
@@ -176,6 +178,7 @@ public class Transaction {
 
     /**
      * Updates the transaction description.
+     * 
      * @param description New description.
      */
     public void setDescription(String description) {
@@ -184,6 +187,7 @@ public class Transaction {
 
     /**
      * Updates the category of the transaction.
+     * 
      * @param category New category.
      */
     public void setCategory(Category category) {
@@ -192,6 +196,7 @@ public class Transaction {
 
     /**
      * Sets the recurrence period.
+     * 
      * @param recurringPeriod Number of days between each recurrence (0 = one-time).
      */
     public void setRecurringPeriod(int recurringPeriod) {
@@ -200,6 +205,7 @@ public class Transaction {
 
     /**
      * Sets the amount of the transaction.
+     * 
      * @param amount New amount.
      */
     public void setAmount(double amount) {
@@ -208,6 +214,7 @@ public class Transaction {
 
     /**
      * Sets the currency of the transaction.
+     * 
      * @param currency New currency.
      */
     public void setCurrency(Currency currency) {
@@ -216,21 +223,23 @@ public class Transaction {
 
     /**
      * Sets the transaction date.
+     * 
      * @param date New date.
      */
-    //@@author Lukapeng77
+    // @@author Lukapeng77
     public void setDate(LocalDate date) {
         this.date = date;
     }
 
     /**
      * Sets the priority of the transaction.
+     * 
      * @param priority New priority level.
      */
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
-    //@@author
+    // @@author
 
     // ======================== Status Methods ========================
 
