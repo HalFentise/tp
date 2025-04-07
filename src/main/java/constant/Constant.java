@@ -178,6 +178,5 @@ public class Constant {
      */
     public static final String IDENTIFIER_DATE = " t/";
 
-    public static final String COMMAND_STATUS = "status";
 
 }

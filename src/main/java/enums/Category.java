@@ -36,7 +36,5 @@ public enum Category {
     /** Alternate or overlapping category for health-related spending. */
     HEALTH,
 
-    /** Expenses related to general savings */
-    SAVING
 }
 
