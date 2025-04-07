@@ -1,0 +1,22 @@
+<!-- @@author Lukapeng77 -->
+@startuml
+
+hide footbox
+skinparam sequenceReferenceBackgroundColor #f7807c
+
+actor User
+
+participant ":SummaryCommand" as SummaryCommand #FFB6C1
+participant ":TransactionManager" as TM #ADD8E6
+participant ":Ui" as UI #90EE90
+
+Developer -> SummaryCommand : new SummaryCommand(start, end, TM, UI)
+
+SummaryCommand -> TM : getTransactionsBetween(start, end)
+TM --> SummaryCommand : filteredTransactions
+
+SummaryCommand -> SummaryCommand : calculate total amount
+
+SummaryCommand -> UI : printSummary(filteredTransactions, total, start, end)
+
+@enduml

@@ -1,0 +1,28 @@
+<!-- @@author Lukapeng77 -->
+@startuml
+
+hide footbox
+skinparam sequenceReferenceBackgroundColor #f7807c
+
+actor User
+
+participant ":ConvertCommand" as ConvertCommand #FFB6C1
+participant ":TransactionManager" as TM #ADD8E6
+participant ":Transaction" as Transaction #FFD700
+participant ":Ui" as UI #90EE90
+
+Developer -> ConvertCommand : new ConvertCommand(id, targetCurrency, TM, UI)
+
+ConvertCommand -> TM : getTransactions()
+TM --> ConvertCommand : List<Transaction>
+
+ConvertCommand -> Transaction : getCurrency()
+ConvertCommand -> Transaction : getAmount()
+
+ConvertCommand -> Transaction : convertTo(targetCurrency)
+
+ConvertCommand -> Transaction : getAmount()
+
+ConvertCommand -> UI : printConversion(originalAmount, originalCurrency, newAmount, targetCurrency)
+
+@enduml

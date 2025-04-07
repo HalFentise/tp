@@ -1,0 +1,130 @@
+@startuml
+hide circle
+skinparam linetype ortho
+class Transaction {
+    - id : int
+    - amount : double
+    - date : LocalDate
+    - description : String
+    - tags : ArrayList<String>
+    - isDeleted : boolean
+    - recurringPeriod : int
+    - isCompleted : boolean
+    + getId() : int
+    + getAmount() : double
+    + getDescription() : String
+    + getCurrency() : Currency
+    + getCategory() : Category
+    + getDate() : LocalDate
+    + getPriority() : Priority
+    + getTags() : ArrayList<String>
+    + getStatus() : Status
+    + isDeleted() : boolean
+    + getRecurringPeriod() : int
+    + isCompleted() : boolean
+    + setDescription(description: String) : void
+    + setCategory(category: Category) : void
+    + setRecurringPeriod(period: int) : void
+    + setAmount(amount: double) : void
+    + setCurrency(currency: Currency) : void
+    + setDate(date: LocalDate) : void
+    + setPriority(priority: Priority) : void
+    + complete() : void
+    + notComplete() : void
+    + addTag(tag: String) : void
+    + removeTag(tag: String) : void
+    + containsTag(tag: String) : boolean
+    + isSameTransaction(otherTransaction: Transaction) : boolean
+    + delete() : void
+    + recover() : void
+}
+
+class TransactionManager {
+    - budgetLimit : double
+    - isBudgetSet : boolean
+    - budgetList : BudgetList
+    - storage : Storage
+    - currentMaxId : int
+    + TransactionManager()
+    + setStorage(storage: Storage) : void
+    + loadBudgetFromStorage() : void
+    + getNextAvailableId() : int
+    + setBudgetList(budgetList: BudgetList) : void
+    + setDefaultCurrency(defaultCurrency: Currency) : void
+    + getNum() : int
+    + getSize() : int
+    + getBudgetLimit() : double
+    + setBudgetLimit(budgetLimit: double) : void
+    + setBudgetSet(budgetSet: boolean) : void
+    + getTotalTransactionAmount() : double
+    + addTransaction(transaction: Transaction) : void
+    + addTransaction(description: String, amount: double, category: Category, date: LocalDate) : boolean
+    + getTransactions() : ArrayList<Transaction>
+    + getTransactionsBetween(start: LocalDate, end: LocalDate) : ArrayList<Transaction>
+    + deleteExpense(id: int) : void
+    + checkBudgetLimit(budgetLimit: double) : void
+    + clear() : void
+    + searchTransaction(id: int) : Transaction
+    + searchTransactionList(isIndex: boolean, searchTerm: String) : ArrayList<Transaction>
+    + getRecurringTransactions() : ArrayList<Transaction>
+    + remindRecurringTransactions() : void
+    + sortRecurringTransactions(list: ArrayList<Transaction>) : ArrayList<Transaction>
+    + notify(description: String, category: String, date: LocalDate) : void
+    + tickTransaction(id: int) : void
+    + unTickTransaction(id: int) : void
+    + setRecur(id: int, period: int) : void
+    + sortTransactions(list: ArrayList<Transaction>) : void
+    + getTransactionsOnDate(date: LocalDate) : ArrayList<Transaction>
+    + getTransactionsThisMonth() : ArrayList<Transaction>
+    + getTransactionsThisWeek() : ArrayList<Transaction>
+    + getUpcomingTransactions(period: String) : void
+    + editInfo(id: int, value: String, type: int) : void
+    + checkIdEmpty(id: int) : boolean
+    + getTotalAmount() : double
+    + getRecurringAmount() : double
+    + getNormalAmount() : double
+    + getBudgetList() : BudgetList
+}
+
+class Currency {
+    - fullName : String
+    - rate : double
+    + getFullName() : String
+    + getRate() : double
+    + convertTo(money: double, target: Currency) : double
+}
+
+class Status {
+    - displayName : String
+    - description : String
+    + getDescription() : String
+}
+
+class Category {
+    <<enumeration>>
+    FOOD
+    EDUCATION
+    TRANSPORT
+    SHOPPING
+    ENTERTAINMENT
+    HEALTHCARE
+    HOUSING
+    OTHER
+    GROCERIES
+    HEALTH
+}
+
+class Priority {
+    <<enumeration>>
+    HIGH
+    MEDIUM
+    LOW
+}
+
+TransactionManager "1" -- "*" Transaction : manages
+TransactionManager "1" -- "1" Currency : uses
+Transaction "1" -- "1" Currency : uses
+Transaction "1" -- "1" Status : has
+Transaction "1" -- "1" Category : categorized by
+Transaction "1" -- "1" Priority : has
+@enduml

@@ -72,8 +72,14 @@ public class Transaction {
      * @param date        Date of the transaction.
      * @param status      Status of the transaction.
      */
-    public Transaction(int id, String description, double amount, Currency currency,
-                       LocalDate date, Status status) {
+
+    public Transaction(int id, String description, double amount, Currency currency, LocalDate date, Status status) {
+        assert description != null : "Description cannot be null";
+        assert currency != null : "Currency cannot be null";
+        assert date != null : "Date cannot be null";
+        assert status != null : "Status cannot be null";
+        assert amount >= 0 : "Amount should be non-negative";
+
         this.id = id;
         this.description = description;
         this.amount = amount;
@@ -249,8 +255,31 @@ public class Transaction {
     }
 
     public void convertTo(Currency currency) {
-        double toSGD = 1 / this.currency.getRate();
-        this.amount = currency.getRate() * toSGD;
+        if (this.currency == currency) {
+            return; // No conversion needed
+        }
+
+        // Step 1: Convert from original currency to SGD
+        double amountInSGD = this.amount / this.currency.getRate();
+
+        // Step 2: Convert from SGD to target currency
+        this.amount = amountInSGD * currency.getRate();
         this.currency = currency;
+    }
+
+    public void addTag(String daily) {
+        tags.add(daily);
+    }
+
+    public boolean containsTag(String food) {
+        return tags.contains(food);
+    }
+
+    public void removeTag(String food) {
+        tags.remove(food);
+    }
+
+    public boolean isSameTransaction(Transaction other) {
+        return this.equals(other);
     }
 }

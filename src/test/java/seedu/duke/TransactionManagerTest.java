@@ -141,7 +141,7 @@ public class TransactionManagerTest {
                 LocalDate.of(2024, 1, 15), Status.PENDING);
         manager.addTransaction(transaction);
 
-        manager.notify("Gym membership", "HEALTH", LocalDate.of(2024, 2, 15));
+        manager.notify("Gym membership", "HEALTHCARE", LocalDate.of(2024, 2, 15));
 
         assertEquals(LocalDate.of(2024, 2, 15), manager.searchTransaction(1).getDate());
     }
