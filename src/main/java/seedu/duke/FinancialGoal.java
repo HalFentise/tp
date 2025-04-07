@@ -125,6 +125,15 @@ public class FinancialGoal {
         return this.deposits - this.expenses;
     }
 
+    /**
+     * Gets the current deposits.
+     *
+     * @return Total sum of deposits made.
+     */
+    public double getDeposits() {
+        return this.deposits;
+    }
+
     // Set methods
 
     /**
