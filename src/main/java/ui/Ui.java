@@ -248,7 +248,7 @@ public class Ui {
         for (Transaction t : transactions) {
             String completedMark = t.getRecurringPeriod() > 0 ? "  R (" + t.getRecurringPeriod() + ")"
                     : t.isCompleted() ? "    ✔" : "    ✖";
-            String row = String.format(INNER_ROW_FORMAT,
+            String row = String.format(innerRowFormat,
                     t.getId(),
                     limitWithEllipsis(t.getDescription()),
                     t.getAmount(),
@@ -427,7 +427,9 @@ public class Ui {
 
         printLine();
         System.out.println("Done! The " + type
-                + " of the target transaction has been updated to:\n" + value);
+                + " of the target transaction has been updated to:\n"
+                + (typeId == 3 ? Currency.valueOf(value).toString()
+                : (typeId == 2) ? Double.parseDouble(value) : value));
         printLine();
     }
 

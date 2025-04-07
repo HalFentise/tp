@@ -136,7 +136,7 @@ public class Transaction {
         this.recurringPeriod = recurringPeriod;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
