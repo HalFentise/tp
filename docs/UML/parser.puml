@@ -1,0 +1,17 @@
+@startuml
+participant Parser
+participant UI
+
+-> Parser : readCommand(input)
+
+activate Parser
+Parser -> Parser : invalid command
+Parser -> UI : throw exceptions
+
+activate UI
+UI -> : print out warnings or errors
+deactivate UI
+
+deactivate Parser
+
+@enduml

@@ -253,4 +253,20 @@ public class Transaction {
         this.amount = currency.getRate() * toSGD;
         this.currency = currency;
     }
+
+    public void addTag(String daily) {
+        tags.add(daily);
+    }
+
+    public boolean containsTag(String food) {
+        return tags.contains(food);
+    }
+
+    public void removeTag(String food) {
+        tags.remove(food);
+    }
+
+    public boolean isSameTransaction(Transaction other) {
+        return this.equals(other);
+    }
 }
