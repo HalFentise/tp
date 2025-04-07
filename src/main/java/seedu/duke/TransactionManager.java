@@ -192,6 +192,15 @@ public class TransactionManager {
         return null;
     }
 
+    //@@author yangyi-zhu
+    /**
+     * Searches the transaction list based on index or keyword.
+     *
+     * @param isIndex True if searching by index; false if searching by keyword.
+     * @param searchTerm The search term or index string.
+     * @return A list of transactions matching the search.
+     * @throws Exception If the index is invalid or another error occurs.
+     */
     public ArrayList<Transaction> searchTransactionList(boolean isIndex, String searchTerm) throws Exception {
         try {
             ArrayList<Transaction> result = new ArrayList<>();
@@ -218,6 +227,11 @@ public class TransactionManager {
         }
     }
 
+    /**
+     * Retrieves a list of upcoming recurring transactions.
+     *
+     * @return A sorted list of upcoming recurring transactions.
+     */
     public ArrayList<Transaction> getRecurringTransactions() {
         ArrayList<Transaction> upcoming = new ArrayList<>();
         for (Transaction t : transactions) {
@@ -228,6 +242,9 @@ public class TransactionManager {
         return sortRecurringTransactions(upcoming);
     }
 
+    /**
+     * Displays a reminder for upcoming recurring transactions, if any exist.
+     */
     public void remindRecurringTransactions() {
         ArrayList<Transaction> upcoming = getRecurringTransactions();
         if (!upcoming.isEmpty()) {
@@ -235,6 +252,12 @@ public class TransactionManager {
         }
     }
 
+    /**
+     * Adjusts transaction dates to reflect upcoming instances and sorts them chronologically.
+     *
+     * @param list The list of recurring transactions to sort.
+     * @return A chronologically sorted list of adjusted transactions.
+     */
     public ArrayList<Transaction> sortRecurringTransactions(ArrayList<Transaction> list) {
         for (Transaction t : list) {
             int period = t.getRecurringPeriod();
@@ -245,6 +268,7 @@ public class TransactionManager {
         list.sort(Comparator.comparing(Transaction::getDate));
         return list;
     }
+
 
     //@@author Lukapeng77
     public void notify(String description, String category, LocalDate date) {
@@ -286,6 +310,14 @@ public class TransactionManager {
         }
     }
 
+    //@@author yangyi-zhu
+    /**
+     * Sets the recurrence period of a transaction by its ID.
+     *
+     * @param id The ID of the transaction.
+     * @param period The new recurring period in days.
+     * @throws Exception If the transaction is not found.
+     */
     public void setRecur(int id, int period) throws Exception{
         Transaction t = searchTransaction(id);
         if (t != null) {
@@ -295,6 +327,7 @@ public class TransactionManager {
         }
     }
 
+    //@@author
     public void sortTransactions(ArrayList<Transaction> list) {
         list.sort(Comparator.comparing(Transaction::getDate, Comparator.nullsLast(Comparator.naturalOrder())));
     }
@@ -352,6 +385,15 @@ public class TransactionManager {
         }
     }
 
+    //@@author yangyi-zhu
+    /**
+     * Edits a specific field of a transaction.
+     *
+     * @param id The transaction ID.
+     * @param value The new value to set.
+     * @param type The attribute to edit (0=description, 1=category, 2=amount, 3=currency).
+     * @throws Exception If the value is invalid or ID is not found.
+     */
     public void editInfo(int id, String value, int type) throws Exception {
         if (checkIdEmpty(id)) {
             return;
@@ -383,6 +425,12 @@ public class TransactionManager {
         }
     }
 
+    /**
+     * Checks if a transaction ID is valid or exists.
+     *
+     * @param id The transaction ID to validate.
+     * @return True if the transaction does not exist, false otherwise.
+     */
     public boolean checkIdEmpty(int id) {
         if (searchTransaction(id) == null) {
             System.out.println(Constant.INVALID_TRANSACTION_ID);
@@ -391,10 +439,20 @@ public class TransactionManager {
         return false;
     }
 
+    /**
+     * Calculates the total amount of all transactions, including recurring and non-recurring ones.
+     *
+     * @return The total amount of all transactions.
+     */
     public double getTotalAmount() {
         return getRecurringAmount() + getNormalAmount();
     }
 
+    /**
+     * Calculates the total amount from recurring transactions.
+     *
+     * @return The projected amount from all recurring transactions.
+     */
     public double getRecurringAmount() {
         double sum = 0;
         for (Transaction t : transactions) {
@@ -406,6 +464,11 @@ public class TransactionManager {
         return sum;
     }
 
+    /**
+     * Calculates the total amount from non-recurring transactions.
+     *
+     * @return The total amount from normal transactions.
+     */
     public double getNormalAmount() {
         double sum = 0;
         for (Transaction t : transactions) {
@@ -416,6 +479,7 @@ public class TransactionManager {
         return sum;
     }
 
+    //@@author
     public BudgetList getBudgetList() {
         return budgetList;
     }
