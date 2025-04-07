@@ -1,0 +1,50 @@
+@startuml
+
+actor User
+participant Duke
+participant Ui
+participant TransactionManager
+participant Storage
+participant Parser
+participant FinancialGoal
+
+User -> Duke : run()
+activate Duke
+Duke -> Ui : printWelcomeMessage()
+activate Ui
+Ui --> Duke : message
+Duke -> Ui : printSavingOverview(goal)
+Ui --> Duke : message
+Duke -> TransactionManager : remindRecurringTransactions()
+activate TransactionManager
+TransactionManager --> Duke : recurring transactions reminded
+deactivate TransactionManager
+loop Read Command
+    User -> Ui : readCommand()
+    activate Ui
+    Ui -> Duke : command
+    activate Duke
+    Duke -> Parser : parser(command, ui, transactions, goal, storage)
+    activate Parser
+    Parser --> Duke : parsed command
+    deactivate Parser
+    Duke --> Ui : response
+    deactivate Duke
+end
+
+Duke -> Storage : load(transactions)
+activate Storage
+Storage --> Duke : data loaded
+deactivate Storage
+Duke -> TransactionManager : loadBudgetFromStorage()
+TransactionManager --> Duke : budget loaded
+Duke -> Storage : loadGoal()
+Storage --> Duke : goal loaded
+Duke -> TransactionManager : setStorage(storage)
+TransactionManager --> Duke : storage set
+
+deactivate Ui
+deactivate Duke
+
+@enduml
+

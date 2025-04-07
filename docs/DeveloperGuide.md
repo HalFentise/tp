@@ -10,7 +10,9 @@ At this stage, no third-party libraries, external code, or documentation have be
 - [Getting Started](#getting-started)
 - [Design](#design)
 - [Usage](#usage)
-- [Contributing](#contributing)
+  - [Architecture](#architecture)
+  - [Main](#main)
+  - [Storage](#storage)
 
 ## Introduction
 NoteUrSaving is a lightweight and efficient financial management tool designed to help students track their incomes and expenses through a simple Command Line Interface (CLI).
@@ -24,7 +26,7 @@ This developer guide outlines the architecture, design principles, and implement
 * Gradle 7.6.2 or higher
 
 ### Setup:
-1. **Fork this project to your own github, and clone it to your computer**
+1. **Fork this project to your own GitHub, and clone it to your computer**
 2. **Ensure Intellij JDK 17 is defined as an SDK**, as described [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk) -- this step is not needed if you have used JDK 17 in a previous Intellij project.
 3. **Import the project _as a Gradle project_**, as described [here](https://se-education.org/guides/tutorials/intellijImportGradleProject.html).
 4. **Verify the setup**: After the importing is complete, locate the `src/main/java/seedu/duke/Duke.java` file, right-click it, and choose `Run Duke.main()`. If the setup is correct, you should see something like the below:
@@ -43,6 +45,45 @@ This developer guide outlines the architecture, design principles, and implement
 
 
 ## Design
+
+This section outlines the various components of the application and explains
+how they interact to execute the program.
+
+### Architecture
+
+![Architecture Diagram](./Images/architecture.png)
+
+The Architecture Diagram above explains the high-level design of the application
+
+* **Main**: Control the main flow of the application from launch to shut down.
+* **Parser**: Parse user input to command that application can execute
+* **Ui**: Read user input, display output of user commands, errors and instructions
+* **Command**: Executable commands of the application.
+* **Storage**: Storing data and settings in hard disk and loading them during the run of application.
+* **Manager**: Holds the data while the application is running
+
+### Main
+Main will handle the setup and loop to execute the interaction with user
+
+Here are the class diagram shows the important features:
+
+![class diagram](./Images/mainClass.png)
+![sequence diagram](./Images/mianseq.png)
+
+### Storage
+Storage will storage all the data in `.txt` and `.csv` file.
+Storage will parse the local string data into executable objects.
+
+### UI
+The `UI` component contain Ui classes, it will display all message that will be seen by user.
+It will also print out errors.
+
+### Parser
+
+### Command
+
+### Manager
+
 
 ## Implementation
 
@@ -64,20 +105,6 @@ fields:
 
 added the ability to set the period at which expenses recur, stored in the `recurringPeriod` field.
 
-```java
-public class Transaction {
-    private int id;
-    private String description;
-    private int amount;
-    private Currency currency;
-    private Category category;
-    private LocalDate date;
-    private Status status;
-    private int recurringPeriod;
-
-    // Constructor and getter/setter methods
-}
-```
 
 **Design Consideration:**  
 This data structure provides all the essential information required for a transaction, <br>
@@ -110,13 +137,13 @@ persistence.
 ### Transaction Management Features: Delete, Set Budget Limit and Notifications
 
 ##### Deletion
-![DeleteCommand](./Sequence_Diagrams_pics/DeleteCommand.png)
+![DeleteCommand](Images/DeleteCommand.png)
 
 #### Set Budget
-![SetBudget](./Sequence_Diagrams_pics/SetBudget.png)
+![SetBudget](Images/SetBudget.png)
 
 #### Notify 
-![NotifyCommand](./Sequence_Diagrams_pics/NotifyCommand.png)
+![NotifyCommand](Images/NotifyCommand.png)
 
 **Feature Description:**  
 `Peng Ziyi` added three main functionalities to delete transaction, set budget limit and notifications for transactions:
@@ -182,10 +209,10 @@ and clear visual cues for overspending or pending transactions.
 ### Transaction Management Features: Alert and Set Priority
 
 ##### Alert Operation  
-![Alert Command](./Sequence_Diagrams_pics/AlertCommand.png)
+![Alert Command](Images/AlertCommand.png)
 
 ##### Set Priority  
-![Set Priority](./Sequence_Diagrams_pics/SetPriority.png)
+![Set Priority](Images/SetPriority.png)
 
 **Feature Description:**  
 `Peng Ziyi` added two main functionalities to view spending alerts, set different priorities for transactions:
@@ -194,16 +221,13 @@ and clear visual cues for overspending or pending transactions.
 * View Spending Alerts (alert): Displays an overview of upcoming expenses, recurring payments, current remaining budget, and whether the spending has exceeded the set budget limit. This command combines notification, priority, and budget insights in a single view.
 
 ```java
-/**
- * @throws NullException If the date format is invalid.
- */
-public AlertCommand(TransactionManager transcations, Ui ui) throws NullException {
+public AlertCommand(TransactionManager transactions, Ui ui) throws NullException {
 
     try {
-        ui.listNotifications(transcations.getTransactions());
+        ui.listNotifications(transactions.getTransactions());
         ConsoleFormatter.printLine();
-        ui.listPriorities(transcations.getTransactions());
-        Ui.printRecurringTransactions(transcations.getTransactions());
+        ui.listPriorities(transactions.getTransactions());
+        Ui.printRecurringTransactions(transactions.getTransactions());
     } catch (Exception e) {
         System.out.println(e.getMessage());
     }
@@ -212,17 +236,16 @@ public AlertCommand(TransactionManager transcations, Ui ui) throws NullException
 /**
  * @param index       The index for the corresponding transaction.
  * @param priorityStr The string representing the priority level want to set.
- * @throws NullException If the date format is invalid.
  */
-public SetPriorityCommand(int index, String priorityStr, TransactionManager transcations, Ui ui) throws NullException {
+public SetPriorityCommand(int index, String priorityStr, TransactionManager transactions, Ui ui) throws NullException {
     Priority priority = Priority.valueOf(priorityStr.toUpperCase());
 
     try {
-        transcations.getTransactions().get(index).setPriority(priority);
+        transactions.getTransactions().get(index).setPriority(priority);
     } catch (Exception e) {
         System.out.println(e.getMessage());
     }
-    ui.PrintPriority(transcations.getTransactions(), index);
+    ui.PrintPriority(transactions.getTransactions(), index);
 }
 ```
 
@@ -265,7 +288,6 @@ public ArrayList<Transaction> searchTransactionList(boolean isIndex, String sear
 
 public void editInfo(int id, String info, int type) {
     if (checkIdEmpty(id)) {
-        return;
     }
     
     // switch-case to update transaction
@@ -411,7 +433,7 @@ public static void parseGoalCommands(String command, Ui ui, FinancialGoal goal) 
 ```
 
 **Design Consideration:**  
-This implementation allows users to update individual parts of the goal, allowing for a more modular approach when only minor modifications are required compared to having to set a new goal each time.
+This implementation allows users to update individual parts of the goal, allowing for a more modular approach when only minor modifications are required to having to set a new goal each time.
 
 ---
 
@@ -528,24 +550,24 @@ platform that promotes better money management without overwhelming users with c
 
 ## User Stories
 
-| Version | As a ... | I want to ...                                         | So that I can ...                                     |
-|-------|----------|-------------------------------------------------------|-------------------------------------------------------|
-| v1.0  | user     | delete financial information                          | correct any upcoming changes in regards to my finances. |
-| v1.0  | user     | add financial information                             | keep track of my financial goals.                     |
-| v1.0  | user     | set a financial goal                                  | track the financial goal |
-| v1.0  | user     | search through my expenses                            | keep better track of expenses I have to pay for |
-| v1.0  | user     | label my expenditures                                 | remember why I want to spend that money |
-| v1.0  | user     | tick off my expenditures                              | remember what I have bought and what I haven’t |
-| v1.0  | user     | set budget limits                                     | limit the amount of purchases I add. |
-| v1.0  | user     | create recurring transactions                         | keep track of regular payments such as subscriptions easily.|
-| v1.0  | user     | correct financial information                         | mistaken by incorrect financial goals. |
-| v2.0  | user     | receive alerts                                        | control it when my spending is higher than usual and have upcoming payments.|
-| v2.0  | user     | prioritise specific expenses                          | see what sort of expenses I should focus on first place.|
-| v2.0  | user     | receive the reminders for upcoming recurring payments | don’t miss a payment deadline.|
-| v2.0  | user     | view a summary of my expenses for a given time frame  |  can get quick information about my finances when I need it.|
-| v2.0  | student  | document project expenses                             | control the budget granted and to request reimbursements.|
-| v2.0  | student  | synchronize the expenditures with balances            | can manage the savings better and see any differences.| 
-| v2.0  | student  | see 5-10 different types of currencies                |  can convert back to my home currency when I need to, like USD, SGD, EUR and CNY.|
+| Version | As a ... | I want to ...                                         | So that I can ...                                                                |
+|---------|----------|-------------------------------------------------------|----------------------------------------------------------------------------------|
+| v1.0    | user     | delete financial information                          | correct any upcoming changes in regards to my finances.                          |
+| v1.0    | user     | add financial information                             | keep track of my financial goals.                                                |
+| v1.0    | user     | set a financial goal                                  | track the financial goal                                                         |
+| v1.0    | user     | search through my expenses                            | keep better track of expenses I have to pay for                                  |
+| v1.0    | user     | label my expenditures                                 | remember why I want to spend that money                                          |
+| v1.0    | user     | tick off my expenditures                              | remember what I have bought and what I haven’t                                   |
+| v1.0    | user     | set budget limits                                     | limit the amount of purchases I add.                                             |
+| v1.0    | user     | create recurring transactions                         | keep track of regular payments such as subscriptions easily.                     |
+| v1.0    | user     | correct financial information                         | mistaken by incorrect financial goals.                                           |
+| v2.0    | user     | receive alerts                                        | control it when my spending is higher than usual and have upcoming payments.     |
+| v2.0    | user     | prioritise specific expenses                          | see what sort of expenses I should focus on first place.                         |
+| v2.0    | user     | receive the reminders for upcoming recurring payments | don’t miss a payment deadline.                                                   |
+| v2.0    | user     | view a summary of my expenses for a given time frame  | can get quick information about my finances when I need it.                      |
+| v2.0    | student  | document project expenses                             | control the budget granted and to request reimbursements.                        |
+| v2.0    | student  | synchronize the expenditures with balances            | can manage the savings better and see any differences.                           | 
+| v2.0    | student  | see 5-10 different types of currencies                | can convert back to my home currency when I need to, like USD, SGD, EUR and CNY. |
 
 
 
