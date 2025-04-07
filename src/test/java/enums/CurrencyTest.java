@@ -10,12 +10,12 @@ class CurrencyTest {
 
     @Test
     void testValueOfFullNameValid() {
-        assertEquals(Currency.SGD, Currency.valueOfFullName("Singapore Dollar"));
-        assertEquals(Currency.USD, Currency.valueOfFullName("United State Dollar"));
-        assertEquals(Currency.CNY, Currency.valueOfFullName("Chinese Yuan"));
-        assertEquals(Currency.EUR, Currency.valueOfFullName("Euro"));
-        assertEquals(Currency.JPY, Currency.valueOfFullName("Japanese Yen"));
-        assertEquals(Currency.GBP, Currency.valueOfFullName("British Pound"));
+        assertEquals(Currency.SGD, Currency.valueOfFullName("SGD"));
+        assertEquals(Currency.USD, Currency.valueOfFullName("USD"));
+        assertEquals(Currency.CNY, Currency.valueOfFullName("CNY"));
+        assertEquals(Currency.EUR, Currency.valueOfFullName("EUR"));
+        assertEquals(Currency.JPY, Currency.valueOfFullName("JPY"));
+        assertEquals(Currency.GBP, Currency.valueOfFullName("GBP"));
     }
 
     @Test
@@ -42,13 +42,13 @@ class CurrencyTest {
 
     @Test
     void testToStringReturnsFullName() {
-        assertEquals("Singapore Dollar", Currency.SGD.toString());
-        assertEquals("United State Dollar", Currency.USD.toString());
+        assertEquals("SGD", Currency.SGD.toString());
+        assertEquals("USD", Currency.USD.toString());
     }
 
     @Test
     void testGetFullName() {
-        assertEquals("Chinese Yuan", Currency.CNY.getFullName());
+        assertEquals("CNY", Currency.CNY.getFullName());
     }
 
     @Test

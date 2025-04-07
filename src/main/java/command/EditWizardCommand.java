@@ -2,6 +2,7 @@ package command;
 
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
+import seedu.duke.Storage;
 import enums.Category;
 import enums.Currency;
 import enums.Priority;
@@ -13,8 +14,14 @@ import java.util.Scanner;
 import static ui.ConsoleFormatter.*;
 
 public class EditWizardCommand extends Command {
+
     @Override
     public void execute(TransactionManager transactions, Ui ui) {
+        throw new UnsupportedOperationException("Use the EditWizardCommand with storage parameter.");
+    }
+
+
+    public void execute(TransactionManager transactions, Ui ui, Storage storage) {
         Scanner scanner = new Scanner(System.in);
 
         printCenteredTitle("Edit Wizard");
@@ -67,7 +74,7 @@ public class EditWizardCommand extends Command {
                     String amtStr = scanner.nextLine();
                     if (amtStr.equalsIgnoreCase("cancel")) return;
                     double amount = Double.parseDouble(amtStr);
-                    target.setAmount((int) amount);
+                    target.setAmount(amount);
                     ui.printEdited(amtStr, 2);
                 }
                 case 3 -> {

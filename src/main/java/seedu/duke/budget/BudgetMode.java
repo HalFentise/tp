@@ -1,6 +1,7 @@
 package seedu.duke.budget;
 
 import enums.Category;
+import seedu.duke.TransactionManager;
 import ui.Ui;
 import ui.ConsoleFormatter;
 import seedu.duke.Storage;
@@ -10,7 +11,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class BudgetMode {
-    public static void enter(Ui ui, BudgetList budgetList, Storage storage) {
+    public static void enter(Ui ui, BudgetList budgetList, TransactionManager transactions, Storage storage) {
         Scanner scanner = new Scanner(System.in);
         ConsoleFormatter.printLine();
         System.out.println("You're now in Budget Mode!");
@@ -29,14 +30,15 @@ public class BudgetMode {
             }
 
             try {
-                parseBudgetCommand(input, ui, budgetList, storage);
+                parseBudgetCommand(input, ui, budgetList, transactions, storage);
             } catch (Exception e) {
                 ui.showError(e.getMessage());
             }
         }
     }
 
-    private static void parseBudgetCommand(String input, Ui ui, BudgetList list, Storage storage) throws Exception {
+    private static void parseBudgetCommand(String input, Ui ui, BudgetList list,
+                                           TransactionManager transactions, Storage storage) throws Exception {
         if (input.isBlank()) {
             return;
         }
@@ -44,36 +46,37 @@ public class BudgetMode {
         String command = parts[0].toLowerCase();
 
         switch (command) {
-        case "help":
-            printHelp();
-            break;
-        case "set":
-            handleSetBudget(ui, list, storage);
-            break;
-        case "list":
-            list.printAllBudgets(ui);
-            break;
-        case "check":
-            handleCheckBudget(parts, ui, list);
-            break;
-        case "add":
-            handleAddAmount(parts, list, storage);
-            break;
-        case "deduct":
-            handleDeductAmount(parts, list, storage);
-            break;
-        case "modify":
-            handleModify(parts, list, ui, storage);
-            break;
-        case "delete":
-            handleDelete(parts, list, storage);
-            break;
-        default:
-            throw new Exception("Unknown command in Budget Mode. Type 'help' for available commands.");
+            case "help":
+                printHelp();
+                break;
+            case "set":
+                handleSetBudget(ui, list, storage, transactions);
+                break;
+            case "list":
+                list.printAllBudgets(ui, transactions.getTransactions());
+                break;
+            case "check":
+                handleCheckBudget(parts, ui, list, transactions);
+                break;
+            case "add":
+                handleAddAmount(parts, list, storage, transactions);
+                break;
+            case "deduct":
+                handleDeductAmount(parts);
+                break;
+            case "modify":
+                handleModify(parts, list, ui, storage, transactions);
+                break;
+            case "delete":
+                handleDelete(parts, list, storage, transactions);
+                break;
+            default:
+                throw new Exception("Unknown command in Budget Mode. Type 'help' for available commands.");
         }
     }
 
-    private static void handleSetBudget(Ui ui, BudgetList list, Storage storage) {
+    private static void handleSetBudget(Ui ui, BudgetList list, Storage storage,
+                                        TransactionManager transactions) {
         Scanner scanner = new Scanner(System.in);
         ConsoleFormatter.printLine();
         System.out.println("Enter budget name (or 'cancel' to abort):");
@@ -140,20 +143,22 @@ public class BudgetMode {
 
         Budget budget = new Budget(name, totalAmount, endDate, category);
         list.add(budget);
-        storage.saveBudgets(list);
-        System.out.println("✅ Budget added successfully.");
+        storage.saveBudgets(list, transactions.getTransactions());
+        System.out.println("Budget added successfully.");
         ConsoleFormatter.printLine();
     }
 
-    private static void handleCheckBudget(String[] parts, Ui ui, BudgetList list) throws Exception {
+    private static void handleCheckBudget(String[] parts, Ui ui, BudgetList list,
+                                          TransactionManager transactions) throws Exception {
         if (parts.length < 2 || !parts[1].startsWith("i/")) {
             throw new Exception("Usage: check i/INDEX");
         }
         int index = Integer.parseInt(parts[1].substring(2).trim()) - 1;
-        list.printBudgetDetail(index, ui);
+        list.printBudgetDetail(index, ui, transactions.getTransactions());
     }
 
-    private static void handleAddAmount(String[] parts, BudgetList list, Storage storage) throws Exception {
+    private static void handleAddAmount(String[] parts, BudgetList list, Storage storage,
+                                        TransactionManager transactions) throws Exception {
         if (!parts[1].matches("i/\\d+ a/\\d+(\\.\\d+)?")) {
             throw new Exception("Usage: add i/INDEX a/AMOUNT");
         }
@@ -161,27 +166,18 @@ public class BudgetMode {
         int index = Integer.parseInt(tokens[0].substring(2)) - 1;
         double amount = Double.parseDouble(tokens[1].substring(2));
         list.get(index).addAmount(amount);
-        storage.saveBudgets(list);
+        storage.saveBudgets(list, transactions.getTransactions());
         ConsoleFormatter.printLine();
         System.out.println("✅ Added $" + amount + " to budget #" + (index + 1));
         ConsoleFormatter.printLine();
     }
 
-    private static void handleDeductAmount(String[] parts, BudgetList list, Storage storage) throws Exception {
-        if (!parts[1].matches("i/\\d+ a/\\d+(\\.\\d+)?")) {
-            throw new Exception("Usage: deduct i/INDEX a/AMOUNT");
-        }
-        String[] tokens = parts[1].split(" ");
-        int index = Integer.parseInt(tokens[0].substring(2)) - 1;
-        double amount = Double.parseDouble(tokens[1].substring(2));
-        list.get(index).deductAmount(amount);
-        storage.saveBudgets(list);
-        ConsoleFormatter.printLine();
-        System.out.println("✅ Deducted $" + amount + " from budget #" + (index + 1));
-        ConsoleFormatter.printLine();
+    private static void handleDeductAmount(String[] parts) throws Exception {
+        throw new Exception("❌ Deduct is now handled by actual transactions. To spend money, record a transaction.");
     }
 
-    private static void handleModify(String[] parts, BudgetList list, Ui ui, Storage storage) throws Exception {
+    private static void handleModify(String[] parts, BudgetList list, Ui ui,
+                                     Storage storage, TransactionManager transactions) throws Exception {
         String[] tokens = parts[1].split(" ");
         int index = -1;
         String name = null;
@@ -221,13 +217,14 @@ public class BudgetMode {
             b.setCategory(category);
         }
 
-        storage.saveBudgets(list);
+        storage.saveBudgets(list, transactions.getTransactions());
         ConsoleFormatter.printLine();
         System.out.println("✅ Budget modified successfully.");
-        list.printBudgetDetail(index, ui);
+        list.printBudgetDetail(index, ui, transactions.getTransactions());
     }
 
-    private static void handleDelete(String[] parts, BudgetList list, Storage storage) throws Exception {
+    private static void handleDelete(String[] parts, BudgetList list, Storage storage,
+                                     TransactionManager transactions) throws Exception {
         if (parts.length < 2 || !parts[1].startsWith("i/")) {
             throw new Exception("Usage: delete i/INDEX");
         }
@@ -237,7 +234,7 @@ public class BudgetMode {
         }
         Budget removed = list.get(index);
         list.remove(index);
-        storage.saveBudgets(list);
+        storage.saveBudgets(list, transactions.getTransactions());
         ConsoleFormatter.printLine();
         System.out.println("🗑️ Deleted budget: " + removed.getName());
         ConsoleFormatter.printLine();
@@ -247,10 +244,9 @@ public class BudgetMode {
         ConsoleFormatter.printLine();
         System.out.println("📘 Budget Mode Commands:");
         System.out.println("- set: Interactively create a new budget");
-        System.out.println("- list: List all budgets (basic info)");
+        System.out.println("- list: List all budgets (with real-time remaining amount)");
         System.out.println("- check i/INDEX: View budget details");
-        System.out.println("- add i/INDEX a/AMOUNT: Add to budget total + remaining");
-        System.out.println("- deduct i/INDEX a/AMOUNT: Deduct from budget remaining");
+        System.out.println("- add i/INDEX a/AMOUNT: Add to budget total");
         System.out.println("- modify i/INDEX [n/NAME] [a/AMOUNT] [e/DATE] [c/CATEGORY]: Modify fields");
         System.out.println("- delete i/INDEX: Delete a budget");
         System.out.println("- exit: Return to main menu");
