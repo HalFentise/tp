@@ -310,7 +310,6 @@ public class TransactionManager {
         }
     }
 
-<<<<<<< HEAD
     //@@author yangyi-zhu
     /**
      * Sets the recurrence period of a transaction by its ID.
@@ -320,9 +319,6 @@ public class TransactionManager {
      * @throws Exception If the transaction is not found.
      */
     public void setRecur(int id, int period) throws Exception{
-=======
-    public void setRecur(int id, int period) throws Exception {
->>>>>>> tp-v3.7
         Transaction t = searchTransaction(id);
         if (t != null) {
             t.setRecurringPeriod(period);

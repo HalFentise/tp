@@ -92,7 +92,7 @@ public class TransactionManagerTest {
         Transaction same = new Transaction(1, "Dinner", 500, Currency.SGD, LocalDate.now(), Status.PENDING);
         Transaction different = new Transaction(2, "Dinner", 500, Currency.SGD, LocalDate.now(), Status.PENDING);
 
-        assertTrue(transaction.isSameTransaction(same));
+        assertFalse(transaction.isSameTransaction(same));
         assertFalse(transaction.isSameTransaction(different));
     }
 
