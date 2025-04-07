@@ -12,6 +12,7 @@ import enums.Category;
 import enums.Currency;
 import enums.Status;
 import exceptions.InvalidCommand;
+import ui.ConsoleFormatter;
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
 import java.util.Map;
@@ -125,7 +126,7 @@ public class TransactionManager {
             if (isBudgetSet && amount < 0) {
                 double projectedSpending = getTotalSpending() + (-amount); // 负号让支出为正
                 if (projectedSpending > budgetLimit) {
-                    System.out.println("Cannot add transaction! Budget limit exceeded!");
+                    ConsoleFormatter.printLeftAlignedLine("Cannot add transaction! Budget limit exceeded!");
                     return false;
                 }
             }

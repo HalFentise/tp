@@ -38,4 +38,3 @@ public enum Category {
     /** Expenses related to general savings */
     SAVING
 }
-

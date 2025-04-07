@@ -369,14 +369,14 @@ public class Ui {
 
     public void unTickTransaction(Transaction transaction) {
         printLine();
-        System.out.println("I un tick the following transaction:");
+        System.out.println("I have un-ticked the following transaction:");
         printTransaction(transaction);
         printLine();
     }
 
     public void add(Transaction transaction) {
         printLine();
-        printCenteredTitle("Added the following transaction Successful:");
+        printCenteredTitle("Added the following transaction Successfully:");
         printLine();
         printTransaction(transaction);
         printLine();
@@ -465,7 +465,7 @@ public class Ui {
      */
     public static void createGoalConfirm() {
         printLine();
-        System.out.println("Want to set a new goal (Y/N)? ");
+        ConsoleFormatter.printLeftAlignedLine("Want to set a new goal (Y/N)? ");
         printLine();
     }
 
@@ -473,7 +473,8 @@ public class Ui {
      * Prompts the user to input the name of a new goal.
      */
     public static void createGoalName() {
-        System.out.println("Name of new goal:");
+        printLine();
+        ConsoleFormatter.printLeftAlignedLine("Name of new goal:");
         printLine();
     }
 
@@ -481,7 +482,8 @@ public class Ui {
      * Prompts the user to input the target amount of a new goal.
      */
     public static void createGoalTarget() {
-        System.out.println("Target amount of new goal:");
+        printLine();
+        ConsoleFormatter.printLeftAlignedLine("Target amount of new goal:");
         printLine();
     }
 
@@ -490,7 +492,7 @@ public class Ui {
      */
     public static void createGoalDescription() {
         printLine();
-        System.out.println("Description of new goal:");
+        ConsoleFormatter.printLeftAlignedLine("Description of new goal:");
         printLine();
     }
 
@@ -499,7 +501,8 @@ public class Ui {
      */
     public static void createGoalSuccess() {
         printLine();
-        System.out.println("Goal successfully created\nRun 'goal' to see it!");
+        ConsoleFormatter.printLeftAlignedLine("Goal successfully created");
+        ConsoleFormatter.printLeftAlignedLine("Run 'goal' in the main menu to see it!");
         printLine();
     }
 
@@ -508,7 +511,7 @@ public class Ui {
      */
     public static void createGoalAborted() {
         printLine();
-        System.out.println("Goal creation cancelled by user.");
+        ConsoleFormatter.printLeftAlignedLine("Goal creation cancelled by user.");
         printLine();
     }
 
@@ -521,9 +524,9 @@ public class Ui {
      */
     public static void subFromSavings(double amount, double currentAmount) {
         printLine();
-        System.out.println("Subtracted " + amount + " from your savings.");
+        ConsoleFormatter.printLeftAlignedLine("Subtracted " + amount + " from your savings.");
         if (currentAmount < 0) {
-            System.out.println("Warning. You currently have a negative balance.");
+            ConsoleFormatter.printLeftAlignedLine("Warning. You currently have a negative balance.");
         }
         printLine();
     }
@@ -538,10 +541,11 @@ public class Ui {
     public static boolean printGoalStatus(double currentAmount, double targetAmount) {
         printLine();
         if (currentAmount >= targetAmount) {
-            System.out.println("You have achieved the goal! Congratulations!");
+            ConsoleFormatter.printLeftAlignedLine("You have achieved the goal! Congratulations!");
             return true;
         }
-        System.out.println("You're " + currentAmount + " out of " + targetAmount + ". Good luck!");
+        ConsoleFormatter.printLeftAlignedLine("You're " + currentAmount +
+                " out of " + targetAmount + ". Good luck!");
         printLine();
         return false;
     }
@@ -573,10 +577,10 @@ public class Ui {
         }
 
         printLine();
-        System.out.println("Done! The " + type
-                + " of the target transaction has been updated to:\n"
-                + (typeId == 3 ? Currency.valueOf(value).toString()
-                        : (typeId == 2) ? Double.parseDouble(value) : value));
+        ConsoleFormatter.printLeftAlignedLine("Done! The " + type
+                + " of the target transaction has been updated to:");
+        ConsoleFormatter.printLeftAlignedLine((typeId == 3 ? Currency.valueOf(value).toString()
+                        : (typeId == 2) ? Double.parseDouble(value) : value).toString());
         printLine();
     }
 
@@ -589,7 +593,7 @@ public class Ui {
         DateTimeFormatter df = DateTimeFormatter.ofPattern("E, dd MMM yyyy");
         printLine();
         if (transactions.isEmpty()) {
-            System.out.println("You have no recurring payments ahead.");
+            ConsoleFormatter.printLeftAlignedLine("You have no recurring payments ahead.");
             printLine();
             return;
         }
@@ -632,7 +636,7 @@ public class Ui {
         printLeftAlignedLine("");
 
         printLeftAlignedLine("Status:       You're currently at:" + String.format("  %s  %.1f%% complete",
-                bar, percent * 100, current, target));
+                bar, percent * 100));
         if (percent >= 1.0) {
             printLeftAlignedLine("Analysis:     Amazing! You've achieved your savings goal. Time to celebrate!");
         } else if (percent >= 0.75) {
@@ -671,7 +675,7 @@ public class Ui {
 
     public void printCategoryChoice() {
         ConsoleFormatter.printLine();
-        System.out.println("You can enter exit to quit choose progress");
+        System.out.println("You can enter exit to quit choosing progress");
         System.out.println("Please choose a valid category from the list below:");
         int index = 1;
         for (Category category : Category.values()) {
@@ -686,7 +690,7 @@ public class Ui {
     }
 
     public void printCategoryChoose() {
-        System.out.println("Choose category successfully!");
+        System.out.println("Chosen category successfully!");
         ConsoleFormatter.printLine();
     }
 
@@ -780,5 +784,4 @@ public class Ui {
         printLeftAlignedLine("Total Completed Amount (in SGD): " + String.format("%.2f", total));
         printLine();
     }
-
 }

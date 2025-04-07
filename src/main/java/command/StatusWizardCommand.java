@@ -2,6 +2,7 @@ package command;
 
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
+import ui.ConsoleFormatter;
 import ui.Ui;
 
 import java.util.Scanner;
@@ -20,7 +21,7 @@ public class StatusWizardCommand extends Command {
 
         Transaction target = null;
         while (target == null) {
-            System.out.print("Transaction/Status> Enter Transaction ID: ");
+            ConsoleFormatter.printLeftAlignedLine("Transaction/Status> Enter Transaction ID: ");
             String input = scanner.nextLine().trim();
             if (input.equalsIgnoreCase("cancel")) return;
             try {
@@ -38,10 +39,10 @@ public class StatusWizardCommand extends Command {
             }
         }
 
-        System.out.println("Transaction/Status> Choose status:");
-        System.out.println("1. Mark as Completed");
-        System.out.println("2. Mark as Not Completed");
-        System.out.print("Transaction/Status> Enter choice: ");
+        ConsoleFormatter.printLeftAlignedLine("Transaction/Status> Choose status:");
+        ConsoleFormatter.printLeftAlignedLine("1. Mark as Completed");
+        ConsoleFormatter.printLeftAlignedLine("2. Mark as Not Completed");
+        ConsoleFormatter.printLeftAlignedLine("Transaction/Status> Enter choice: ");
         String choice = scanner.nextLine().trim();
         if (choice.equalsIgnoreCase("cancel")) return;
 

@@ -143,9 +143,6 @@ public class AddWizardCommand extends Command {
                 }
             }
 
-
-
-
             transactions.addTransaction(transaction);
 
             ui.add(transaction);

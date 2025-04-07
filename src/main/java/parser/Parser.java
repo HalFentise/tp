@@ -12,6 +12,7 @@ import seedu.duke.Storage;
 import seedu.duke.SavingMode;
 import seedu.duke.budget.BudgetMode;
 import enums.Category;
+import ui.ConsoleFormatter;
 import ui.Ui;
 
 import java.util.Scanner;
@@ -128,7 +129,8 @@ public class Parser {
                 amount = Double.parseDouble(details[1]);
                 //@@author
                 if (Double.isInfinite(amount) || Double.isNaN(amount)) {
-                    System.out.println("Invalid input: amount is too large, too small, or not a number.");
+                    ConsoleFormatter.printLeftAlignedLine("Invalid input:" +
+                            " amount is too large, too small, or not a number.");
                 }
                 new SetBudgetCommand(amount, transactions);
                 storage.saveTransactions(transactions.getTransactions());

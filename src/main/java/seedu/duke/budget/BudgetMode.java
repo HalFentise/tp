@@ -120,7 +120,7 @@ public class BudgetMode {
             System.out.println("Choose category:");
             Category[] categories = Category.values();
             for (int i = 0; i < categories.length; i++) {
-                System.out.printf("%d. %s%n", i + 1, categories[i]);
+                ConsoleFormatter.printfLeft("%d. %s%n", i + 1, categories[i]);
             }
             System.out.print("Enter number (or 'cancel'): ");
             String choice = scanner.nextLine().trim();
