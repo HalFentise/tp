@@ -94,6 +94,7 @@ public class Transaction {
         return category;
     }
 
+    //@@author Lukapeng77
     public LocalDate getDate() {
         return date;
     }
@@ -101,6 +102,7 @@ public class Transaction {
     public Priority getPriority() {
         return priority;
     }
+    //@@author
 
     public ArrayList<String> getTags() {
         return new ArrayList<>(tags);
@@ -144,6 +146,7 @@ public class Transaction {
         this.currency = currency;
     }
 
+    //@@author Lukapeng77
     public void setDate(LocalDate date) {
         this.date = date;
     }
@@ -151,6 +154,7 @@ public class Transaction {
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
+    //@@author
 
     public void complete() {
         isCompleted = true;
@@ -186,7 +190,7 @@ public class Transaction {
     }
 
     public void convertTo(Currency currency) {
-        double toSGD = 1/this.currency.getRate();
+        double toSGD = 1 / this.currency.getRate();
         this.amount = currency.getRate() * toSGD;
         this.currency = currency;
     }

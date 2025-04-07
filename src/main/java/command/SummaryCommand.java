@@ -7,6 +7,7 @@ import ui.Ui;
 import java.time.LocalDate;
 import java.util.List;
 
+//@@author Lukapeng77
 public class SummaryCommand extends Command{
 
     public SummaryCommand(LocalDate start, LocalDate end, TransactionManager transactions, Ui ui) {
