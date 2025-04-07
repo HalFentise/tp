@@ -50,8 +50,10 @@ public class Duke {
     public void run() {
         ui.printWelcomeMessage();
         ui.printSavingOverview(goal);
+        //@@author yangyi-zhu
         transactions.remindRecurringTransactions();
 
+        //@@author
         while (true) {
             String command = ui.readCommand();
             if (command == null || command.trim().isEmpty()) {

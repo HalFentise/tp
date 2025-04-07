@@ -130,6 +130,7 @@ public class Transaction {
     }
 
     /** @return Date of the transaction. */
+    //@@author Lukapeng77
     public LocalDate getDate() {
         return date;
     }
@@ -138,6 +139,7 @@ public class Transaction {
     public Priority getPriority() {
         return priority;
     }
+    //@@author
 
     /** @return List of tags associated with the transaction. */
     public ArrayList<String> getTags() {
@@ -210,6 +212,7 @@ public class Transaction {
      * Sets the transaction date.
      * @param date New date.
      */
+    //@@author Lukapeng77
     public void setDate(LocalDate date) {
         this.date = date;
     }
@@ -221,6 +224,7 @@ public class Transaction {
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
+    //@@author
 
     // ======================== Status Methods ========================
 
@@ -245,7 +249,7 @@ public class Transaction {
     }
 
     public void convertTo(Currency currency) {
-        double toSGD = 1/this.currency.getRate();
+        double toSGD = 1 / this.currency.getRate();
         this.amount = currency.getRate() * toSGD;
         this.currency = currency;
     }

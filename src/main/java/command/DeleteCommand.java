@@ -5,6 +5,7 @@ import seedu.duke.TransactionManager;
 import ui.Ui;
 import exceptions.InvalidCommand;
 
+//@@author Lukapeng77
 public class DeleteCommand extends Command {
 
     /**

@@ -131,6 +131,7 @@ public class Parser {
                 ui.unTickTransaction(transactions.searchTransaction(id));
                 storage.saveTransactions(transactions.getTransactions());
                 break;
+            //@@author yangyi-zhu
             case COMMAND_SEARCH:
                 boolean isIndex = parts[1].startsWith("id-");
                 String keyWord = isIndex ? parts[1].substring(3) : parts[1];
@@ -145,6 +146,7 @@ public class Parser {
                 }
                 storage.saveTransactions(transactions.getTransactions());
                 break;
+            //@@author
             case COMMAND_DELETE:
                 id = Integer.parseInt(parts[1]);
                 new DeleteCommand(id, transactions);
@@ -242,7 +244,7 @@ public class Parser {
                     throw new InvalidCommand("Invalid date format. Follow this format: YYYY-MM-DD.");
                 }
                 break;
-
+            //@@author yangyi-zhu
             case COMMAND_RECUR:
                 int slashIndex = parts[1].indexOf("/");
                 try {
@@ -257,6 +259,7 @@ public class Parser {
                 }
                 storage.saveTransactions(transactions.getTransactions());
                 break;
+            //@@author
             case COMMAND_EXIT:
                 ui.printExit();
                 storage.saveTransactions(transactions.getTransactions());
@@ -268,6 +271,7 @@ public class Parser {
             case "budget":
                 BudgetMode.enter(ui, transactions.getBudgetList(), storage);
                 break;
+            //@@author yangyi-zhu
             case COMMAND_GOAL:
                 goal.updateExpenses(transactions);
                 try {
@@ -277,6 +281,7 @@ public class Parser {
                     throw new InvalidCommand("Format invalid, try again!");
                 }
                 break;
+            //@@author
             default:
                 throw new InvalidCommand(INVALID_INPUT);
             }
@@ -285,6 +290,18 @@ public class Parser {
         }
     }
 
+    //@@author yangyi-zhu
+    /**
+     * Attempts to parse user commands pertaining to financial goal.
+     * This method handles setting goal properties such as target amount,
+     * description, title, and checking the status of the goal. It also allows
+     * creating a new goal or simply printing the goal.
+     *
+     * @param command The user input command to be parsed.
+     * @param ui The UI instance for interacting with the user.
+     * @param goal The current financial goal to be modified or queried.
+     * @throws Exception If the command is invalid or if the goal is empty when required.
+     */
     public static void parseGoalCommands(String command, Ui ui, FinancialGoal goal) throws Exception {
         String[] parts = command.toLowerCase().split(" ", 2);
 
@@ -320,6 +337,17 @@ public class Parser {
         }
     }
 
+    /**
+     * Attempts to parse user commands to edit transactions.
+     * This method modifies transaction attributes such as description, category,
+     * amount, and currency based on user input. It validates the transaction ID and
+     * the attribute type, and handles incorrect inputs with custom exceptions.
+     *
+     * @param command The user input command to be parsed.
+     * @param ui The UI instance for interacting with the user.
+     * @param transactions The transaction manager handling all transaction data.
+     * @throws Exception If the attribute is unknown, ID is out of range, or the new value is invalid.
+     */
     public static void parseEditCommands(String command, Ui ui, TransactionManager transactions) throws Exception {
         String[] fields = command.toLowerCase().split(" ", 3);
         String attribute = fields[0];
@@ -360,6 +388,7 @@ public class Parser {
         }
     }
 
+    //@@author
     /**
      * Tries to parse a string into a valid Category enum, case-insensitively.
      * If the input is invalid, shows a list of valid categories and asks user to choose one.

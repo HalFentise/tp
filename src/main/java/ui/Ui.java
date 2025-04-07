@@ -96,6 +96,8 @@ public class Ui {
         printLine();
     }
 
+
+    //@@author Lukapeng77
     public static void printDeleteTask(Transaction transaction, int count) {
         printLine();
         System.out.println("Noted. I've removed this transaction:");
@@ -114,6 +116,7 @@ public class Ui {
         }
         printLine();
     }
+    //@@author
 
     public void printClear() {
         printLine();
@@ -121,6 +124,7 @@ public class Ui {
         printLine();
     }
 
+    //@@author Lukapeng77
     public void listNotification(ArrayList<Transaction> upcomingTransactions, String description) {
         printLine();
         if (upcomingTransactions.isEmpty()) {
@@ -200,6 +204,7 @@ public class Ui {
         System.out.println("--------------------------------------------------");
         System.out.printf("Total Expenses: %.2f\n", total);
     }
+    //@@author
 
     public void printTransactions(ArrayList<Transaction> transactions) {
         printLine();
@@ -308,6 +313,12 @@ public class Ui {
         printLine();
     }
 
+    //@@author yangyi-zhu
+    /**
+     * Prints a message based on whether the search was by index or by keyword.
+     *
+     * @param isIndex True if the search was by transaction index; false if by keyword.
+     */
     public void search(boolean isIndex) {
         if (isIndex) {
             System.out.println("I have searched the transaction with the given index.");
@@ -316,6 +327,12 @@ public class Ui {
         }
     }
 
+    /**
+     * Sets the recurring period for a given transaction and prints confirmation.
+     *
+     * @param transaction      The transaction to modify.
+     * @param recurringPeriod  The number of days for recurrence; set to 0 or less to disable.
+     */
     public void setPeriod(Transaction transaction, int recurringPeriod) {
         printLine();
         if (recurringPeriod > 0) {
@@ -328,64 +345,108 @@ public class Ui {
         printLine();
     }
 
+    /**
+     * Prints the details of a financial goal.
+     *
+     * @param goal The goal to be printed.
+     */
     public void printGoal(FinancialGoal goal) {
         printLine();
         System.out.println(goal);
         printLine();
     }
 
+    /**
+     * Prints a confirmation message for updating a goal's target amount.
+     *
+     * @param goal The goal to update.
+     */
     public void setGoalTarget(FinancialGoal goal) {
         printLine();
         System.out.println("I have updated your target to: " + goal.getTargetAmount());
         printLine();
     }
 
+    /**
+     * Prints a confirmation message for updating a goal's description.
+     *
+     * @param goal The goal to update.
+     */
     public void setGoalDescription(FinancialGoal goal) {
         printLine();
         System.out.println("I have updated your description to:\n" + goal.getDescription());
         printLine();
     }
 
+    /**
+     * Prints a confirmation message for updating a goal's title/name.
+     *
+     * @param goal The goal to update.
+     */
     public void setGoalTitle(FinancialGoal goal) {
         printLine();
         System.out.println("I have updated your goal to:\n" + goal.getGoal());
         printLine();
     }
 
+    /**
+     * Prompts the user to confirm whether they want to create a new goal.
+     */
     public static void createGoalConfirm() {
         printLine();
         System.out.println("Want to set a new goal (Y/N)? ");
         printLine();
     }
 
+    /**
+     * Prompts the user to input the name of a new goal.
+     */
     public static void createGoalName() {
         System.out.println("Name of new goal:");
         printLine();
     }
 
+    /**
+     * Prompts the user to input the target amount of a new goal.
+     */
     public static void createGoalTarget() {
         System.out.println("Target amount of new goal:");
         printLine();
     }
 
+    /**
+     * Prompts the user to input the description of a new goal.
+     */
     public static void createGoalDescription() {
         printLine();
         System.out.println("Description of new goal:");
         printLine();
     }
 
+    /**
+     * Displays a message indicating the goal has been successfully created.
+     */
     public static void createGoalSuccess() {
         printLine();
         System.out.println("Goal successfully created\nRun 'goal' to see it!");
         printLine();
     }
 
+    /**
+     * Displays a message indicating the goal creation was aborted.
+     */
     public static void createGoalAborted() {
         printLine();
         System.out.println("Goal creation cancelled by user.");
         printLine();
     }
 
+    /**
+     * Subtracts a specified amount from savings and displays a warning if the balance is negative.
+     *
+     * @param amount         The amount to subtract.
+     * @param currentAmount  The resulting balance after subtraction.
+     */
     public static void subFromSavings(double amount, double currentAmount) {
         printLine();
         System.out.println("Subtracted " + amount + " from your savings.");
@@ -395,6 +456,13 @@ public class Ui {
         printLine();
     }
 
+    /**
+     * Checks and prints the goal status based on current savings and target.
+     *
+     * @param currentAmount  The current balance saved.
+     * @param targetAmount   The savings target to reach.
+     * @return True if the goal is achieved; false otherwise.
+     */
     public static boolean printGoalStatus(double currentAmount, double targetAmount) {
         printLine();
         if (currentAmount >= targetAmount) {
@@ -406,6 +474,12 @@ public class Ui {
         return false;
     }
 
+    /**
+     * Prints a confirmation message after editing a transaction.
+     *
+     * @param value   The new value of the attribute.
+     * @param typeId  The type of attribute edited: 0=desc, 1=category, 2=amount, 3=currency.
+     */
     public void printEdited(String value, int typeId) {
         String type;
         switch (typeId) {
@@ -413,7 +487,7 @@ public class Ui {
             type = "description";
             break;
         case 1:
-            type =  "category";
+            type = "category";
             break;
         case 2:
             type = "amount";
@@ -433,6 +507,11 @@ public class Ui {
         printLine();
     }
 
+    /**
+     * Displays a list of upcoming recurring transactions, if any.
+     *
+     * @param transactions A list of recurring transactions.
+     */
     public static void printRecurringTransactions(ArrayList<Transaction> transactions) {
         DateTimeFormatter df = DateTimeFormatter.ofPattern("E, dd MMM yyyy");
         printLine();
@@ -451,6 +530,7 @@ public class Ui {
         printLine();
     }
 
+    //@@author
     public void printSavingOverview(FinancialGoal goal) {
         printCenteredTitle("Saving Overview");
 
@@ -478,7 +558,7 @@ public class Ui {
         printLeftAlignedLine("Description:  " + goal.getDescription());
         printLeftAlignedLine("");
 
-        printLeftAlignedLine("Status:       You're currently at:"+String.format("  %s  %.1f%% complete",
+        printLeftAlignedLine("Status:       You're currently at:" + String.format("  %s  %.1f%% complete",
                 bar, percent * 100, current, target));
         if (percent >= 1.0) {
             printLeftAlignedLine("Analysis:     Amazing! You've achieved your savings goal. Time to celebrate!");
