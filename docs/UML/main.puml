@@ -1,0 +1,43 @@
+@startuml
+skinparam linetype ortho
+
+class Duke {
+    - transactions : TransactionManager
+    - ui : Ui
+    - goal : FinancialGoal
+    - storage : Storage
+    + Duke()
+    + run() : void
+    + main(args: String[]) : void
+}
+
+class TransactionManager {
+    - storage : Storage
+    + setStorage(storage: Storage) : void
+    + loadBudgetFromStorage() : void
+    + remindRecurringTransactions() : void
+}
+
+class Ui {
+    + printWelcomeMessage() : void
+    + printSavingOverview(goal: FinancialGoal) : void
+    + readCommand() : String
+}
+
+class FinancialGoal {
+    // Financial goal related methods and properties
+}
+
+class Storage {
+    + load(transactions: TransactionManager) : void
+    + loadGoal() : FinancialGoal
+}
+
+Duke --> TransactionManager : 1
+Duke --> Ui : 1
+Duke --> FinancialGoal : 1
+Duke --> Storage : 1
+TransactionManager --> Storage : 1
+Storage --> FinancialGoal : 1
+
+@enduml

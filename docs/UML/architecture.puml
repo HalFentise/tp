@@ -1,0 +1,53 @@
+@startuml
+
+skinparam linetype ortho
+
+left to right direction
+
+skinparam package {
+    BackgroundColor<<UI>> #E3F2FD
+    BackgroundColor<<Logic>> #E8F5E9
+    BackgroundColor<<Storage>> #FFF3E0
+    BorderColor black
+}
+
+actor User
+
+package "NoteUrSaving" {
+
+    package "UI Layer" {
+        rectangle "Ui" as Ui
+    }
+
+    package "Core Logic Layer" {
+        rectangle "Main" as Main
+        rectangle "Parser" as Parser
+        rectangle "Command" as Command
+        rectangle "Manager" as Model
+    }
+
+    package "Storage Layer" {
+        rectangle "Storage" as Storage
+    }
+
+    User --> Main
+    Main --> Ui
+    Main --> Parser
+    Main --> Model
+    Main --> Storage
+
+    Ui --> Parser
+    Ui --> Command
+    Parser --> Command
+
+    Command --> Model
+    Command --> Storage
+
+    Storage --> Model
+}
+
+@enduml
+
+
+
+

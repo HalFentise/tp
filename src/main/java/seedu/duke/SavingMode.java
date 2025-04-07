@@ -73,7 +73,7 @@ public class SavingMode {
             throw new Exception("Amount must be a positive number.");
         }
         goal.addToSavings(addAmount);
-        System.out.printf("✅ You have added $%.2f to your savings goal.%n", addAmount);
+        System.out.printf("You have added $%.2f to your savings goal.%n", addAmount);
         storage.saveGoal(goal);
     }
 

@@ -498,7 +498,6 @@ public class Ui {
         default:
             type = "";
         }
-        ;
 
         printLine();
         System.out.println("Done! The " + type

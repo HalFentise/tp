@@ -78,9 +78,10 @@ These features form the core functionality of the application, allowing users to
 * **Developer Guide:**
   * Added Table of Content, Getting Started, Product Scope, User Stories v1.0 and Non-Functional Requirements
   * Added Design part
+  * Added related features in Implementation part 
   * Added data structure and `add` `tick` `untick` `list` introduction
 ### Community:
 * Maintain `ui`,`parser`and `transactionManager`
 * Review teams code and fix the bug
 * Maintain issue tracker
-* Fix CL error
+* Fix CL errors
