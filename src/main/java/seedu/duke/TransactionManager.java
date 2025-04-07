@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import constant.Constant;
@@ -47,7 +49,7 @@ public class TransactionManager {
     }
     //@@author
 
-    private int getNextAvailableId() {
+    public int getNextAvailableId() {
         currentMaxId += 1;
         if (storage != null) {
             storage.saveMaxTransactionId(currentMaxId);
@@ -482,5 +484,38 @@ public class TransactionManager {
     //@@author
     public BudgetList getBudgetList() {
         return budgetList;
+    }
+
+    public Map<Category, Double> getCompletedAmountPerCategory() {
+        Map<Category, Double> result = new HashMap<>();
+        for (Transaction t : transactions) {
+            if (!t.isDeleted() && t.isCompleted()) {
+                double amt = t.getCurrency().convertTo(t.getAmount(), Currency.SGD);
+                result.put(t.getCategory(), result.getOrDefault(t.getCategory(), 0.0) + amt);
+            }
+        }
+        return result;
+    }
+
+    public int[] getCompletionStats() {
+        int complete = 0, incomplete = 0;
+        for (Transaction t : transactions) {
+            if (!t.isDeleted()) {
+                if (t.isCompleted()) complete++;
+                else incomplete++;
+            }
+        }
+        return new int[]{complete, incomplete};
+    }
+
+    public double getCurrentBalanceInSGD() {
+        double balance = 0;
+        for (Transaction t : transactions) {
+            if (!t.isDeleted() && t.isCompleted()) {
+                double amountInSGD = t.getCurrency().convertTo(t.getAmount(), Currency.SGD);
+                balance += amountInSGD;
+            }
+        }
+        return balance;
     }
 }

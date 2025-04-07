@@ -49,6 +49,8 @@ public class Constant {
 
     public static final String COMMAND_CONVERT = "convert";
 
+    public static final String COMMAND_STATUS = "status";
+
     /**
      * Command keyword for unmarking a task (marking it as incomplete)
      */

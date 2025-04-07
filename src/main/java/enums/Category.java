@@ -32,6 +32,7 @@ public enum Category {
     /** Expenses specifically for groceries and daily necessities. */
     GROCERIES,
 
+    SAVING,
     /** Alternate or overlapping category for health-related spending. */
     HEALTH
 }
