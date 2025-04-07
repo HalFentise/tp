@@ -206,6 +206,7 @@ public class FinancialGoal {
      */
     public void createNewGoal(Ui ui) {
         Scanner sc = new Scanner(System.in);
+        String goalName;
         double amount;
         Ui.createGoalConfirm();
 
@@ -215,7 +216,7 @@ public class FinancialGoal {
         }
 
         Ui.createGoalName();
-        setGoal(sc.nextLine());
+        goalName = sc.nextLine();
 
         Ui.createGoalTarget();
         try {
@@ -224,7 +225,6 @@ public class FinancialGoal {
                 ui.showError("Target amount must be a positive number.");
                 return;
             }
-            setTargetAmount(amount);
         } catch (NumberFormatException e) {
             ui.showError("Invalid target amount. Please enter a valid number.");
             return;
@@ -232,6 +232,8 @@ public class FinancialGoal {
 
         Ui.createGoalDescription();
         setDescription(sc.nextLine());
+        setGoal(goalName);
+        setTargetAmount(amount);
 
         Ui.createGoalSuccess();
     }
