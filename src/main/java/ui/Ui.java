@@ -96,6 +96,8 @@ public class Ui {
         printLine();
     }
 
+
+    //@@author Lukapeng77
     public static void printDeleteTask(Transaction transaction, int count) {
         printLine();
         System.out.println("Noted. I've removed this transaction:");
@@ -114,6 +116,7 @@ public class Ui {
         }
         printLine();
     }
+    //@@author
 
     public void printClear() {
         printLine();
@@ -121,6 +124,7 @@ public class Ui {
         printLine();
     }
 
+    //@@author Lukapeng77
     public void listNotification(ArrayList<Transaction> upcomingTransactions, String description) {
         printLine();
         if (upcomingTransactions.isEmpty()) {
@@ -200,6 +204,7 @@ public class Ui {
         System.out.println("--------------------------------------------------");
         System.out.printf("Total Expenses: %.2f\n", total);
     }
+    //@@author
 
     public void printTransactions(ArrayList<Transaction> transactions) {
         printLine();
@@ -413,7 +418,7 @@ public class Ui {
             type = "description";
             break;
         case 1:
-            type =  "category";
+            type = "category";
             break;
         case 2:
             type = "amount";
@@ -423,7 +428,8 @@ public class Ui {
             break;
         default:
             type = "";
-        };
+        }
+        ;
 
         printLine();
         System.out.println("Done! The " + type
@@ -478,7 +484,7 @@ public class Ui {
         printLeftAlignedLine("Description:  " + goal.getDescription());
         printLeftAlignedLine("");
 
-        printLeftAlignedLine("Status:       You're currently at:"+String.format("  %s  %.1f%% complete",
+        printLeftAlignedLine("Status:       You're currently at:" + String.format("  %s  %.1f%% complete",
                 bar, percent * 100, current, target));
         if (percent >= 1.0) {
             printLeftAlignedLine("Analysis:     Amazing! You've achieved your savings goal. Time to celebrate!");

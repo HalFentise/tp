@@ -6,6 +6,7 @@ import ui.Ui;
 
 import java.time.LocalDate;
 
+//@@author Lukapeng77
 public class NotifyCommand extends Command {
     public NotifyCommand(String description, String categoryString,
                          LocalDate date, TransactionManager transactions, Ui ui) {
