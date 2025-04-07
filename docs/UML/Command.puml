@@ -1,0 +1,8 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+abstract class Command {
+    + execute(transactions: TransactionManager, ui: Ui) : void
+    + isExit() : boolean
+}
+@enduml

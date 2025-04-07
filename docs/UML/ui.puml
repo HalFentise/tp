@@ -1,0 +1,13 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+class UI {
+    + readCommand()
+    + showError(String)
+    + printOutput()
+    + printOutput(A)
+}
+
+@enduml
+
+
