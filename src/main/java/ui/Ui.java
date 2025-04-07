@@ -423,7 +423,7 @@ public class Ui {
             break;
         default:
             type = "";
-        };
+        }
 
         printLine();
         System.out.println("Done! The " + type

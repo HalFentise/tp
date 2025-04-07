@@ -8,6 +8,11 @@ import enums.Status;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * Represents a financial transaction with various attributes including amount, currency,
+ * date, category, status, priority, tags, and recurrence.
+ * Each transaction has a unique immutable ID and can be marked as deleted or completed.
+ */
 public class Transaction {
     private final int id;
     private double amount;
@@ -15,16 +20,26 @@ public class Transaction {
     private Currency currency;
     private LocalDate date;
 
-    // changeable fields
+    // Changeable fields
     private String description;
     private Category category;
     private Priority priority;
     private ArrayList<String> tags;
     private boolean isDeleted = false;
-    private int recurringPeriod; // Repeated every recurringPeriod days, one-time if 0
+    private int recurringPeriod; // Repeats every X days, or once if 0
     private boolean isCompleted = false;
 
-    //Constructor
+    /**
+     * Creates a new Transaction with full details.
+     *
+     * @param id          Unique identifier of the transaction.
+     * @param description Description of the transaction.
+     * @param amount      Amount of money involved.
+     * @param currency    Currency used in the transaction.
+     * @param category    Category of the transaction.
+     * @param date        Date of the transaction.
+     * @param status      Status of the transaction (e.g., pending, confirmed).
+     */
     public Transaction(int id, String description, double amount, Currency currency,
                        Category category, LocalDate date, Status status) {
         assert description != null : "Description cannot be null";
@@ -46,8 +61,19 @@ public class Transaction {
         recurringPeriod = 0;
     }
 
-
-    public Transaction(int id, String description, double amount, Currency currency, LocalDate date, Status status) {
+    /**
+     * Creates a new Transaction without a specified category.
+     * Intended for minimal transaction creation use cases.
+     *
+     * @param id          Unique identifier of the transaction.
+     * @param description Description of the transaction.
+     * @param amount      Amount of money involved.
+     * @param currency    Currency used in the transaction.
+     * @param date        Date of the transaction.
+     * @param status      Status of the transaction.
+     */
+    public Transaction(int id, String description, double amount, Currency currency,
+                       LocalDate date, Status status) {
         this.id = id;
         this.description = description;
         this.amount = amount;
@@ -59,7 +85,11 @@ public class Transaction {
         recurringPeriod = 0;
     }
 
-
+    /**
+     * Returns a CSV-style string representation of the transaction.
+     *
+     * @return Formatted string of transaction fields.
+     */
     @Override
     public String toString() {
         return id + "," +
@@ -67,120 +97,149 @@ public class Transaction {
                 amount + "," +
                 currency + "," +
                 category + "," +
-                priority + "," +     // 第6列
-                status + "," +       // 第7列
-                (date == null ? "N/A" : date.toString());  // 第8列
+                priority + "," +
+                status + "," +
+                (date == null ? "N/A" : date.toString());
     }
 
+    // ======================== Getters ========================
 
-    //get method
+    /** @return Unique ID of the transaction. */
     public int getId() {
         return id;
     }
 
+    /** @return Amount of the transaction. */
     public double getAmount() {
         return amount;
     }
 
+    /** @return Description of the transaction. */
     public String getDescription() {
         return description;
     }
 
+    /** @return Currency of the transaction. */
     public Currency getCurrency() {
         return currency;
     }
 
+    /** @return Category assigned to the transaction. */
     public Category getCategory() {
         return category;
     }
 
+    /** @return Date of the transaction. */
     public LocalDate getDate() {
         return date;
     }
 
+    /** @return Priority level of the transaction. */
     public Priority getPriority() {
         return priority;
     }
 
+    /** @return List of tags associated with the transaction. */
     public ArrayList<String> getTags() {
         return new ArrayList<>(tags);
     }
 
+    /** @return Status of the transaction. */
     public Status getStatus() {
         return status;
     }
 
+    /** @return Whether the transaction is marked as deleted. */
     public boolean isDeleted() {
         return isDeleted;
     }
 
+    /** @return Number of days for recurrence (0 = one-time). */
     public int getRecurringPeriod() {
         return recurringPeriod;
     }
 
+    /** @return Whether the transaction is marked as completed. */
     public boolean isCompleted() {
         return isCompleted;
     }
 
+    // ======================== Setters ========================
 
-    //set method
+    /**
+     * Updates the transaction description.
+     * @param description New description.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Updates the category of the transaction.
+     * @param category New category.
+     */
     public void setCategory(Category category) {
         this.category = category;
     }
 
+    /**
+     * Sets the recurrence period.
+     * @param recurringPeriod Number of days between each recurrence (0 = one-time).
+     */
     public void setRecurringPeriod(int recurringPeriod) {
         this.recurringPeriod = recurringPeriod;
     }
 
+    /**
+     * Sets the amount of the transaction.
+     * @param amount New amount.
+     */
     public void setAmount(double amount) {
         this.amount = amount;
     }
 
+    /**
+     * Sets the currency of the transaction.
+     * @param currency New currency.
+     */
     public void setCurrency(Currency currency) {
         this.currency = currency;
     }
 
+    /**
+     * Sets the transaction date.
+     * @param date New date.
+     */
     public void setDate(LocalDate date) {
         this.date = date;
     }
 
+    /**
+     * Sets the priority of the transaction.
+     * @param priority New priority level.
+     */
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
 
+    // ======================== Status Methods ========================
+
+    /** Marks the transaction as completed. */
     public void complete() {
         isCompleted = true;
     }
 
+    /** Unmarks the transaction as completed. */
     public void notComplete() {
         isCompleted = false;
     }
 
-
-    public void addTag(String tag) {
-        tags.add(tag);
-    }
-
-    public void removeTag(String tag) {
-        tags.remove(tag);
-    }
-
-    public boolean containsTag(String tag) {
-        return tags.contains(tag);
-    }
-
-    public boolean isSameTransaction(Transaction otherTransaction) {
-        return this.id == otherTransaction.id;
-    }
-
+    /** Marks the transaction as deleted. */
     public void delete() {
         isDeleted = true;
     }
 
+    /** Recovers the transaction from deleted state. */
     public void recover() {
         isDeleted = false;
     }
