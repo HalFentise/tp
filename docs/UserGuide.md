@@ -235,7 +235,7 @@ the recurring transaction list respectively.
 
 Format: `alert` <br><br>
 Example: <br>
-![My Diagram](Screenshoots/Alert_demo.png)
+![My Diagram](Images/Alert_demo.png)
 
 ---
 
@@ -262,29 +262,39 @@ Format: `exit`
 
 **Q**: How do I transfer my data to another computer?
 
-**A**: {your answer here}
+**A**: NoteUrSavings creates a `/data` directory at the address at which the program itself is stored. 
+Transfer everything in this directory and to another computer and all data should load accordingly.
+
+## Enumerations
+| Type     | Supported Variations                                                                                                  |
+|----------|-----------------------------------------------------------------------------------------------------------------------|
+| Category | `EDUCATION`, `ENTERTAINMENT`, `FOOD`, `GROCERIES`, `HEALTH`, `HEALTHCARE`, `HOUSING`, `OTHER`, `SHOPPING`, `TRANSPORT`|
+| Currency | `CNY`, `EUR`, `GBP`, `JPY`, `SGD`, `USD`                                                                              |
+| Priority | `HIGH`, `MEDIUM`, `LOW`                                                                                               |
+
 
 ## Command Overview
 
-| Command     | Format                                           | Description                                                                                     | Example                                                                                            |
-|-------------|--------------------------------------------------|-------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
-| `add`       | `add d/DESCRIPTION a/AMOUNT c/CATEGORY [t/DATE]` | Adds a new expense.                                                                             | `add d/Dinner a/15.50 c/Food`<br>`add d/Netflix Subscription a/12.99 c/Entertainment t/04-06-2025` |
-| `list`      | `list`                                           | Lists all recorded expenses.                                                                    | `list`                                                                                             |
-| `edit`      | `edit [tag] [id] [value]`                        | Edits an expense's description (`desc`), amount (`am`), category (`cat`), or currency (`curr`). | `edit desc 1 Coffee`<br>`edit cat 2 OTHER`<br>`edit am 3 25`<br>`edit curr 4 JPY`                  |
-| `delete`    | `delete INDEX`                                   | Deletes the expense at the given index.                                                         | `delete 2`                                                                                         |
-| `clear`     | `clear`                                          | Deletes **all** expenses.                                                                       | `clear`                                                                                            |
-| `setbudget` | `setbudget a/AMOUNT`                             | Sets a maximum spending cap.                                                                    | `setbudget a/500`                                                                                  |
-| `search`    | `search [keyword]`<br>`search id-[id]`           | Searches by keyword or expense ID.                                                              | `search Netflix`<br>`search id-5`                                                                  |
-| `recur`     | `recur [id]/[period]`                            | Sets a recurring expense in days.                                                               | `recur 1/7` (weekly)                                                                               |
-| `goal`      | `goal [tag] [value]`                             | Manages savings goals. Tags: `target`, `desc`, `title`, `status`, `new`                         | `goal target 1000`<br>`goal desc New phone`<br>`goal title Gadgets`<br>`goal status`<br>`goal new` |
-| `tick`      | `tick INDEX`                                     | Marks an expense as completed/paid.                                                             | `tick 3`                                                                                           |
-| `untick`    | `untick INDEX`                                   | Unmarks a previously ticked expense.                                                            | `untick 3`                                                                                         |
-| `currency`  | `currency`                                       | Changes the default currency.                                                                   | `currency`                                                                                         |
-| `notify`    | `notify d/DESCRIPTION c/CATEGORY t/DATE`         | Sets a notification for future payment.                                                         | `notify d/Dinner c/Food t/2025-03-01`                                                              |
-| `priority`  | `priority INDEX priority_level`                  | Sets priority level of an expense. Levels: `low`, `medium`, `high`.                             | `priority 1 high`                                                                                  |
-| `summary`   | `summary`                                        | Shows all the list for the given time frame.                                                    | `summary`                                                                                          |
-| `exit`      | `exit`                                           | Exits the program.                                                                              | `exit`                                                                                             |
-| `alert`     | `alert`                                          | Triggers a warning for higher spending.                                                         | `alert`                                                                                            |
+| Command     | Format                                           | Description                                                                                         | Example                                                                                           |
+|-------------|--------------------------------------------------|-----------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| `add`       | `add d/DESCRIPTION a/AMOUNT c/CATEGORY [t/DATE]` | Adds a new expense.                                                                                 | `add d/Dinner a/15.50 c/Food`<br>`add d/Netflix Subscription a/12.99 c/Entertainment t/04-06-2025` |
+| `list`      | `list`                                           | Lists all recorded expenses.                                                                        | `list`                                                                                            |
+| `edit`      | `edit [tag] [id] [value]`                        | Edits an expense's description (`desc`), amount (`am`), category (`cat`), or currency (`curr`).     | `edit desc 1 Coffee`<br>`edit cat 2 OTHER`<br>`edit am 3 25`<br>`edit curr 4 JPY`                 |
+| `delete`    | `delete INDEX`                                   | Deletes the expense at the given index.                                                             | `delete 2`                                                                                        |
+| `clear`     | `clear`                                          | Deletes **all** expenses.                                                                           | `clear`                                                                                           |
+| `setbudget` | `setbudget a/AMOUNT`                             | Sets a maximum spending cap.                                                                        | `setbudget a/500`                                                                                 |
+| `search`    | `search [keyword]`<br>`search id-[id]`           | Searches by keyword or expense ID.                                                                  | `search Netflix`<br>`search id-5`                                                                 |
+| `recur`     | `recur [id]/[period]`                            | Sets a recurring expense in days.                                                                   | `recur 1/7` (weekly)                                                                              |
+| `goal`      | `goal [tag] [value]`                             | Manages savings goals. Tags: `target`, `desc`, `title`, `status`, `new`                             | `goal target 1000`<br>`goal desc New phone`<br>`goal title Gadgets`<br>`goal status`<br>`goal new` |
+| `tick`      | `tick INDEX`                                     | Marks an expense as completed/paid.                                                                 | `tick 3`                                                                                          |
+| `untick`    | `untick INDEX`                                   | Unmarks a previously ticked expense.                                                                | `untick 3`                                                                                        |
+| `currency`  | `currency`                                       | Changes the default currency.                                                                       | `currency`                                                                                        |
+| `notify`    | `notify d/DESCRIPTION c/CATEGORY t/DATE`         | Sets a notification for future payment.                                                             | `notify d/Dinner c/Food t/2025-03-01`                                                             |
+| `priority`  | `priority INDEX priority_level`                  | Sets priority level of an expense. Levels: `low`, `medium`, `high`.                                 | `priority 1 high`                                                                                 |
+| `convert`   | `priority id/TRANSACTION_ID to/CURRENCY`         | Converts the first transaction to the currency user wants to convert based on fixed exchange rates. | `convert id/1 to/USD`                                                                             |
+| `summary`   | `summary`                                        | Shows all the list for the given time frame.                                                        | `summary`                                                                                         |
+| `exit`      | `exit`                                           | Exits the program.                                                                                  | `exit`                                                                                            |
+| `alert`     | `alert`                                          | Triggers a warning for higher spending.                                                             | `alert`                                                                                           |
 
 ## Need Help?
 
