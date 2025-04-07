@@ -160,4 +160,22 @@ public class Constant {
      * Identifier for setting a budget amount in user input
      */
     public static final String IDENTIFIER_AMOUNT = "a/";
+
+    /**
+     * Identifier for specifying a description in user input
+     */
+    public static final String IDENTIFIER_DESCRIPTION = " d/";
+
+    /**
+     * Identifier for specifying a category type in user input
+     */
+    public static final String IDENTIFIER_CATEGORY = " c/";
+
+    /**
+     * Identifier for specifying a category type in user input
+     */
+    public static final String IDENTIFIER_DATE = " t/";
+
+    public static final String COMMAND_STATUS = "status";
+
 }

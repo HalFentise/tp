@@ -50,7 +50,7 @@ public class Duke {
     public void run() {
         ui.printWelcomeMessage();
         ui.printSavingOverview(goal);
-        //@@author yangyi-zhu
+        ui.printStatisticsOverview(transactions);
         transactions.remindRecurringTransactions();
 
         //@@author
