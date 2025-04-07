@@ -251,7 +251,8 @@ public class Ui {
 
         // 每一行打印
         for (Transaction t : transactions) {
-            String completedMark = t.isCompleted() ? "    ✔" : "    ✖";
+            String completedMark = t.getRecurringPeriod() > 0 ? "  R (" + t.getRecurringPeriod() + ")"
+                    : t.isCompleted() ? "    ✔" : "    ✖";
             String row = String.format(innerRowFormat,
                     t.getId(),
                     limitWithEllipsis(t.getDescription()),
@@ -432,13 +433,20 @@ public class Ui {
 
         printLine();
         System.out.println("Done! The " + type
-                + " of the target transaction has been updated to:\n" + value);
+                + " of the target transaction has been updated to:\n"
+                + (typeId == 3 ? Currency.valueOf(value).toString()
+                : (typeId == 2) ? Double.parseDouble(value) : value));
         printLine();
     }
 
     public static void printRecurringTransactions(ArrayList<Transaction> transactions) {
         DateTimeFormatter df = DateTimeFormatter.ofPattern("E, dd MMM yyyy");
         printLine();
+        if (transactions.isEmpty()) {
+            System.out.println("You have no recurring payments ahead.");
+            printLine();
+            return;
+        }
         System.out.println("Here is a list of your upcoming recurring payments:");
         int count = 1;
         for (Transaction transaction : transactions) {

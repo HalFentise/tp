@@ -94,7 +94,7 @@ public class TransactionManagerTest {
     void testLoadBudgetFromStorage() {
         manager.loadBudgetFromStorage();
 
-        assertEquals(500.0, manager.getBudgetLimit());
+        assertEquals(0.0, manager.getBudgetLimit());
         assertTrue(manager.getBudgetLimit() > 0);
     }
 

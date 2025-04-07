@@ -16,11 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TransactionTest {
-
     private Transaction transaction;
-
-    private Currency usd;
-    private Currency sgd;
+    private Currency usd = Currency.USD;
+    private Currency sgd = Currency.SGD;
     private LocalDate newDate;
 
 
@@ -70,6 +68,7 @@ public class TransactionTest {
         //@@author Lukapeng77
         assertEquals(Priority.HIGH, transaction.getPriority());
         assertEquals(newDate, transaction.getDate());
+
 
     }
 

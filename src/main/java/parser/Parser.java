@@ -250,8 +250,10 @@ public class Parser {
                     int recurringPeriod = Integer.parseInt(parts[1].substring(slashIndex + 1).trim());
                     transactions.setRecur(transactionId, recurringPeriod);
                     ui.setPeriod(transactions.searchTransaction(transactionId), recurringPeriod);
-                } catch (Exception e) {
+                } catch (StringIndexOutOfBoundsException | NumberFormatException fe) {
                     throw new InvalidCommand("Format invalid, try again! (recur [id]/[period])");
+                } catch (Exception e) {
+                    throw new InvalidCommand("Transaction not found!");
                 }
                 storage.saveTransactions(transactions.getTransactions());
                 break;
@@ -322,7 +324,7 @@ public class Parser {
         String[] fields = command.toLowerCase().split(" ", 3);
         String attribute = fields[0];
         int id = Integer.parseInt(fields[1]);
-        if (id >= transactions.getNum() || id < 0) {
+        if (id < 0) {
             throw new InvalidCommand("ID is out of range!");
         }
         String value = fields[2];
@@ -333,6 +335,7 @@ public class Parser {
             ui.printEdited(value, 0);
             break;
         case EDIT_CAT:
+            value = value.toUpperCase();
             try {
                 transactions.editInfo(id, value, 1);
             } catch (Exception e) {
@@ -350,7 +353,7 @@ public class Parser {
             } catch (Exception e) {
                 throw new InvalidCommand("Unknown currency, try again!");
             }
-            ui.printEdited(value, 3);
+            ui.printEdited(value.toUpperCase(), 3);
             break;
         default:
             throw new InvalidCommand("Unknown attribute!");

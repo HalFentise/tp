@@ -218,20 +218,24 @@ public class TransactionManager {
         }
     }
 
-    public void remindRecurringTransactions() {
+    public ArrayList<Transaction> getRecurringTransactions() {
         ArrayList<Transaction> upcoming = new ArrayList<>();
         for (Transaction t : transactions) {
             if (!t.isDeleted() && t.getRecurringPeriod() > 0) {
                 upcoming.add(t);
             }
         }
+        return sortRecurringTransactions(upcoming);
+    }
+
+    public void remindRecurringTransactions() {
+        ArrayList<Transaction> upcoming = getRecurringTransactions();
         if (!upcoming.isEmpty()) {
-            sortRecurringTransactions(upcoming);
             Ui.printRecurringTransactions(upcoming);
         }
     }
 
-    public void sortRecurringTransactions(ArrayList<Transaction> list) {
+    public ArrayList<Transaction> sortRecurringTransactions(ArrayList<Transaction> list) {
         for (Transaction t : list) {
             int period = t.getRecurringPeriod();
             while (t.getDate().isBefore(LocalDate.now())) {
@@ -239,6 +243,7 @@ public class TransactionManager {
             }
         }
         list.sort(Comparator.comparing(Transaction::getDate));
+        return list;
     }
 
     //@@author Lukapeng77
@@ -281,10 +286,12 @@ public class TransactionManager {
         }
     }
 
-    public void setRecur(int id, int period) {
+    public void setRecur(int id, int period) throws Exception{
         Transaction t = searchTransaction(id);
         if (t != null) {
             t.setRecurringPeriod(period);
+        } else {
+            throw new Exception();
         }
     }
 
@@ -362,14 +369,14 @@ public class TransactionManager {
             t.setCategory(Category.valueOf(value));
             break;
         case 2:
-            int val = Integer.parseInt(value);
+            double val = Double.parseDouble(value);
             if (val < 0) {
                 throw new InvalidCommand("Expense cannot be negative!");
             }
             t.setAmount(val);
             break;
         case 3:
-            t.setCurrency(Currency.valueOf(value));
+            t.setCurrency(Currency.valueOf(value.toUpperCase()));
             break;
         default:
             break;
