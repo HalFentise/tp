@@ -29,13 +29,13 @@ This developer guide outlines the architecture, design principles, and implement
 1. **Fork this project to your own GitHub, and clone it to your computer**
 2. **Ensure Intellij JDK 17 is defined as an SDK**, as described [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk) -- this step is not needed if you have used JDK 17 in a previous Intellij project.
 3. **Import the project _as a Gradle project_**, as described [here](https://se-education.org/guides/tutorials/intellijImportGradleProject.html).
-4. **Verify the setup**: After the importing is complete, locate the `src/main/java/seedu/duke/Duke.java` file, right-click it, and choose `Run Duke.main()`. If the setup is correct, you should see something like the below:
+4. **Verify the setup**: After the importing is complete, locate the `src/main/java/seedu/noteursavings/NoteUrSavings.java` file, right-click it, and choose `Run NoteUrSavings.main()`. If the setup is correct, you should see something like the below:
    ```
    > Task :compileJava
    > Task :processResources NO-SOURCE
    > Task :classes
    
-   > Task :Duke.main()
+   > Task :NoteUrSavings.main()
    ```
 <div style="background-color: #FFA500; border-left: 6px solid #FF0000; padding: 10px; color: #000000;">
   <strong> Important: </strong> Please import this project as a Gradle project
