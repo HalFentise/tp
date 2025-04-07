@@ -9,6 +9,8 @@ import seedu.duke.TransactionManager;
 import ui.Ui;
 import enums.Category;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -87,7 +89,7 @@ class ParserTest {
         try {
             Parser.parser(userInput, ui, transactions, goal, storage);
             // Add a transaction to search for
-            transactions.addTransaction("Test Transaction", 100, Category.FOOD,null);
+            transactions.addTransaction("Test Transaction", 100, Category.FOOD, null);
             // Assuming that searchTransactionList correctly finds the transaction by id
             assertEquals(1, transactions.searchTransactionList(true, "1").size());
         } catch (Exception e) {
@@ -100,7 +102,7 @@ class ParserTest {
         // Simulate tick command
         String userInput = "tick 1";
         try {
-            transactions.addTransaction("Test Transaction", 100, Category.FOOD,null);
+            transactions.addTransaction("Test Transaction", 100, Category.FOOD, null);
             Parser.parser(userInput, ui, transactions, goal, storage);
             Transaction transaction = transactions.searchTransaction(1);
             assertTrue(transaction.isCompleted());
@@ -119,4 +121,91 @@ class ParserTest {
             assertEquals("Invalid input", e.getMessage());
         }
     }
+
+    //@@author Lukapeng77
+    @Test
+    void testDeleteCommandValid() {
+        try {
+            // Add a transaction to be deleted
+            transactions.addTransaction("Brunch", 40.00, Category.FOOD, null);
+            assertEquals(1, transactions.getNum());
+
+            String userInput = "delete 1";
+            Parser.parser(userInput, ui, transactions, goal, storage);
+
+            // After deletion, the number of transactions should be 0
+            assertEquals(0, transactions.getNum());
+        } catch (Exception e) {
+            fail("Delete command failed with error: " + e.getMessage());
+        }
+    }
+
+    @Test
+    void testSetBudgetCommandValid() {
+        String userInput = "setbudget a/500.00";
+        try {
+            Parser.parser(userInput, ui, transactions, goal, storage);
+            assertEquals(500.00, transactions.getBudgetLimit());
+        } catch (Exception e) {
+            fail("Set budget command failed with error: " + e.getMessage());
+        }
+    }
+
+    @Test
+    void testNotifyCommandValid() {
+        String userInput = "notify d/Pay rent c/housing t/2025-05-01";
+        try {
+            Parser.parser(userInput, ui, transactions, goal, storage);
+            // Assuming notify adds something like a transaction or reminder
+            // Replace with actual assertions as per implementation
+            assertEquals(1, transactions.getNum());
+            Transaction transaction = transactions.getTransactions().get(0);
+            assertEquals("pay rent", transaction.getDescription());
+            assertEquals(Category.HOUSING, transaction.getCategory());
+            assertEquals(LocalDate.of(2025, 5, 1), transaction.getDate());
+        } catch (Exception e) {
+            fail("Notify command failed with error: " + e.getMessage());
+        }
+    }
+
+    @Test
+    void testAlertCommand() {
+        String userInput = "alert";
+        try {
+            Parser.parser(userInput, ui, transactions, goal, storage);
+            // Alert likely doesn't change state, so just assert no exception
+        } catch (Exception e) {
+            fail("Alert command failed with error: " + e.getMessage());
+        }
+    }
+
+    @Test
+    void testSetPriorityCommandValid() {
+        try {
+            transactions.addTransaction("Book Flight", 300, Category.TRANSPORT, null);
+            String userInput = "priority 1 high";
+            Parser.parser(userInput, ui, transactions, goal, storage);
+            Transaction transaction = transactions.searchTransaction(1);
+            assertEquals("high", transaction.getPriority());
+        } catch (Exception e) {
+            fail("Set priority command failed with error: " + e.getMessage());
+        }
+    }
+
+    @Test
+    void testSummaryCommandValid() {
+        try {
+            // Add test data
+            transactions.addTransaction("Coffee", 5.00, Category.FOOD, LocalDate.of(2025, 4, 1));
+            transactions.addTransaction("Groceries", 50.00, Category.FOOD, LocalDate.of(2025, 4, 2));
+
+            String userInput = "summary from/2025-04-01 to/2025-04-30";
+            Parser.parser(userInput, ui, transactions, goal, storage);
+
+            // No state change expected, just ensure summary command does not throw
+        } catch (Exception e) {
+            fail("Summary command failed with error: " + e.getMessage());
+        }
+    }
+    //@@author
 }

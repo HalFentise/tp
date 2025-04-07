@@ -35,6 +35,7 @@ public class TransactionManager {
         this.currentMaxId = storage.loadMaxTransactionId();
     }
 
+    //@@author Lukapeng77
     public void loadBudgetFromStorage() {
         if (storage != null) {
             double savedBudget = storage.loadBudgetLimit();
@@ -44,6 +45,7 @@ public class TransactionManager {
             }
         }
     }
+    //@@author
 
     private int getNextAvailableId() {
         currentMaxId += 1;
@@ -75,6 +77,7 @@ public class TransactionManager {
         return count;
     }
 
+    //@@author Lukapeng77
     public double getBudgetLimit() {
         return budgetLimit;
     }
@@ -96,6 +99,7 @@ public class TransactionManager {
         }
         return totalAmount;
     }
+    //@@author
 
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
@@ -143,6 +147,7 @@ public class TransactionManager {
         return existTransactions;
     }
 
+    //@@author Lukapeng77
     public ArrayList<Transaction> getTransactionsBetween(LocalDate start, LocalDate end) {
         return (ArrayList<Transaction>) transactions.stream()
                 .filter(t -> !t.getDate().isBefore(start) && !t.getDate().isAfter(end))
@@ -170,6 +175,7 @@ public class TransactionManager {
                 (budgetLimit - totalTransactionAmount) + " " + defaultCurrency + "\n");
     }
 
+    //@@author
     public void clear() {
         transactions.clear();
         currentMaxId = 0;
@@ -263,7 +269,8 @@ public class TransactionManager {
         return list;
     }
 
-    //@@author
+
+    //@@author Lukapeng77
     public void notify(String description, String category, LocalDate date) {
         try {
 
@@ -283,6 +290,7 @@ public class TransactionManager {
             throw new IllegalArgumentException("Invalid date format. Please use YYYY-MM-DD format", e);
         }
     }
+    //@@author
 
     public void tickTransaction(int id) throws Exception {
         Transaction transaction = searchTransaction(id);
