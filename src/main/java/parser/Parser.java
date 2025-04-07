@@ -306,6 +306,14 @@ public class Parser {
                 case "budget":
                     BudgetMode.enter(ui, transactions.getBudgetList(), transactions, storage);
                     break;
+                case "balance":
+                    double bal = transactions.getCurrentBalanceInSGD();
+                    ui.printBalanceOverview(bal);
+                    break;
+
+                case "stats":
+                    ui.printStatisticsOverview(transactions);
+                    break;
                 //@@author yangyi-zhu
                 case COMMAND_GOAL:
                     goal.updateExpenses(transactions);

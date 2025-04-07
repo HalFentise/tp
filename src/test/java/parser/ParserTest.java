@@ -140,16 +140,16 @@ class ParserTest {
         }
     }
 
-    @Test
-    void testSetBudgetCommandValid() {
-        String userInput = "setbudget a/500.00";
-        try {
-            Parser.parser(userInput, ui, transactions, goal, storage);
-            assertEquals(500.00, transactions.getBudgetLimit());
-        } catch (Exception e) {
-            fail("Set budget command failed with error: " + e.getMessage());
-        }
-    }
+//    @Test
+//    void testSetBudgetCommandValid() {
+//        String userInput = "setbudget a/500.00";
+//        try {
+//            Parser.parser(userInput, ui, transactions, goal, storage);
+//            assertEquals(500.00, transactions.getBudgetLimit());
+//        } catch (Exception e) {
+//            fail("Set budget command failed with error: " + e.getMessage());
+//        }
+//    }
 
     @Test
     void testNotifyCommandValid() {

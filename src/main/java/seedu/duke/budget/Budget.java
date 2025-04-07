@@ -59,13 +59,16 @@ public class Budget {
     public double calculateRemaining(List<Transaction> transactions) {
         double spent = 0;
         for (Transaction t : transactions) {
-            if (t.getCategory() == this.category && t.getAmount() < 0) {
-                double amountInSGD = t.getCurrency().convertTo(-t.getAmount(), Currency.SGD); // convert to SGD
+            if (t.getCategory() == this.category &&
+                    t.getAmount() < 0 &&
+                    t.isCompleted()) {
+                double amountInSGD = t.getCurrency().convertTo(-t.getAmount(), Currency.SGD);
                 spent += amountInSGD;
             }
         }
         return totalAmount - spent;
     }
+
 
 
     @Override
@@ -75,4 +78,19 @@ public class Budget {
                 name, category, endDate, totalAmount
         );
     }
+
+    public double calculateSpentAmount(List<Transaction> transactions) {
+        double total = 0;
+        for (Transaction t : transactions) {
+            if (!t.isDeleted() && t.isCompleted() &&
+                    t.getCategory() == this.category &&
+                    t.getAmount() < 0 &&
+                    t.getDate() != null &&
+                    t.getDate().isBefore(endDate)) {
+                total += Math.abs(t.getAmount());
+            }
+        }
+        return total;
+    }
+
 }

@@ -2,19 +2,18 @@ package ui;
 
 import static ui.ConsoleFormatter.*;
 
+import enums.Priority;
 import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.List;
+import java.util.*;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 import static constant.Constant.*;
 import enums.Currency;
-import java.util.Map;
 import enums.Category;
 
 
@@ -97,13 +96,14 @@ public class Ui {
         printLine();
     }
 
-    public static void printDeleteTask(Transaction transaction, int count) {
+    public void printDeleteTask(Transaction transaction, int count) {
         printLine();
-        System.out.println("Noted. I've removed this transaction:");
-        System.out.println(transaction);
-        System.out.printf("Now you have %d transactions in the list.%n", count);
+        printCenteredTitle("Transaction Deleted");
+        printTransactionsTable(List.of(transaction));
+        printCenteredLine("Now you have " + count + " transactions in the list.");
         printLine();
     }
+
 
     public void PrintBudgetLimit(TransactionManager transaction) {
         printLine();
@@ -111,7 +111,7 @@ public class Ui {
             System.out.println("Please add a transaction first before you set the budget!");
         } else {
             double total = transaction.getTotalTransactionAmount();
-            transaction.checkBudgetLimit(total);
+            transaction.checkBudgetLimit();
         }
         printLine();
     }
@@ -124,70 +124,73 @@ public class Ui {
 
     public void listNotification(ArrayList<Transaction> upcomingTransactions, String description) {
         printLine();
-        if (upcomingTransactions.isEmpty()) {
-            System.out.println("No upcoming expenses.");
+
+        List<Transaction> filtered = upcomingTransactions.stream()
+                .filter(t -> !t.isCompleted()
+                        && t.getDescription().equalsIgnoreCase(description)
+                        && t.getDate() != null)
+                .collect(Collectors.toList());
+
+        if (filtered.isEmpty()) {
+            System.out.println("No upcoming incomplete transactions with description: " + description);
         } else {
-            System.out.println("Upcoming Expenses:");
-            for (Transaction transaction : upcomingTransactions) {
-                if (transaction.getDescription().equals(description) && transaction.getDate() != null) {
-                    System.out.println("- " + transaction.getDescription() + " of " + transaction.getAmount() + " "
-                            + transaction.getCurrency() + " in category " + transaction.getCategory() + " is due on "
-                            + transaction.getDate());
-                }
-            }
+            printCenteredTitle("Upcoming Incomplete Transactions");
+            printTransactionsTable(filtered);
         }
+
         printLine();
     }
 
     public void listNotifications(ArrayList<Transaction> upcomingTransactions) {
-        if (upcomingTransactions.isEmpty()) {
-            System.out.println("There are no upcoming transactions for now.");
+        if (upcomingTransactions == null || upcomingTransactions.isEmpty()) {
+            System.out.println("📭 There are no upcoming transactions for now.");
             return;
         }
-        boolean hasUpcoming = false;
-        for (Transaction transaction : upcomingTransactions) {
-            if (transaction.getDate() != null) {
-                if (!hasUpcoming) {
-                    System.out.println("Upcoming Expenses:");
-                    hasUpcoming = true;
-                }
-                System.out.println("- " + transaction.getDescription() + " of " + transaction.getAmount() + " "
-                        + transaction.getCurrency() + " in category " + transaction.getCategory() + " is due on "
-                        + transaction.getDate());
-            }
+
+        List<Transaction> filtered = upcomingTransactions.stream()
+                .filter(t -> !t.isCompleted() && t.getDate() != null)
+                .collect(Collectors.toList());
+
+        if (filtered.isEmpty()) {
+            System.out.println("No upcoming *incomplete* transactions for now.");
+            return;
         }
-        if (!hasUpcoming) {
-            System.out.println("No upcoming expenses for now.");
-        }
+
+        printCenteredTitle("Upcoming Incomplete Transactions");
+        printTransactionsTable(filtered);
     }
+
 
     public void PrintPriority(ArrayList<Transaction> transactions, int index) {
         printLine();
-        if (transactions.isEmpty()) {
+        if (transactions.isEmpty() || index < 0 || index >= transactions.size()) {
             System.out.println("Please add a transaction first before you set the priority!");
         } else {
-            System.out.println("Priority is set to " + transactions.get(index).getPriority() + " for current transaction.");
+            Transaction t = transactions.get(index);
+            System.out.println("Priority set to " + t.getPriority() + " for the current transaction:");
+            printTransactionsTable(List.of(t));
         }
         printLine();
     }
 
-    public void listPriorities(ArrayList<Transaction> upcomingTransactions) {
-        String defaultPriority = "HIGH";
-        boolean hasHighPriority = false;
-        for (Transaction transaction : upcomingTransactions) {
-            if (transaction.getPriority() != null && transaction.getPriority().toString().equalsIgnoreCase(defaultPriority)) {
-                if (!hasHighPriority) {
-                    System.out.println("Following transactions have the high priority:");
-                    hasHighPriority = true;
-                }
-                System.out.println("- " + transaction.getDescription() + " " + transaction.getAmount() + " "
-                        + transaction.getCurrency() + " in category " + transaction.getCategory());
-            }
+
+    public void listPriorities(ArrayList<Transaction> transactions) {
+        List<Transaction> highPriority = transactions.stream()
+                .filter(t -> t.getPriority() == Priority.HIGH)
+                .collect(Collectors.toList());
+
+        printLine();
+
+        if (highPriority.isEmpty()) {
+            printCenteredLine("No high priority transactions found.");
+        } else {
+            printCenteredTitle("High Priority Transactions");
+            printTransactionsTable(highPriority);
         }
-        if (!hasHighPriority) {
-            System.out.println("No high priority transactions found.");
-        }
+
+        printLine();
     }
+
 
     public void printTransactions(ArrayList<Transaction> transactions) {
         if (transactions.isEmpty()) {
@@ -282,10 +285,6 @@ public class Ui {
             return content.substring(0, maxLength); // fallback
         }
     }
-
-
-
-
 
     public void tickTransaction(Transaction transaction) {
         printLine();
@@ -422,18 +421,24 @@ public class Ui {
         printLine();
     }
 
-    public static void printRecurringTransactions(ArrayList<Transaction> transactions) {
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("E, dd MMM yyyy");
+    public void printRecurringTransactions(ArrayList<Transaction> transactions) {
         printLine();
-        System.out.println("Here is a list of your upcoming recurring payments:");
-        int count = 1;
-        for (Transaction transaction : transactions) {
-            System.out.println(count + ". " + transaction.getDescription()
-                    + " - " + transaction.getDate().format(df));
-            count++;
+
+        List<Transaction> filtered = transactions.stream()
+                .filter(t -> t.getRecurringPeriod() > 0)
+                .collect(Collectors.toList());
+
+        if (filtered.isEmpty()) {
+            printCenteredLine("No upcoming recurring payments found.");
+        } else {
+            printCenteredTitle("Upcoming Recurring Transactions");
+            printTransactionsTable(filtered);
         }
+
         printLine();
     }
+
+
 
     public void printSavingOverview(FinancialGoal goal) {
         printCenteredTitle("Saving Overview");
@@ -539,7 +544,7 @@ public class Ui {
         } else if (balance == 0) {
             printLeftAlignedLine("Analysis: Net balance is zero. Consider reviewing your expenses.");
         } else {
-            printLeftAlignedLine("Analysis: You’ve spent more than your earnings. Be cautious!");
+            printLeftAlignedLine("Analysis: You've spent more than your earnings. Be cautious!");
         }
 
         printLine();

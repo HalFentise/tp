@@ -14,6 +14,7 @@ import enums.Category;
 import enums.Currency;
 import enums.Status;
 import exceptions.InvalidCommand;
+import seedu.duke.budget.Budget;
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
 
@@ -112,7 +113,6 @@ public class TransactionManager {
                 storage.saveMaxTransactionId(currentMaxId);
             }
         }
-        checkBudgetOverspending(transaction);
     }
 
 
@@ -126,17 +126,11 @@ public class TransactionManager {
             transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
         }
 
-        if (isBudgetSet && (getTotalTransactionAmount() + amount > budgetLimit)) {
-            return false;
-        }
-
-        if (!isTransactionAllowedByBudget(transaction)) {
-            System.out.println("This transaction is blocked: it occurs before the budget's end date.");
-            return false;
-        }
+//        if (isBudgetSet && (getTotalTransactionAmount() + amount > budgetLimit)) {
+//            return false;
+//        }
 
         transactions.add(transaction);
-        checkBudgetOverspending(transaction);
 
         if (id > currentMaxId) {
             currentMaxId = id;
@@ -147,7 +141,7 @@ public class TransactionManager {
         return true;
     }
 
-    private boolean isTransactionAllowedByBudget(Transaction t) {
+    public boolean isTransactionAllowedByBudget(Transaction t) {
         if (t.getAmount() >= 0) {
             return true;
         }
@@ -203,19 +197,38 @@ public class TransactionManager {
         }
     }
 
-    public void checkBudgetLimit(double budgetLimit) {
-        double totalTransactionAmount = getTotalTransactionAmount();
-        setBudgetLimit(budgetLimit);
-        setBudgetSet(true);
-
-        if (storage != null) {
-            storage.saveBudgetLimit(budgetLimit);
+    public void checkBudgetLimit() {
+        if (budgetList == null || budgetList.isEmpty()) {
+            System.out.println("No budgets found. Use 'budget > set' to create a budget.");
+            return;
         }
 
-        System.out.println("Budget limit set to " + budgetLimit + " " + defaultCurrency);
-        System.out.println("The remaining Budget amount is " +
-                (budgetLimit - totalTransactionAmount) + " " + defaultCurrency + "\n");
+        System.out.println(" Budget Category Report:");
+        for (seedu.duke.budget.Budget b : budgetList.getAll()) {
+            Category cat = b.getCategory();
+            double limit = b.getTotalAmount();
+            double spent = 0;
+
+            for (Transaction t : getTransactions()) {
+                if (t.isCompleted()
+                        && !t.isDeleted()
+                        && t.getCategory() == cat
+                        && t.getAmount() < 0
+                        && !t.getDate().isAfter(b.getEndDate())) {
+                    spent += t.getCurrency().convertTo(-t.getAmount(), Currency.SGD);
+                }
+            }
+
+            double remaining = limit - spent;
+
+            System.out.printf("- %s: Limit = $%.2f, Spent = $%.2f, Remaining = $%.2f %s%n",
+                    cat, limit, spent, remaining,
+                    (remaining < 0 ? "OVERSPENT" : ""));
+        }
+
+        System.out.println(); // newline for spacing
     }
+
 
     //@@author
     public void clear() {
@@ -290,7 +303,8 @@ public class TransactionManager {
     public void remindRecurringTransactions() {
         ArrayList<Transaction> upcoming = getRecurringTransactions();
         if (!upcoming.isEmpty()) {
-            Ui.printRecurringTransactions(upcoming);
+            Ui ui = new Ui();
+            ui.printRecurringTransactions(upcoming);
         }
     }
 
@@ -338,6 +352,12 @@ public class TransactionManager {
         Transaction transaction = searchTransaction(id);
         if (transaction != null) {
             transaction.complete();
+
+            if (!isTransactionAllowedByBudget(transaction)) {
+                System.out.println("Warning: After completing this transaction, it may exceed your budget limit.");
+            }
+
+            checkBudgetOverspending(transaction);
         } else {
             throw new InvalidCommand("Transaction not found! Please type in a valid id");
         }
@@ -559,20 +579,32 @@ public class TransactionManager {
         return balance;
     }
 
-    private void checkBudgetOverspending(Transaction t) {
-        if (t.getAmount() >= 0) {
+    public void checkBudgetOverspending(Transaction t) {
+        if (!t.isCompleted()) return;
+        if (t.getAmount() >= 0) return;
+
+        for (Budget budget : budgetList.getAll()) {
+            if (budget.getCategory() != t.getCategory()) {
+                continue;
+            }
+
+            if (t.getDate() != null && !t.getDate().isBefore(budget.getEndDate())) {
+                return;
+            }
+
+            double totalSpent = budget.calculateSpentAmount(getTransactions());
+
+            double remaining = budget.getTotalAmount() - totalSpent;
+
+            if (Math.abs(t.getAmount()) > remaining) {
+                double overspent = Math.abs(t.getAmount()) - remaining;
+                System.out.printf("Warning: You have overspent your budget '%s' by $%.2f%n",
+                        budget.getName(), overspent);
+            }
+
             return;
         }
-
-        for (seedu.duke.budget.Budget budget : budgetList.getAll()) {
-            if (budget.getCategory() == t.getCategory()) {
-                double remaining = budget.calculateRemaining(getTransactions());
-                if (remaining < 0) {
-                    System.out.printf("Warning: You have overspent your budget '%s' by $%.2f%n",
-                            budget.getName(), -remaining);
-                }
-            }
-        }
     }
+
 
 }

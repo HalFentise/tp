@@ -137,17 +137,27 @@ public class AddWizardCommand extends Command {
                 String completedInput = scanner.nextLine().trim().toLowerCase();
 
                 if (completedInput.equals("cancel")) return;
+
                 if (completedInput.isEmpty() || completedInput.equals("yes") || completedInput.equals("y")) {
                     transaction.complete();
+
+                    if (!transactions.isTransactionAllowedByBudget(transaction)) {
+                        System.out.println("Warning: After completing this transaction, it may exceed your budget limit.");
+                    }
+                    transactions.checkBudgetOverspending(transaction);
+
                     break;
+
                 } else if (completedInput.equals("no") || completedInput.equals("n")) {
                     break;
+
                 } else {
                     printCenteredTitle("ERROR: Add Wizard");
                     printLeftAlignedLine("Please enter 'yes', 'no', or press Enter to default to yes.");
                     printLine();
                 }
             }
+
 
 
 
