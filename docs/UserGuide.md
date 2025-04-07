@@ -212,7 +212,8 @@ Format: `exit`
 
 **Q**: How do I transfer my data to another computer? 
 
-**A**: {your answer here}
+**A**: NoteUrSavings creates a `/data` directory at the address at which the program itself is stored. 
+Transfer everything in this directory and to another computer and all data should load accordingly.
 
 ## Enumerations
 | Type     | Supported Variations                                                                                                  |
