@@ -105,14 +105,19 @@ Options to edit goal information allow the user to amend any errors instead of h
 * Ensure consistency in formatting. <br>
 
 **Developer Guide:**
-* Added diagram for FinancialGoal class
 * Document features implemented (`recur`, `edit`, `search`, `goal`)
+* Added sequence diagrams for core features implemented
+* Added sequence diagram for recurring transaction reminder
 * Documented FinancialGoal class
+* Added diagram for FinancialGoal class
+* Added sequence diagrams for goal commands and goal creation
+* Updated testing instructions
+* Updated table of contents
 
 ---
 
 ### Community
 * Maintain `Ui`,`Parser`and `TransactionManager`
-* Review teams code and fix the bug
+* Review teams code and fix bugs
 * Maintain issue tracker
 * Integrate `FinancialGoal` class (base data structure drafted by `Faheem Akram`)
