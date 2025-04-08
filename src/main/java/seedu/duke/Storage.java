@@ -24,6 +24,7 @@ import seedu.duke.budget.BudgetList;
  * Handles reading from and writing to files that store transaction, budget, goal, and settings data.
  * Responsible for persisting and loading user data from the local file system.
  */
+//@@author HalFentise
 public class Storage {
     /** Path to the main data folder. */
     private static final String FOLDER_PATH = "data";
@@ -215,6 +216,7 @@ public class Storage {
             return null;
         }
     }
+    //@@author
 
     // 获取当前最大 Transaction ID
     public int loadMaxTransactionId() {
@@ -340,7 +342,7 @@ public class Storage {
         return budgetList;
     }
 
-
+//@@author HalFentise
     //Settings
 
     /**
@@ -400,7 +402,7 @@ public class Storage {
         Currency defaultCurrency = loadDefaultCurrency();
         transactions.setDefaultCurrency(defaultCurrency);
     }
-
+//@@author
 
     // Save budget limit
     public void saveBudgetLimit(double limit) {

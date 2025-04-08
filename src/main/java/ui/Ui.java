@@ -111,14 +111,8 @@ public class Ui {
             System.out.println("Please add a transaction first before you set the budget!");
         } else {
             double total = transaction.getTotalTransactionAmount();
-            transaction.checkBudgetLimit();
+            transaction.checkBudgetLimit(transaction.getBudgetLimit());
         }
-        printLine();
-    }
-
-    public void PrintClear() {
-        printLine();
-        System.out.println("All transactions have been cleared!");
         printLine();
     }
 
@@ -191,7 +185,7 @@ public class Ui {
         printLine();
     }
 
-
+//@@author HalFentise
     public void printTransactions(ArrayList<Transaction> transactions) {
         if (transactions.isEmpty()) {
             printCenteredTitle("View Transaction");
@@ -205,7 +199,7 @@ public class Ui {
     public void printTransaction(Transaction transaction) {
         viewTransactionDetail(transaction);
     }
-
+//@@author
     public void printTransactionsTable(List<Transaction> transactions) {
         final int TOTAL_WIDTH = 121;
         final String INNER_HEADER_FORMAT = "| %-2s | %-12s | %9s | %-8s | %-9s | %-10s | %-11s | %-8s |";
@@ -276,13 +270,14 @@ public class Ui {
         System.out.println(line);
     }
 
+    //@@author HalFentise
     private String trimToFit(String content, int maxLength) {
         if (content.length() <= maxLength) {
             return content;
         } else if (maxLength >= 3) {
             return content.substring(0, maxLength - 3) + "...";
         } else {
-            return content.substring(0, maxLength); // fallback
+            return content.substring(0, maxLength);
         }
     }
 
@@ -307,7 +302,7 @@ public class Ui {
         printTransaction(transaction);
         printLine();
     }
-
+//@@author
     public void search(boolean isIndex) {
         if (isIndex) {
             System.out.println("I have searched the transaction with the given index.");
@@ -501,16 +496,6 @@ public class Ui {
 
         printLeftAlignedLine("Completed:     " + (t.isCompleted() ? "[ YES ]" : "[ NO ]"));
 
-//        String recurringStr = (t.getRecurringPeriod() > 0)
-//                ? "Every " + t.getRecurringPeriod() + " days"
-//                : "No";
-//        printLeftAlignedLine("Recurring:     " + recurringStr);
-//
-//        String tags = t.getTags().isEmpty()
-//                ? "(none)"
-//                : String.join(", ", t.getTags());
-//        printLeftAlignedLine("Tags:          " + tags);
-
         printLine(); // 底部边框
     }
 
@@ -629,8 +614,9 @@ public class Ui {
         System.out.printf("Total Expenses: %.2f\n", total);
     }
 
-
+//@@author HalFentise
     public void printClear() {
+        System.out.println("All transactions have been cleared!");
         printCenteredTitle("Cleared");
     }
 
@@ -676,4 +662,5 @@ public class Ui {
         System.out.println("Set your default currency successfully!");
         ConsoleFormatter.printLine();
     }
+//@@author
 }
