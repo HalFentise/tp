@@ -6,10 +6,8 @@ import enums.Status;
 import ui.Ui;
 import ui.ConsoleFormatter;
 
-
 import java.time.LocalDate;
 import java.util.Scanner;
-
 
 public class SavingMode {
 
@@ -27,7 +25,7 @@ public class SavingMode {
 
             if (input.equalsIgnoreCase("exit")) {
                 ConsoleFormatter.printLine();
-                ConsoleFormatter.printLeftAlignedLine("Exiting Saving Mode...");
+                System.out.println("Exiting Saving Mode...");
                 ConsoleFormatter.printLine();
                 break;
             }
@@ -134,14 +132,13 @@ public class SavingMode {
 
     private static void printHelp() {
         ConsoleFormatter.printLine();
-        ConsoleFormatter.printLeftAlignedLine("Saving Mode Commands:");
-        ConsoleFormatter.printLeftAlignedLine("- set: Create a new saving goal interactively");
-        ConsoleFormatter.printLeftAlignedLine("- list: Show current saving goal details");
-        ConsoleFormatter.printLeftAlignedLine("- contribute a/AMOUNT: Add funds to your goal (from your balance)");
-        ConsoleFormatter.printLeftAlignedLine("- save a/AMOUNT: (alias) Add funds to your goal");
-        ConsoleFormatter.printLeftAlignedLine("- deduct a/AMOUNT: " +
-                "Withdraw from your goal (added to your balance)");
-        ConsoleFormatter.printLeftAlignedLine("- exit: Return to main menu");
+        System.out.println("Saving Mode Commands:");
+        System.out.println("- set: Create a new saving goal interactively");
+        System.out.println("- list: Show current saving goal details");
+        System.out.println("- contribute a/AMOUNT: Add funds to your goal (from your balance)");
+        System.out.println("- save a/AMOUNT: (alias) Add funds to your goal");
+        System.out.println("- deduct a/AMOUNT: Withdraw from your goal (added to your balance)");
+        System.out.println("- exit: Return to main menu");
         ConsoleFormatter.printLine();
-}
+    }
 }

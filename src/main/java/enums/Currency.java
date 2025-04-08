@@ -82,3 +82,4 @@ public enum Currency {
         throw new IllegalArgumentException("Can not load the following currency: " + fullName);
     }
 }
+

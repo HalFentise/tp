@@ -53,13 +53,12 @@ public class BudgetList {
         double remaining = b.calculateRemaining(transactions);
 
         ConsoleFormatter.printLine();
-        ConsoleFormatter.printLeftAlignedLine("🔍 Budget Details:");
-        ConsoleFormatter.printLeftAlignedLine("Name: " + b.getName());
-        ConsoleFormatter.printLeftAlignedLine("Target Amount: $" + b.getTotalAmount());
-        ConsoleFormatter.printLeftAlignedLine("Remaining: $" + b.getRemainingAmount());
-        ConsoleFormatter.printLeftAlignedLine("End Date: " + b.getEndDate());
-        ConsoleFormatter.printLeftAlignedLine("Category: " + b.getCategory());
-
+        System.out.println("🔍 Budget Details:");
+        System.out.println("Name: " + b.getName());
+        System.out.println("Target Amount: $" + b.getTotalAmount());
+        System.out.println("Remaining: $" + String.format("%.2f", remaining));
+        System.out.println("End Date: " + b.getEndDate());
+        System.out.println("Category: " + b.getCategory());
         ConsoleFormatter.printLine();
     }
 
