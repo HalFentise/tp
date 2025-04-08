@@ -36,6 +36,7 @@ public class Parser {
         LocalDate date;
         String[] fields;
 
+        //@@author HalFentise
         try {
             switch (commandType) {
                 case COMMAND_HELP:
@@ -104,6 +105,7 @@ public class Parser {
                     ui.unTickTransaction(transactions.searchTransaction(id));
                     storage.saveTransactions(transactions.getTransactions());
                     break;
+                    //@@ author
                 case COMMAND_STATUS:
                     try {
                         if (parts.length == 1 || parts[1].isBlank()) {
@@ -183,11 +185,13 @@ public class Parser {
                     String time = parts[1];
                     transactions.getUpcomingTransactions(time);
                     break;
+                    //@@author HalFentise
                 case COMMAND_CURRENCY:
                     Currency currency = parseCurrency(ui);
                     transactions.setDefaultCurrency(currency);
                     storage.saveDefaultCurrency(currency);
                     break;
+                    //@@author
                 //@@author Lukapeng77
                 case COMMAND_NOTIFY:
                     String[] detail = {"description", "category", "date"};
