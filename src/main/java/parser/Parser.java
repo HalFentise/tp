@@ -45,9 +45,9 @@ public class Parser {
                     break;
                 case COMMAND_ADD:
                     if (parts.length == 1 || parts[1].isBlank()) {
+
                         Command addWizard = new AddWizardCommand();
                         addWizard.execute(transactions, ui, storage);
-
                         break;
                     }
 
