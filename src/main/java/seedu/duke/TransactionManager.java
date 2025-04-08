@@ -14,6 +14,7 @@ import enums.Category;
 import enums.Currency;
 import enums.Status;
 import exceptions.InvalidCommand;
+import ui.ConsoleFormatter;
 import seedu.duke.budget.Budget;
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
@@ -139,6 +140,17 @@ public class TransactionManager {
             transaction = new Transaction(id, description, amount, defaultCurrency, category, now, Status.PENDING);
         } else {
             transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
+            if (isBudgetSet && amount < 0) {
+                double projectedSpending = getTotalSpending() + (-amount); // 负号让支出为正
+                if (projectedSpending > budgetLimit) {
+                    ConsoleFormatter.printLeftAlignedLine("Cannot add transaction! Budget limit exceeded!");
+                    return false;
+                }
+            }
+            if (isBudgetSet && (getTotalTransactionAmount() + amount > budgetLimit)) {
+                return false;
+            }
+
         }
 
         transactions.add(transaction);
