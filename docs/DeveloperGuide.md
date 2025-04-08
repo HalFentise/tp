@@ -17,10 +17,22 @@ At this stage, no third-party libraries, external code, or documentation have be
   - [Parser](#parser)
   - [Command](#command)
   - [Manager](#manager)
-- [Implementation](#implementation)
-  - [Transaction Basic Data Structure](#transaction-basic-data-structure)
-  - [Managing Transactions with TransactionManager](#managing-transactions-with-transactionmanager)
-  - [Tick,Add,Exit,List](#transaction-management-features-tick-add-exit-list)
+- [Implementation](#implementation) <br>
+  - **Transactions**
+    - [Basic Data Structure](#transaction-basic-data-structure)
+    - [Managing Transactions with TransactionManager](#managing-transactions-with-transactionmanager)
+    - [Tick, Add, Exit, List](#transaction-management-features-tick-add-exit-list)
+    - [Delete, Set Budget Limit, Notifications, Summary](#transaction-management-features-delete-set-budget-limit-notifications-and-summary)
+    - [Alert, Set Priority, Convert Currency function](#transaction-management-features-alert-set-priority-and-convert-currency-function-)
+    - [Set Recurring Period](#transaction-management-features-set-recurring-period)
+    - [Search](#transaction-management-features-search)
+    - [Edit](#transaction-management-features-edit)
+    - [Remind Recurring Transactions](#transaction-management-features-remind-recurring-transactions)
+    - [Filter by date, Currency Conversion, Sort by date](#transaction-management-features-filter-by-date-currency-conversion-sort-by-date)
+  - **Goal**
+    - [Basic Data Structure](#financial-goal-basic-data-structure)
+    - [Create](#goal-management-features-create)
+    - [Integration with Transactions to Reflect Balance](#goal-implementation-integration-with-transactions-to-reflect-balance)
 - [Product Scope](#product-scope)
 - [User Stories](#user-stories)
 - [Non Functional Requirement](#non-functional-requirements)
@@ -359,10 +371,10 @@ interaction respectively. Drawing clear boundaries between parts of this feature
 
 ### Transaction Management Features: Filter by date, Currency Conversion, Sort by date
 
-`Faheem Akram` added the following functionalities to manage transactions:
-
+**Feature Description:** <br>
 * Upcoming Transactions (`getUpcomingTransactions`): Allows users to get transactions for an upcoming date
 * Convert Currency (`convertTo`): Allows users to change from one currency to another
+* Sort by date (`sortTransactions`): Sorts transactions by date
 
 ```Java
 public ArrayList<Transaction> sortTransactions(ArrayList<Transaction> transactions) {
@@ -404,18 +416,9 @@ public void getUpcomingTransactions(String period) {
 }
 ```
 
-**Design Consideration:**
+**Design Consideration:** <br>
 The ability to sort by and filter by date allows for the user to quickly find what the soonest transactions will be
 so that they can plan accordingly.
-
----
-
-
-### Transaction Management Features: Currency Conversion
-
-`Faheem Akram` added the following feature:
-
-* Sort by date (`sortTransactions`): Sorts transactions by date
 
 ```Java
 public void convertTo(Currency currency) {
@@ -425,7 +428,7 @@ this.currency = currency;
 }
 ```
 
-**Design Consideration:**
+**Design Consideration:** <br>
 
 This allows for users to effectively convert between different common currencies.
 
@@ -677,7 +680,7 @@ platform that promotes better money management without overwhelming users with c
 
 2. Add Transaction Using Inline Parameters
     * Steps:
-      1. Input the command with inline parameters (e.g., add d/Lunch a/15.50 c/Food t/2023-04-07).
+      1. Input the command with inline parameters (e.g. add d/Lunch a/15.50 c/Food t/2023-04-07).
       2. Verify that the parameters are parsed correctly.
     * Expected Results:
       1. A transaction with the specified details is added to the transactions list.
@@ -685,8 +688,60 @@ platform that promotes better money management without overwhelming users with c
       3. The storage is updated with the new transaction.
     * Edge Cases:
       1. Missing optional t/ field: Verify that the current date is used if date is not provided.
-      2. Incorrect or malformed parameters (e.g., add d/Lunch a/abc c/Food): Ensure appropriate error messages are displayed.
+      2. Incorrect or malformed parameters (e.g. add d/Lunch a/abc c/Food): Ensure appropriate error messages are displayed.
       3. Empty or blank parameter values: Verify that missing non-optional fields throw an InvalidCommand exception.
       
+3. Edit Transaction Using Inline Parameters
+    * Steps:
+      1. Add a transaction according to the instructions above.
+      2. Input command with inline parameters. (e.g. `edit desc 1 groceries`)
+      3. Verify that parameters are parsed correctly.
+    * Expected Results:
+      1. The transaction at the specified index is updated with the new information.
+      2. The UI displays the field changed at the target transaction.
+      3. The storage is updated with the updated transaction.
+    * Edge Cases:
+      1. Missing parameters
+      2. Invalid input type for index
+      3. Out-of-bounds index
+      4. Unrecognized attribute tags (e.g. `edit meow 2 cat`)
 
+4. Set Transaction to Recur
+    * Steps:
+        1. Add a transaction according to the instructions above.
+        2. Input command with inline parameters. (e.g. `recur 1/3`)
+        3. Verify that parameters are parsed correctly.
+    * Expected Results:
+        1. The transaction at the specified index is updated with the period.
+        2. The UI displays details of the updated transaction.
+        3. The storage is updated with the updated transaction.
+    * Edge Cases:
+        1. Missing parameters
+        2. Invalid input type for index or period
+        3. Out-of-bounds index
 
+5. Search Transactions by Description
+    * Steps:
+        1. Add a transaction according to the instructions above.
+        2. Input command with inline parameters. (e.g. `search dinner`)
+        3. Verify that parameters are parsed correctly.
+    * Expected Results:
+        1. Transactions whose description contains the search term are fetched.
+        2. The UI displays list of all fetched transactions.
+    * Edge Cases:
+        1. Missing parameters
+        2. Invalid input type for index or period
+        3. Out-of-bounds index
+
+6. Search Transactions by ID
+    * Steps:
+        1. Add a transaction according to the instructions above.
+        2. Input command with inline parameters. (e.g. `search id-1`)
+        3. Verify that parameters are parsed correctly.
+    * Expected Results:
+        1. Transaction with the specified ID is fetched.
+        2. The UI displays the fetched transaction.
+    * Edge Cases:
+        1. Misspelled `id-` prefix
+        2. Invalid input type for index or period
+        3. Out-of-bounds index
