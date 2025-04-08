@@ -264,9 +264,9 @@ public class Ui {
     }
     //@@author
 
-    public void printTransactions(ArrayList<Transaction> transactions) {
+    /*public void printTransactions(ArrayList<Transaction> transactions) {
         printLine();
-    }
+    }*/
 
 //@@author HalFentise
     public void printTransactions(ArrayList<Transaction> transactions) {
