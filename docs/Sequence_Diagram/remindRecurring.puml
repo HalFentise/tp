@@ -1,0 +1,44 @@
+@startuml
+
+actor User
+participant NoteUrSavings
+participant Transaction
+participant Ui
+participant TransactionManager
+
+== Remind Recurring Transactions ==
+User -> NoteUrSavings : Start program
+activate NoteUrSavings
+NoteUrSavings -> NoteUrSavings : Load data and welcome user
+NoteUrSavings -> TransactionManager : remindRecurringTransactions()
+activate TransactionManager
+loop for each transaction
+    TransactionManager -> Transaction : isDeleted()
+    activate Transaction
+    Transaction --> TransactionManager : isDeleted
+    TransactionManager -> Transaction : getRecurringPeriod()
+    Transaction --> TransactionManager : recurringPeriod
+    deactivate Transaction
+    alt !isDeleted && recurringPeriod > 0
+        TransactionManager -> TransactionManager : Add transaction to list
+    end
+end
+loop for each transaction in list
+    TransactionManager -> TransactionManager : Set date to next billing cycle
+end
+TransactionManager -> TransactionManager : Sort list by date
+TransactionManager -> Ui : printRecurringTransactions(list)
+activate Ui
+alt list is empty
+Ui -> TransactionManager : No transactions to print
+end
+Ui -> TransactionManager : List printed
+deactivate Ui
+TransactionManager -> NoteUrSavings : Reminder complete
+deactivate TransactionManager
+NoteUrSavings -> User : Logic cycle end, await user input
+deactivate NoteUrSavings
+
+
+@enduml
+

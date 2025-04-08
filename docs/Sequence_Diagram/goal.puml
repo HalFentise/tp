@@ -1,0 +1,104 @@
+@startuml
+
+actor User
+participant NoteUrSavings
+participant FinancialGoal
+participant Transaction
+participant Ui
+participant TransactionManager
+participant Parser
+
+== Goal ==
+User -> NoteUrSavings : Enter "goal" command
+activate NoteUrSavings
+NoteUrSavings -> Parser : parser(command)
+activate Parser
+Parser -> FinancialGoal : updateExpenses(transactions)
+activate FinancialGoal
+FinancialGoal -> TransactionManager : getTotalAmount()
+activate TransactionManager
+loop for each transaction
+    TransactionManager -> Transaction : isDeleted()
+    activate Transaction
+    Transaction --> TransactionManager : isDeleted
+    TransactionManager -> Transaction : getRecurringPeriod()
+    Transaction --> TransactionManager : recurringPeriod
+    alt !isDeleted && recurringPeriod > 0
+        TransactionManager -> Transaction : getDate()
+        Transaction --> TransactionManager : date
+        TransactionManager -> TransactionManager : Calculate number of past cycles
+        TransactionManager -> Transaction : getAmount()
+        Transaction --> TransactionManager : cycles * amount
+        deactivate Transaction
+        TransactionManager -> TransactionManager : Add product to sum
+    end
+end
+loop for each transaction
+    TransactionManager -> Transaction : isDeleted()
+    activate Transaction
+    Transaction --> TransactionManager : isDeleted
+    TransactionManager -> Transaction : getRecurringPeriod()
+    Transaction --> TransactionManager : recurringPeriod
+    deactivate Transaction
+    alt !isDeleted && recurringPeriod <= 0
+        TransactionManager -> Transaction : getAmount()
+        activate Transaction
+        Transaction --> TransactionManager : amount
+        deactivate Transaction
+        TransactionManager -> TransactionManager : Add amount to sum
+    end
+end
+return sum
+FinancialGoal -> Parser : Updated expenses
+Parser -> Parser : parseGoalCommands(command, ui, goal)
+alt attribute == target
+    Parser -> FinancialGoal : setTargetAmount(value)
+    FinancialGoal -> Parser : Target updated
+    Parser -> Ui : setGoalTarget(goal)
+    activate Ui
+    Ui -> Parser : Print set success
+    deactivate Ui
+else attribute == desc
+    Parser -> FinancialGoal : setDescription(value)
+    FinancialGoal -> Parser : Description updated
+    Parser -> Ui : setGoalDescription(goal)
+    activate Ui
+    Ui -> Parser : Print set success
+    deactivate Ui
+else attribute == title
+    Parser -> FinancialGoal : setGoal(value)
+    FinancialGoal -> Parser : Title updated
+    Parser -> Ui : setGoalTitle(goal)
+    activate Ui
+    Ui -> Parser : Print set success
+    deactivate Ui
+else attribute == status
+    alt goal not blank
+        Parser -> FinancialGoal : checkGoalStatus()
+        FinancialGoal -> Ui : printGoalStatus(balance, targetAmount)
+        activate Ui
+        return (balance >= targetAmount)
+        FinancialGoal -> FinancialGoal : Update isAchieved
+    end
+else attribute == new
+    FinancialGoal -> FinancialGoal : Create new goal
+else default
+    alt goal empty
+        FinancialGoal -> FinancialGoal : Create new goal
+    else goal not empty
+        FinancialGoal -> Ui : printGoal(goal)
+        activate Ui
+        Ui -> FinancialGoal : Goal printed
+        deactivate Ui
+    end
+end
+FinancialGoal -> Parser : Goal updated/checked
+deactivate FinancialGoal
+Parser -> NoteUrSavings : Command complete
+deactivate Parser
+NoteUrSavings -> User : Logic cycle end, await next input
+deactivate NoteUrSavings
+
+
+@enduml
+

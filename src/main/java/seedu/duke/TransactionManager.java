@@ -471,9 +471,6 @@ public class TransactionManager {
             return;
         }
         Transaction t = searchTransaction(id);
-        if (t == null) {
-            return;
-        }
 
         switch (type) {
         case 0:

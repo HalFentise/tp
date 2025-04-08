@@ -24,6 +24,9 @@ interface.
 
 ## Features
 
+> Before anything, note that case-sensitivity is not accounted for in command prefixes and most tags. <br>
+> Follow the exact formats given to ensure seamless usage!
+
 ### Adding an expense: `add`
 
 Adds an expense entry to the budget tracker.
