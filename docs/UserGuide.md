@@ -1,4 +1,4 @@
-# User Guide
+# User Guide 
 
 ## Introduction
 
@@ -23,9 +23,6 @@ interface.
 > Open CMD and run `java -jar [path you just copied]`.
 
 ## Features
-
-> Before anything, note that case-sensitivity is not accounted for in command prefixes and most tags. <br>
-> Follow the exact formats given to ensure seamless usage!
 
 ### Adding an expense: `add`
 
