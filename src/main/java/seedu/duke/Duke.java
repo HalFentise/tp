@@ -4,20 +4,20 @@ import ui.Ui;
 import parser.Parser;
 
 /**
- * The {@code Duke} class serves as the entry point of the Budget flow application.
+ * The {@code Duke} class serves as the entry point of the Budgetflow application.
  * It initializes all core components including UI, storage, transaction manager,
  * and financial goal. It also handles the main interaction loop for reading and
  * executing user commands.
  */
 public class Duke {
     /** Manages all transactions and budget logic. */
-    private final TransactionManager transactions;
+    private TransactionManager transactions;
 
     /** Handles user input and output. */
     private final Ui ui;
 
     /** Represents the user's financial goal. */
-    private final FinancialGoal goal;
+    private FinancialGoal goal;
 
     /** Handles loading and saving data from and to the disk. */
     private final Storage storage;
@@ -39,6 +39,7 @@ public class Duke {
         goal = storage.loadGoal();
 
         assert goal != null : "FinancialGoal should be initialized";
+        assert transactions != null : "TransactionManager should be initialized";
     }
 
     /**
@@ -71,3 +72,4 @@ public class Duke {
         new Duke().run();
     }
 }
+

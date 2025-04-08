@@ -8,7 +8,6 @@ import exceptions.InvalidCommand;
 import seedu.duke.*;
 import seedu.duke.budget.BudgetMode;
 import enums.Category;
-import ui.ConsoleFormatter;
 import ui.Ui;
 
 import java.util.Scanner;

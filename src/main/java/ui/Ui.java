@@ -290,14 +290,14 @@ public class Ui {
 
     public void unTickTransaction(Transaction transaction) {
         printLine();
-        System.out.println("I have un-ticked the following transaction:");
+        System.out.println("I un tick the following transaction:");
         printTransaction(transaction);
         printLine();
     }
 
     public void add(Transaction transaction) {
         printLine();
-        printCenteredTitle("Added the following transaction Successfully:");
+        printCenteredTitle("Added the following transaction Successful:");
         printLine();
         printTransaction(transaction);
         printLine();
@@ -349,46 +349,43 @@ public class Ui {
 
     public static void createGoalConfirm() {
         printLine();
-        ConsoleFormatter.printLeftAlignedLine("Want to set a new goal (Y/N)? ");
+        System.out.println("Want to set a new goal (Y/N)? ");
         printLine();
     }
 
     public static void createGoalName() {
-        printLine();
-        ConsoleFormatter.printLeftAlignedLine("Name of new goal:");
+        System.out.println("Name of new goal:");
         printLine();
     }
 
     public static void createGoalTarget() {
-        printLine();
-        ConsoleFormatter.printLeftAlignedLine("Target amount of new goal:");
+        System.out.println("Target amount of new goal:");
         printLine();
     }
 
     public static void createGoalDescription() {
         printLine();
-        ConsoleFormatter.printLeftAlignedLine("Description of new goal:");
+        System.out.println("Description of new goal:");
         printLine();
     }
 
     public static void createGoalSuccess() {
         printLine();
-        ConsoleFormatter.printLeftAlignedLine("Goal successfully created");
-        ConsoleFormatter.printLeftAlignedLine("Run 'goal' in the main menu to see it!");
+        System.out.println("Goal successfully created\nRun 'goal' to see it!");
         printLine();
     }
 
     public static void createGoalAborted() {
         printLine();
-        ConsoleFormatter.printLeftAlignedLine("Goal creation cancelled by user.");
+        System.out.println("Goal creation cancelled by user.");
         printLine();
     }
 
     public static void subFromSavings(double amount, double currentAmount) {
         printLine();
-        ConsoleFormatter.printLeftAlignedLine("Subtracted " + amount + " from your savings.");
+        System.out.println("Subtracted " + amount + " from your savings.");
         if (currentAmount < 0) {
-            ConsoleFormatter.printLeftAlignedLine("Warning. You currently have a negative balance.");
+            System.out.println("Warning. You currently have a negative balance.");
         }
         printLine();
     }
@@ -396,11 +393,10 @@ public class Ui {
     public static boolean printGoalStatus(double currentAmount, double targetAmount) {
         printLine();
         if (currentAmount >= targetAmount) {
-            ConsoleFormatter.printLeftAlignedLine("You have achieved the goal! Congratulations!");
+            System.out.println("You have achieved the goal! Congratulations!");
             return true;
         }
-        ConsoleFormatter.printLeftAlignedLine("You're " + currentAmount +
-                " out of " + targetAmount + ". Good luck!");
+        System.out.println("You're " + currentAmount + " out of " + targetAmount + ". Good luck!");
         printLine();
         return false;
     }
@@ -415,15 +411,14 @@ public class Ui {
         };
 
         printLine();
-        ConsoleFormatter.printLeftAlignedLine("Done! The " + type
-                + " of the target transaction has been updated to:");
-        ConsoleFormatter.printLeftAlignedLine((typeId == 3 ? Currency.valueOf(value).toString()
-                        : (typeId == 2) ? Double.parseDouble(value) : value).toString());
+        System.out.println("Done! The " + type
+                + " of the target transaction has been updated to:\n" + value);
         printLine();
     }
 
     public void printRecurringTransactions(ArrayList<Transaction> transactions) {
         printLine();
+
         List<Transaction> filtered = transactions.stream()
                 .filter(t -> t.getRecurringPeriod() > 0)
                 .collect(Collectors.toList());
@@ -437,9 +432,12 @@ public class Ui {
 
         printLine();
     }
-  
+
+
+
     public void printSavingOverview(FinancialGoal goal) {
         printCenteredTitle("Saving Overview");
+
         if (goal.isBlank()) {
             printLeftAlignedLine("You haven't set a saving goal yet.");
             printLeftAlignedLine("Tip: Use 'saving > set' to create one and start tracking!");
@@ -464,8 +462,10 @@ public class Ui {
         printLeftAlignedLine("Goal:         \"" + goal.getGoal() + "\"");
         printLeftAlignedLine("Description:  " + goal.getDescription());
         printLeftAlignedLine("");
-        printLeftAlignedLine("Status:       You're currently at:" + String.format("  %s  %.1f%% complete",
-                bar, percent * 100));
+
+        printLeftAlignedLine("Status:       You're currently at:"+String.format("  %s  %.1f%% complete",
+                bar.toString(), percent * 100, current, target));
+
         if (percent >= 1.0) {
             printLeftAlignedLine("Analysis:     Amazing! You've achieved your savings goal. Time to celebrate!");
         } else if (percent >= 0.75) {
@@ -477,6 +477,7 @@ public class Ui {
         } else {
             printLeftAlignedLine("Analysis:     You haven't started saving yet. Let's begin today!");
         }
+
         printLine();
     }
 
@@ -560,7 +561,6 @@ public class Ui {
         printLeftAlignedLine("Total Completed Amount (in SGD): " + String.format("%.2f", total));
         printLine();
     }
-
 
     /**
      * Prints the result of a currency conversion from one currency to another.
