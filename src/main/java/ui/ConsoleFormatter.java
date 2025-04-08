@@ -36,25 +36,27 @@ public class ConsoleFormatter {
             int maxWidth = firstLine ? firstLineContentWidth : otherLineContentWidth;
             if ((currentLine.length() + word.length() + 1) > maxWidth) {
 
-                printFormattedLine(currentLine.toString(), firstLine, contentWidth, indent);
+                printFormattedLine(currentLine.toString(), firstLine, indent);
                 currentLine = new StringBuilder(word); // 开新行
                 firstLine = false;
             } else {
-                if (currentLine.length() > 0) {
+                if (!currentLine.isEmpty()) {
                     currentLine.append(" ");
                 }
                 currentLine.append(word);
             }
         }
 
-        printFormattedLine(currentLine.toString(), firstLine, contentWidth, indent);
+
+        printFormattedLine(currentLine.toString(), firstLine, indent);
 
         if (text.isEmpty()) {
             System.out.println("|" + " ".repeat(contentWidth) + "|");
         }
     }
 
-    private static void printFormattedLine(String lineContent, boolean isFirstLine, int contentWidth, String indent) {
+    private static void printFormattedLine(String lineContent, boolean isFirstLine, String indent) {
+        int contentWidth = DEFAULT_WIDTH - 2;
         StringBuilder line = new StringBuilder();
         line.append("| ");
         if (!isFirstLine) {
@@ -83,4 +85,10 @@ public class ConsoleFormatter {
 
         System.out.println(line);
     }
+
+    public static void printfLeft(String format, Object... args) {
+        String formatted = String.format(format, args);
+        printLeftAlignedLine(formatted);
+    }
+
 }
