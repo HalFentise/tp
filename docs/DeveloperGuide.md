@@ -20,7 +20,7 @@ At this stage, no third-party libraries, external code, or documentation have be
 - [Implementation](#implementation)
   - [Transaction Basic Data Structure](#transaction-basic-data-structure)
   - [Managing Transactions with TransactionManager](#managing-transactions-with-transactionmanager)
-  - 
+  - [Tick,Add,Exit,List](#transaction-management-features-tick-add-exit-list)
 - [Product Scope](#product-scope)
 - [User Stories](#user-stories)
 - [Non Functional Requirement](#non-functional-requirements)

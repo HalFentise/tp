@@ -17,7 +17,7 @@ public class AlertCommand extends Command{
             ui.listNotifications(transactions.getTransactions());
             printLine();
             ui.listPriorities(transactions.getTransactions());
-            Ui.printRecurringTransactions(transactions.getRecurringTransactions());
+            ui.printRecurringTransactions(transactions.getRecurringTransactions());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

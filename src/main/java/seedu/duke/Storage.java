@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.time.format.DateTimeParseException;
 
@@ -23,6 +24,7 @@ import seedu.duke.budget.BudgetList;
  * Handles reading from and writing to files that store transaction, budget, goal, and settings data.
  * Responsible for persisting and loading user data from the local file system.
  */
+//@@author HalFentise
 public class Storage {
     /** Path to the main data folder. */
     private static final String FOLDER_PATH = "data";
@@ -214,6 +216,7 @@ public class Storage {
             return null;
         }
     }
+    //@@author
 
     // 获取当前最大 Transaction ID
     public int loadMaxTransactionId() {
@@ -292,14 +295,15 @@ public class Storage {
 
     // ================= BUDGET =================
 
-    public void saveBudgets(BudgetList budgetList) {
+    public void saveBudgets(BudgetList list, List<Transaction> transactions) {
         createDataFolderIfNeeded();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(BUDGET_FILE_PATH))) {
-            for (Budget b : budgetList.getAll()) {
+            for (Budget b : list.getAll()) {
+                double remaining = b.calculateRemaining(transactions);
                 writer.write(String.format("%s,%f,%f,%s,%s",
                         b.getName(),
                         b.getTotalAmount(),
-                        b.getRemainingAmount(),
+                        remaining,
                         b.getEndDate(),
                         b.getCategory()));
                 writer.newLine();
@@ -326,12 +330,10 @@ public class Storage {
 
                 String name = parts[0];
                 double total = Double.parseDouble(parts[1]);
-                double remaining = Double.parseDouble(parts[2]);
                 LocalDate endDate = LocalDate.parse(parts[3]);
                 Category category = Category.valueOf(parts[4]);
 
                 Budget budget = new Budget(name, total, endDate, category);
-                budget.deductAmount(total - remaining);
                 budgetList.add(budget);
             }
         } catch (IOException | NumberFormatException e) {
@@ -340,6 +342,7 @@ public class Storage {
         return budgetList;
     }
 
+//@@author HalFentise
     //Settings
 
     /**
@@ -399,7 +402,7 @@ public class Storage {
         Currency defaultCurrency = loadDefaultCurrency();
         transactions.setDefaultCurrency(defaultCurrency);
     }
-
+//@@author
 
     // Save budget limit
     public void saveBudgetLimit(double limit) {

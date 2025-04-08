@@ -1,6 +1,9 @@
 package seedu.duke.budget;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import seedu.duke.Transaction;
 import ui.Ui;
 import ui.ConsoleFormatter;
 
@@ -12,6 +15,7 @@ public class BudgetList {
     }
 
     public void add(Budget budget) {
+        budgets.removeIf(b -> b.getCategory() == budget.getCategory());
         budgets.add(budget);
     }
 
@@ -39,24 +43,26 @@ public class BudgetList {
         budgets.clear();
     }
 
-    public void printBudgetDetail(int index, Ui ui) {
+    public void printBudgetDetail(int index, Ui ui, List<Transaction> transactions) {
         if (index < 0 || index >= budgets.size()) {
             ui.showError("Invalid budget index.");
             return;
         }
 
         Budget b = budgets.get(index);
+        double remaining = b.calculateRemaining(transactions);
+
         ConsoleFormatter.printLine();
         System.out.println("🔍 Budget Details:");
         System.out.println("Name: " + b.getName());
         System.out.println("Target Amount: $" + b.getTotalAmount());
-        System.out.println("Remaining: $" + b.getRemainingAmount());
+        System.out.println("Remaining: $" + String.format("%.2f", remaining));
         System.out.println("End Date: " + b.getEndDate());
         System.out.println("Category: " + b.getCategory());
         ConsoleFormatter.printLine();
     }
 
-    public void printAllBudgets(Ui ui) {
+    public void printAllBudgets(Ui ui, List<Transaction> transactions) {
         final int totalWidth = 121;
         final String headerFormat = "| %-2s | %-14s | %9s | %-10s | %-10s |";
         final String rowFormat = "| %2d | %-14s | %9.2f | %-10s | %-10s |";

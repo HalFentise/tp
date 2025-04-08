@@ -1,20 +1,21 @@
 package seedu.duke.budget;
 
 import enums.Category;
+import enums.Currency;
+import seedu.duke.Transaction;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Budget {
     private String name;
     private double totalAmount;
-    private double remainingAmount;
     private LocalDate endDate;
     private Category category;
 
     public Budget(String name, double totalAmount, LocalDate endDate, Category category) {
         this.name = name;
         this.totalAmount = totalAmount;
-        this.remainingAmount = totalAmount;
         this.endDate = endDate;
         this.category = category;
     }
@@ -27,10 +28,6 @@ public class Budget {
         return totalAmount;
     }
 
-    public double getRemainingAmount() {
-        return remainingAmount;
-    }
-
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -41,11 +38,6 @@ public class Budget {
 
     public void addAmount(double amount) {
         this.totalAmount += amount;
-        this.remainingAmount += amount;
-    }
-
-    public void deductAmount(double amount) {
-        this.remainingAmount -= amount;
     }
 
     public void setName(String name) {
@@ -53,9 +45,7 @@ public class Budget {
     }
 
     public void setTotalAmount(double totalAmount) {
-        double difference = totalAmount - this.totalAmount;
         this.totalAmount = totalAmount;
-        this.remainingAmount += difference;  // adjust remaining accordingly
     }
 
     public void setEndDate(LocalDate endDate) {
@@ -66,11 +56,41 @@ public class Budget {
         this.category = category;
     }
 
+    public double calculateRemaining(List<Transaction> transactions) {
+        double spent = 0;
+        for (Transaction t : transactions) {
+            if (t.getCategory() == this.category &&
+                    t.getAmount() < 0 &&
+                    t.isCompleted()) {
+                double amountInSGD = t.getCurrency().convertTo(-t.getAmount(), Currency.SGD);
+                spent += amountInSGD;
+            }
+        }
+        return totalAmount - spent;
+    }
+
+
+
     @Override
     public String toString() {
         return String.format(
-                "Budget: %s\nCategory: %s\nEnd Date: %s\nTotal: $%.2f\nRemaining: $%.2f",
-                name, category, endDate, totalAmount, remainingAmount
+                "Budget: %s\nCategory: %s\nEnd Date: %s\nTotal: $%.2f",
+                name, category, endDate, totalAmount
         );
     }
+
+    public double calculateSpentAmount(List<Transaction> transactions) {
+        double total = 0;
+        for (Transaction t : transactions) {
+            if (!t.isDeleted() && t.isCompleted() &&
+                    t.getCategory() == this.category &&
+                    t.getAmount() < 0 &&
+                    t.getDate() != null &&
+                    t.getDate().isBefore(endDate)) {
+                total += Math.abs(t.getAmount());
+            }
+        }
+        return total;
+    }
+
 }

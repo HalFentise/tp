@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import constant.Constant;
@@ -12,6 +14,7 @@ import enums.Category;
 import enums.Currency;
 import enums.Status;
 import exceptions.InvalidCommand;
+import seedu.duke.budget.Budget;
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
 
@@ -47,7 +50,7 @@ public class TransactionManager {
     }
     //@@author
 
-    private int getNextAvailableId() {
+    public int getNextAvailableId() {
         currentMaxId += 1;
         if (storage != null) {
             storage.saveMaxTransactionId(currentMaxId);
@@ -103,6 +106,13 @@ public class TransactionManager {
     }
     //@@author
 
+    //@@author HalFentise
+    /**
+     * Adds a new transaction to the system.
+     *
+     * @param transaction the {@code Transaction} object to be added
+     * @return This method does not return any value.
+     */
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
         int id = transaction.getId();
@@ -114,6 +124,15 @@ public class TransactionManager {
         }
     }
 
+    /**
+     * Adds a new transaction with the specified details.
+     *
+     * @param description the description of the transaction
+     * @param amount the amount of the transaction
+     * @param category the category of the transaction
+     * @param date the date of the transaction; if {@code null}, the current date is used
+     * @return {@code true} if the transaction was successfully added
+     */
     public boolean addTransaction(String description, double amount, Category category, LocalDate date) {
         int id = getNextAvailableId();
         LocalDate now = LocalDate.now();
@@ -124,11 +143,8 @@ public class TransactionManager {
             transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
         }
 
-        if (isBudgetSet && (getTotalTransactionAmount() + amount > budgetLimit)) {
-            return false;
-        }
-
         transactions.add(transaction);
+
         if (id > currentMaxId) {
             currentMaxId = id;
             if (storage != null) {
@@ -137,6 +153,39 @@ public class TransactionManager {
         }
         return true;
     }
+
+    //@@author
+
+    public boolean isTransactionAllowedByBudget(Transaction t) {
+        if (t.getAmount() >= 0) {
+            return true;
+        }
+
+        for (seedu.duke.budget.Budget b : budgetList.getAll()) {
+            if (b.getCategory() == t.getCategory()) {
+                if (t.getDate().isAfter(b.getEndDate())) {
+                    return true;
+                }
+
+                double spent = 0;
+                for (Transaction existing : getTransactions()) {
+                    if (!existing.isDeleted() && existing.getCategory() == t.getCategory() && existing.getAmount() < 0
+                            && !existing.getDate().isAfter(b.getEndDate())) {
+                        spent += existing.getCurrency().convertTo(-existing.getAmount(), Currency.SGD);
+                    }
+                }
+
+                double newAmountSGD = t.getCurrency().convertTo(-t.getAmount(), Currency.SGD);
+
+                return spent + newAmountSGD <= b.getTotalAmount();
+            }
+        }
+
+        return true;
+    }
+
+
+
 
     public ArrayList<Transaction> getTransactions() {
         ArrayList<Transaction> existTransactions = new ArrayList<>();
@@ -167,17 +216,21 @@ public class TransactionManager {
         double totalTransactionAmount = getTotalTransactionAmount();
         setBudgetLimit(budgetLimit);
         setBudgetSet(true);
-
         if (storage != null) {
             storage.saveBudgetLimit(budgetLimit);
         }
-
         System.out.println("Budget limit set to " + budgetLimit + " " + defaultCurrency);
         System.out.println("The remaining Budget amount is " +
                 (budgetLimit - totalTransactionAmount) + " " + defaultCurrency + "\n");
     }
 
+
     //@@author
+    /**
+     * Clears all transactions and budgets from the system.
+     *
+     * @return This method does not return any value.
+     */
     public void clear() {
         transactions.clear();
         currentMaxId = 0;
@@ -185,6 +238,13 @@ public class TransactionManager {
         budgetList.clear();
     }
 
+    /**
+     * Searches for a transaction by its unique ID.
+     *
+     * @param id the unique ID of the transaction to search for
+     * @return the {@code Transaction} object matching the specified ID and not marked as deleted,
+     *         or {@code null} if no such transaction is found
+     */
     public Transaction searchTransaction(int id) {
         for (Transaction transaction : transactions) {
             if (transaction.getId() == id && !transaction.isDeleted()) {
@@ -193,6 +253,8 @@ public class TransactionManager {
         }
         return null;
     }
+
+
 
     //@@author yangyi-zhu
     /**
@@ -250,7 +312,8 @@ public class TransactionManager {
     public void remindRecurringTransactions() {
         ArrayList<Transaction> upcoming = getRecurringTransactions();
         if (!upcoming.isEmpty()) {
-            Ui.printRecurringTransactions(upcoming);
+            Ui ui = new Ui();
+            ui.printRecurringTransactions(upcoming);
         }
     }
 
@@ -294,10 +357,17 @@ public class TransactionManager {
     }
     //@@author
 
+    //@@author HalFentise
     public void tickTransaction(int id) throws Exception {
         Transaction transaction = searchTransaction(id);
         if (transaction != null) {
             transaction.complete();
+
+            if (!isTransactionAllowedByBudget(transaction)) {
+                System.out.println("Warning: After completing this transaction, it may exceed your budget limit.");
+            }
+
+            checkBudgetOverspending(transaction);
         } else {
             throw new InvalidCommand("Transaction not found! Please type in a valid id");
         }
@@ -311,6 +381,8 @@ public class TransactionManager {
             throw new InvalidCommand("Transaction not found! Please type in a valid id");
         }
     }
+
+    //@@author
 
     //@@author yangyi-zhu
     /**
@@ -485,4 +557,66 @@ public class TransactionManager {
     public BudgetList getBudgetList() {
         return budgetList;
     }
+
+    public Map<Category, Double> getCompletedAmountPerCategory() {
+        Map<Category, Double> result = new HashMap<>();
+        for (Transaction t : transactions) {
+            if (!t.isDeleted() && t.isCompleted()) {
+                double amt = t.getCurrency().convertTo(t.getAmount(), Currency.SGD);
+                result.put(t.getCategory(), result.getOrDefault(t.getCategory(), 0.0) + amt);
+            }
+        }
+        return result;
+    }
+
+    public int[] getCompletionStats() {
+        int complete = 0, incomplete = 0;
+        for (Transaction t : transactions) {
+            if (!t.isDeleted()) {
+                if (t.isCompleted()) complete++;
+                else incomplete++;
+            }
+        }
+        return new int[]{complete, incomplete};
+    }
+
+    public double getCurrentBalanceInSGD() {
+        double balance = 0;
+        for (Transaction t : transactions) {
+            if (!t.isDeleted() && t.isCompleted()) {
+                double amountInSGD = t.getCurrency().convertTo(t.getAmount(), Currency.SGD);
+                balance += amountInSGD;
+            }
+        }
+        return balance;
+    }
+
+    public void checkBudgetOverspending(Transaction t) {
+        if (!t.isCompleted()) return;
+        if (t.getAmount() >= 0) return;
+
+        for (Budget budget : budgetList.getAll()) {
+            if (budget.getCategory() != t.getCategory()) {
+                continue;
+            }
+
+            if (t.getDate() != null && !t.getDate().isBefore(budget.getEndDate())) {
+                return;
+            }
+
+            double totalSpent = budget.calculateSpentAmount(getTransactions());
+
+            double remaining = budget.getTotalAmount() - totalSpent;
+
+            if (Math.abs(t.getAmount()) > remaining) {
+                double overspent = Math.abs(t.getAmount()) - remaining;
+                System.out.printf("Warning: You have overspent your budget '%s' by $%.2f%n",
+                        budget.getName(), overspent);
+            }
+
+            return;
+        }
+    }
+
+
 }

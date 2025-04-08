@@ -17,6 +17,12 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
+
+import static constant.Constant.*;
+import enums.Currency;
+import enums.Category;
+
 
 public class Ui {
     private final Scanner scanner;
@@ -51,36 +57,44 @@ public class Ui {
     }
 
     public void help() {
-        printCenteredTitle("Help");
-        printLeftAlignedLine("add: Adds a new transaction");
-        printLeftAlignedLine("  Usage: add d/<description> a/<amount> c/<category>");
-        printLeftAlignedLine("  Example: add 'Grocery Shopping' 50.0 SGD Groceries");
-        printLeftAlignedLine("           2025-04-01 Pending");
-        printLeftAlignedLine("");
-        printLeftAlignedLine("delete: Deletes an existing transaction by ID");
-        printLeftAlignedLine("  Usage: delete <transaction_id>");
-        printLeftAlignedLine("  Example: delete 1");
-        printLeftAlignedLine("");
-        printLeftAlignedLine("list: Lists all transactions");
-        printLeftAlignedLine("  Usage: list");
-        printLeftAlignedLine("  Example: list");
-        printLeftAlignedLine("");
-        printLeftAlignedLine("search: Searches transactions based on a query (description)");
-        printLeftAlignedLine("  Usage: search <query>");
-        printLeftAlignedLine("  Example: search 'Groceries'");
-        printLeftAlignedLine("");
-        printLeftAlignedLine("update: edit an existing transaction's details");
-        printLeftAlignedLine("  Usage: edit <transaction_id>");
-        printLeftAlignedLine("         <description|amount|currency|category|status>");
-        printLeftAlignedLine("         <new_value>");
-        printLeftAlignedLine("  Example: edit 1 description 'Monthly Groceries'");
-        printLeftAlignedLine("");
-        printLeftAlignedLine("remind: Sets up reminders for recurring transactions");
-        printLeftAlignedLine("  Usage: remind");
-        printLeftAlignedLine("  Example: remind");
-        printLeftAlignedLine("");
-        printLeftAlignedLine("exit: Exits the application");
-        printLeftAlignedLine("  Usage: exit");
+        printCenteredTitle("NoteUrSavings - Help Menu");
+
+        printLeftAlignedLine("General Commands:");
+        printLeftAlignedLine("  help                - Show this help menu");
+        printLeftAlignedLine("  exit                - Exit the application");
+
+        printLine();
+        printLeftAlignedLine("Transaction Commands:");
+        printLeftAlignedLine("  add                 - Start guided wizard to add a transaction");
+        printLeftAlignedLine("  edit                - Edit a transaction step by step (wizard)");
+        printLeftAlignedLine("  status              - Mark/unmark transaction complete/incomplete");
+        printLeftAlignedLine("  list                - Show all transactions");
+        printLeftAlignedLine("  view <id>           - View full details of a specific transaction");
+        printLeftAlignedLine("  search <text>       - Search transactions by keyword");
+        printLeftAlignedLine("  delete <id>         - Delete a transaction by ID");
+
+        printLine();
+        printLeftAlignedLine("Statistics & Balance:");
+        printLeftAlignedLine("  stats               - Show overview of your finances by category/status");
+        printLeftAlignedLine("  balance             - Show total balance (based on completed transactions)");
+        printLeftAlignedLine("  currency            - View all exchange rates to SGD");
+        printLeftAlignedLine("  currency XXX RATE   - Update exchange rate for currency XXX (e.g. USD 0.75)");
+
+        printLine();
+        printLeftAlignedLine("Saving Mode:");
+        printLeftAlignedLine("  saving              - Enter interactive Saving Mode");
+        printLeftAlignedLine("    - set              - Create or update saving goal");
+        printLeftAlignedLine("    - list             - Show saving goal details");
+        printLeftAlignedLine("    - contribute a/X   - Add funds from balance (simulate expense)");
+        printLeftAlignedLine("    - deduct a/X       - Withdraw from savings (simulate income)");
+        printLeftAlignedLine("    - exit             - Return to main menu");
+
+        printLine();
+        printLeftAlignedLine("Budget Mode:");
+        printLeftAlignedLine("  budget              - Enter interactive Budget Mode (not detailed here)");
+
+        printLine();
+        printCenteredLine("Type commands directly. Fields will be prompted in wizard mode.");
         printLine();
     }
 
@@ -252,6 +266,10 @@ public class Ui {
 
     public void printTransactions(ArrayList<Transaction> transactions) {
         printLine();
+    }
+
+//@@author HalFentise
+    public void printTransactions(ArrayList<Transaction> transactions) {
         if (transactions.isEmpty()) {
             System.out.println("No transaction found.");
             printLine();
@@ -334,6 +352,17 @@ public class Ui {
         int rightPadding = contentWidth - sidePadding - content.length();
         String line = "| " + " ".repeat(sidePadding) + content + " ".repeat(Math.max(0, rightPadding)) + " |";
         System.out.println(line);
+    }
+
+    //@@author HalFentise
+    private String trimToFit(String content, int maxLength) {
+        if (content.length() <= maxLength) {
+            return content;
+        } else if (maxLength >= 3) {
+            return content.substring(0, maxLength - 3) + "...";
+        } else {
+            return content.substring(0, maxLength);
+        }
     }
 
     public void tickTransaction(Transaction transaction) {
