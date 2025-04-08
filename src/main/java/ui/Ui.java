@@ -1,14 +1,21 @@
 package ui;
 
-import static ui.ConsoleFormatter.*;
+import static ui.ConsoleFormatter.printLine;
+import static ui.ConsoleFormatter.printCenteredLine;
+import static ui.ConsoleFormatter.printCenteredTitle;
+import static ui.ConsoleFormatter.printLeftAlignedLine;
 
-import enums.Priority;
+import enums.Category;
+import enums.Currency;
 import seedu.duke.FinancialGoal;
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+import java.util.List;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
@@ -25,9 +32,17 @@ public class Ui {
     }
 
     public String readCommand() {
-        System.out.print(">");
-        return scanner.nextLine();
+        try {
+            if (!scanner.hasNextLine()) {
+                return "";
+            }
+            return scanner.nextLine();
+        } catch (NoSuchElementException e) {
+            System.out.println("Error: No input found");
+            return "";
+        }
     }
+
 
     public void printWelcomeMessage() {
         printLine();
@@ -83,7 +98,6 @@ public class Ui {
         printLine();
     }
 
-
     public void printExit() {
         printLine();
         printCenteredLine("Goodbye! Hope to see you again!");
@@ -92,170 +106,240 @@ public class Ui {
 
     public void showError(String message) {
         printLine();
-        printLeftAlignedLine("Error: " + message);
-        printLine();
-    }
-
-    public void printDeleteTask(Transaction transaction, int count) {
-        printLine();
-        printCenteredTitle("Transaction Deleted");
-        printTransactionsTable(List.of(transaction));
-        printCenteredLine("Now you have " + count + " transactions in the list.");
+        printLeftAlignedLine("Failed: " + message);
         printLine();
     }
 
 
-    public void PrintBudgetLimit(TransactionManager transaction) {
+    //@@author Lukapeng77
+
+    /**
+     * Prints a message indicating a transaction has been deleted, along with the updated transaction count.
+     *
+     * @param transaction The transaction that was deleted.
+     * @param count       The number of transactions remaining after deletion.
+     */
+    public static void printDeleteTask(Transaction transaction, int count) {
         printLine();
-        if (transaction.getTransactions().isEmpty()) {
-            System.out.println("Please add a transaction first before you set the budget!");
-        } else {
-            double total = transaction.getTotalTransactionAmount();
-            transaction.checkBudgetLimit(transaction.getBudgetLimit());
-        }
+        System.out.println("Noted. I've removed this transaction:");
+        System.out.println(transaction);
+        System.out.printf("Now you have %d transactions in the list.%n", count);
         printLine();
     }
 
+    /**
+     * Prints the result of a currency conversion from one currency to another.
+     *
+     * @param originalAmount  The original amount before conversion.
+     * @param from            The original currency.
+     * @param convertedAmount The amount after conversion.
+     * @param to              The target currency.
+     */
+    public void printConversion(double originalAmount, Currency from, double convertedAmount, Currency to) {
+        printLine();
+        System.out.printf("Converted %.2f %s to %.2f %s%n",
+                originalAmount, from.name(), convertedAmount, to.name());
+        printLine();
+    }
+
+    //@@author
+
+    /**
+     * Prints a confirmation message indicating that all transactions have been cleared.
+     */
+    public void printClear() {
+        printLine();
+        System.out.println("All transactions have been cleared!");
+        printLine();
+    }
+
+    //@@author Lukapeng77
+
+    /**
+     * Prints a list of upcoming transactions that match the given description and have a due date.
+     *
+     * @param upcomingTransactions A list of upcoming transactions.
+     * @param description          The description to filter transactions by.
+     */
     public void listNotification(ArrayList<Transaction> upcomingTransactions, String description) {
         printLine();
-
-        List<Transaction> filtered = upcomingTransactions.stream()
-                .filter(t -> !t.isCompleted()
-                        && t.getDescription().equalsIgnoreCase(description)
-                        && t.getDate() != null)
-                .collect(Collectors.toList());
-
-        if (filtered.isEmpty()) {
-            System.out.println("No upcoming incomplete transactions with description: " + description);
+        if (upcomingTransactions.isEmpty()) {
+            System.out.println("No upcoming expenses.");
         } else {
-            printCenteredTitle("Upcoming Incomplete Transactions");
-            printTransactionsTable(filtered);
+            System.out.println("Upcoming Expenses:");
+            for (Transaction transaction : upcomingTransactions) {
+                if (transaction.getDescription().equals(description) && transaction.getDate() != null) {
+                    System.out.println("- " + transaction.getDescription() + " of " + transaction.getAmount() + " "
+                            + transaction.getCurrency() + " in category " + transaction.getCategory() + " is due on "
+                            + transaction.getDate());
+                }
+            }
         }
-
         printLine();
     }
 
+    /**
+     * Prints a list of all upcoming transactions with due dates.
+     *
+     * @param upcomingTransactions A list of upcoming transactions.
+     */
     public void listNotifications(ArrayList<Transaction> upcomingTransactions) {
-        if (upcomingTransactions == null || upcomingTransactions.isEmpty()) {
-            System.out.println("📭 There are no upcoming transactions for now.");
+        if (upcomingTransactions.isEmpty()) {
+            System.out.println("There are no upcoming transactions for now.");
             return;
         }
-
-        List<Transaction> filtered = upcomingTransactions.stream()
-                .filter(t -> !t.isCompleted() && t.getDate() != null)
-                .collect(Collectors.toList());
-
-        if (filtered.isEmpty()) {
-            System.out.println("No upcoming *incomplete* transactions for now.");
-            return;
+        boolean hasUpcoming = false;
+        for (Transaction transaction : upcomingTransactions) {
+            if (transaction.getDate() != null) {
+                if (!hasUpcoming) {
+                    System.out.println("Upcoming Expenses:");
+                    hasUpcoming = true;
+                }
+                System.out.println("- " + transaction.getDescription() + " of " + transaction.getAmount() + " "
+                        + transaction.getCurrency() + " in category " + transaction.getCategory() + " is due on "
+                        + transaction.getDate());
+            }
         }
-
-        printCenteredTitle("Upcoming Incomplete Transactions");
-        printTransactionsTable(filtered);
+        if (!hasUpcoming) {
+            System.out.println("No upcoming expenses for now.");
+        }
     }
 
-
-    public void PrintPriority(ArrayList<Transaction> transactions, int index) {
+    /**
+     * Prints the priority setting for a specified transaction.
+     *
+     * @param transactions The list of transactions.
+     * @param index        The index of the transaction whose priority is being set.
+     */
+    public void printPriority(ArrayList<Transaction> transactions, int index) {
         printLine();
-        if (transactions.isEmpty() || index < 0 || index >= transactions.size()) {
+        if (transactions.isEmpty()) {
             System.out.println("Please add a transaction first before you set the priority!");
         } else {
-            Transaction t = transactions.get(index);
-            System.out.println("Priority set to " + t.getPriority() + " for the current transaction:");
-            printTransactionsTable(List.of(t));
+            System.out.println("Priority is set to " +
+                    transactions.get(index).getPriority() + " for current transaction.");
         }
         printLine();
     }
 
-
-    public void listPriorities(ArrayList<Transaction> transactions) {
-        List<Transaction> highPriority = transactions.stream()
-                .filter(t -> t.getPriority() == Priority.HIGH)
-                .collect(Collectors.toList());
-
-        printLine();
-
-        if (highPriority.isEmpty()) {
-            printCenteredLine("No high priority transactions found.");
-        } else {
-            printCenteredTitle("High Priority Transactions");
-            printTransactionsTable(highPriority);
+    /**
+     * Lists all transactions that have a high priority setting.
+     *
+     * @param upcomingTransactions A list of upcoming transactions to check for high priority.
+     */
+    public void listPriorities(ArrayList<Transaction> upcomingTransactions) {
+        String defaultPriority = "HIGH";
+        boolean hasHighPriority = false;
+        for (Transaction transaction : upcomingTransactions) {
+            if (transaction.getPriority() != null && transaction.
+                    getPriority().toString().equalsIgnoreCase(defaultPriority)) {
+                if (!hasHighPriority) {
+                    System.out.println("Following transactions have the high priority:");
+                    hasHighPriority = true;
+                }
+                System.out.println("- " + transaction.getDescription() + " " + transaction.getAmount() + " "
+                        + transaction.getCurrency() + " in category " + transaction.getCategory());
+            }
         }
-
-        printLine();
+        if (!hasHighPriority) {
+            System.out.println("No high priority transactions found.");
+        }
     }
+
+    /**
+     * Prints a summary of transactions between a given date range, including total expenses.
+     *
+     * @param transactions A list of transactions to summarize.
+     * @param start        The start date of the summary period.
+     * @param end          The end date of the summary period.
+     */
+    public void printSummary(List<Transaction> transactions, LocalDate start, LocalDate end) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        System.out.println("Expense Summary from " + start.format(formatter) + " to " + end.format(formatter));
+        System.out.println("--------------------------------------------------");
+        for (Transaction t : transactions) {
+            System.out.printf("%s | %s | %.2f\n", t.getDate(), t.getDescription(), t.getAmount());
+        }
+        System.out.println("--------------------------------------------------");
+    }
+    //@@author
+
+    /*public void printTransactions(ArrayList<Transaction> transactions) {
+        printLine();
+    }*/
 
 //@@author HalFentise
     public void printTransactions(ArrayList<Transaction> transactions) {
         if (transactions.isEmpty()) {
-            printCenteredTitle("View Transaction");
-            printCenteredLine("No transaction found.");
+            System.out.println("No transaction found.");
             printLine();
             return;
         }
+        System.out.println("Here is the list of transactions:");
         printTransactionsTable(transactions);
+        printLine();
     }
 
     public void printTransaction(Transaction transaction) {
-        viewTransactionDetail(transaction);
+        System.out.println(transaction);
     }
-//@@author
-    public void printTransactionsTable(List<Transaction> transactions) {
-        final int TOTAL_WIDTH = 121;
-        final String INNER_HEADER_FORMAT = "| %-2s | %-12s | %9s | %-8s | %-9s | %-10s | %-11s | %-8s |";
-        final String INNER_ROW_FORMAT    = "| %2d | %-12s | %9s | %-8s | %-9s | %-10s | %-11s | %-8s |";
 
-        String sampleHeader = String.format(INNER_HEADER_FORMAT,
+    public void printTransactionsTable(List<Transaction> transactions) {
+        final int totalWidth = 121;
+        final String innerHeaderFormat = "| %-2s | %-15s | %-9s | %-19s | %-9s | %-10s | %-9s | %-8s |";
+        final String innerRowFormat = "| %2d | %-15s | %-9.2f | %-19s | %-9s | %-10s | %-9s | %-8s |";
+
+        String sampleHeader = String.format(innerHeaderFormat,
                 "ID", "Description", "Amount", "Currency", "Category", "Date", "Completed", "Priority");
 
-        int tableWidth = sampleHeader.length();
-        int spaceInsideBox = TOTAL_WIDTH - 4;
+        int tableWidth = sampleHeader.length(); // ~64
+        int spaceInsideBox = totalWidth - 4;   // 外框两侧 || 各占2
         int sidePadding = (spaceInsideBox - tableWidth) / 2;
 
-        printCenteredTitle("View Transaction");
+        // 打印顶边框
+        printLine();
 
         if (transactions.isEmpty()) {
-            printCenteredLine("No transaction found.");
+            printLeftAlignedLine("No transaction found.");
             printLine();
             return;
         }
 
+        // 打印表头
         printTableLine(sampleHeader, sidePadding);
+
+        // 表头下横线
         printTableLine("-".repeat(tableWidth), sidePadding);
 
+        // 每一行打印
         for (Transaction t : transactions) {
-            String completedMark = t.isCompleted() ? " [ YES ] " : " [ NO ] ";
-
-            // ✨ 内容字段超长截断
-            String desc = trimToFit(t.getDescription(), 12);
-            String curr = trimToFit(t.getCurrency().toString(), 8);
-            String cat  = trimToFit(t.getCategory().toString(), 9);
-            String date = trimToFit(t.getDate() == null ? "N/A" : t.getDate().toString(), 10);
-            String prio = trimToFit(t.getPriority().toString(), 8);
-
-            // ✨ 数值字段过大转科学计数法
-            String amountFormatted;
-            if (Math.abs(t.getAmount()) >= 1e7 || Math.abs(t.getAmount()) < 0.01 && t.getAmount() != 0) {
-                amountFormatted = String.format("%9.2E", t.getAmount());
-            } else {
-                amountFormatted = String.format("%9.2f", t.getAmount());
-            }
-
-            String row = String.format(INNER_ROW_FORMAT,
+            String completedMark = t.getRecurringPeriod() > 0 ? "  R (" + t.getRecurringPeriod() + ")"
+                    : t.isCompleted() ? "    Y" : "    N";
+            String row = String.format(innerRowFormat,
                     t.getId(),
-                    desc,
-                    amountFormatted,
-                    curr,
-                    cat,
-                    date,
+                    limitWithEllipsis(t.getDescription()),
+                    t.getAmount(),
+                    t.getCurrency().toString(),
+                    t.getCategory().toString(),
+                    t.getDate() == null ? "N/A" : t.getDate().toString(),
                     completedMark,
-                    prio
-            );
+                    t.getPriority().toString());
 
             printTableLine(row, sidePadding);
-        }
 
+        }
+        // 打印底边框
         printLine();
+    }
+
+    private static String limitWithEllipsis(String input) {
+        if (input == null) {
+            return "";
+        }
+        if (input.length() <= 15) {
+            return input;
+        }
+        return input.substring(0, 15 - 3) + "...";
     }
 
 
@@ -263,8 +347,8 @@ public class Ui {
      * 打印表格行，包裹 || 并居中填充空格
      */
     public void printTableLine(String content, int sidePadding) {
-        final int TOTAL_WIDTH = 121;
-        int contentWidth = TOTAL_WIDTH - 4;
+        final int totalWidth = 121;
+        int contentWidth = totalWidth - 4;
         int rightPadding = contentWidth - sidePadding - content.length();
         String line = "| " + " ".repeat(sidePadding) + content + " ".repeat(Math.max(0, rightPadding)) + " |";
         System.out.println(line);
@@ -297,12 +381,18 @@ public class Ui {
 
     public void add(Transaction transaction) {
         printLine();
-        printCenteredTitle("Added the following transaction Successful:");
-        printLine();
+        System.out.println("I have added the following transaction to the list:");
         printTransaction(transaction);
         printLine();
     }
-//@@author
+
+    //@@author yangyi-zhu
+
+    /**
+     * Prints a message based on whether the search was by index or by keyword.
+     *
+     * @param isIndex True if the search was by transaction index; false if by keyword.
+     */
     public void search(boolean isIndex) {
         if (isIndex) {
             System.out.println("I have searched the transaction with the given index.");
@@ -311,6 +401,12 @@ public class Ui {
         }
     }
 
+    /**
+     * Sets the recurring period for a given transaction and prints confirmation.
+     *
+     * @param transaction     The transaction to modify.
+     * @param recurringPeriod The number of days for recurrence; set to 0 or less to disable.
+     */
     public void setPeriod(Transaction transaction, int recurringPeriod) {
         printLine();
         if (recurringPeriod > 0) {
@@ -323,64 +419,108 @@ public class Ui {
         printLine();
     }
 
+    /**
+     * Prints the details of a financial goal.
+     *
+     * @param goal The goal to be printed.
+     */
     public void printGoal(FinancialGoal goal) {
         printLine();
         System.out.println(goal);
         printLine();
     }
 
+    /**
+     * Prints a confirmation message for updating a goal's target amount.
+     *
+     * @param goal The goal to update.
+     */
     public void setGoalTarget(FinancialGoal goal) {
         printLine();
         System.out.println("I have updated your target to: " + goal.getTargetAmount());
         printLine();
     }
 
+    /**
+     * Prints a confirmation message for updating a goal's description.
+     *
+     * @param goal The goal to update.
+     */
     public void setGoalDescription(FinancialGoal goal) {
         printLine();
         System.out.println("I have updated your description to:\n" + goal.getDescription());
         printLine();
     }
 
+    /**
+     * Prints a confirmation message for updating a goal's title/name.
+     *
+     * @param goal The goal to update.
+     */
     public void setGoalTitle(FinancialGoal goal) {
         printLine();
         System.out.println("I have updated your goal to:\n" + goal.getGoal());
         printLine();
     }
 
+    /**
+     * Prompts the user to confirm whether they want to create a new goal.
+     */
     public static void createGoalConfirm() {
         printLine();
         System.out.println("Want to set a new goal (Y/N)? ");
         printLine();
     }
 
+    /**
+     * Prompts the user to input the name of a new goal.
+     */
     public static void createGoalName() {
         System.out.println("Name of new goal:");
         printLine();
     }
 
+    /**
+     * Prompts the user to input the target amount of a new goal.
+     */
     public static void createGoalTarget() {
         System.out.println("Target amount of new goal:");
         printLine();
     }
 
+    /**
+     * Prompts the user to input the description of a new goal.
+     */
     public static void createGoalDescription() {
         printLine();
         System.out.println("Description of new goal:");
         printLine();
     }
 
+    /**
+     * Displays a message indicating the goal has been successfully created.
+     */
     public static void createGoalSuccess() {
         printLine();
         System.out.println("Goal successfully created\nRun 'goal' to see it!");
         printLine();
     }
 
+    /**
+     * Displays a message indicating the goal creation was aborted.
+     */
     public static void createGoalAborted() {
         printLine();
         System.out.println("Goal creation cancelled by user.");
         printLine();
     }
 
+    /**
+     * Subtracts a specified amount from savings and displays a warning if the balance is negative.
+     *
+     * @param amount        The amount to subtract.
+     * @param currentAmount The resulting balance after subtraction.
+     */
     public static void subFromSavings(double amount, double currentAmount) {
         printLine();
         System.out.println("Subtracted " + amount + " from your savings.");
@@ -390,6 +530,13 @@ public class Ui {
         printLine();
     }
 
+    /**
+     * Checks and prints the goal status based on current savings and target.
+     *
+     * @param currentAmount The current balance saved.
+     * @param targetAmount  The savings target to reach.
+     * @return True if the goal is achieved; false otherwise.
+     */
     public static boolean printGoalStatus(double currentAmount, double targetAmount) {
         printLine();
         if (currentAmount >= targetAmount) {
@@ -401,40 +548,63 @@ public class Ui {
         return false;
     }
 
+    /**
+     * Prints a confirmation message after editing a transaction.
+     *
+     * @param value  The new value of the attribute.
+     * @param typeId The type of attribute edited: 0=desc, 1=category, 2=amount, 3=currency.
+     */
     public void printEdited(String value, int typeId) {
-        String type = switch (typeId) {
-            case 0 -> "description";
-            case 1 -> "category";
-            case 2 -> "amount";
-            case 3 -> "currency";
-            default -> "";
-        };
-
-        printLine();
-        System.out.println("Done! The " + type
-                + " of the target transaction has been updated to:\n" + value);
-        printLine();
-    }
-
-    public void printRecurringTransactions(ArrayList<Transaction> transactions) {
-        printLine();
-
-        List<Transaction> filtered = transactions.stream()
-                .filter(t -> t.getRecurringPeriod() > 0)
-                .collect(Collectors.toList());
-
-        if (filtered.isEmpty()) {
-            printCenteredLine("No upcoming recurring payments found.");
-        } else {
-            printCenteredTitle("Upcoming Recurring Transactions");
-            printTransactionsTable(filtered);
+        String type;
+        switch (typeId) {
+        case 0:
+            type = "description";
+            break;
+        case 1:
+            type = "category";
+            break;
+        case 2:
+            type = "amount";
+            break;
+        case 3:
+            type = "currency";
+            break;
+        default:
+            type = "";
         }
 
         printLine();
+        System.out.println("Done! The " + type
+                + " of the target transaction has been updated to:\n"
+                + (typeId == 3 ? Currency.valueOf(value).toString()
+                : (typeId == 2) ? Double.parseDouble(value) : value));
+        printLine();
     }
 
+    /**
+     * Displays a list of upcoming recurring transactions, if any.
+     *
+     * @param transactions A list of recurring transactions.
+     */
+    public static void printRecurringTransactions(ArrayList<Transaction> transactions) {
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("E, dd MMM yyyy");
+        printLine();
+        if (transactions.isEmpty()) {
+            System.out.println("You have no recurring payments ahead.");
+            printLine();
+            return;
+        }
+        System.out.println("Here is a list of your upcoming recurring payments:");
+        int count = 1;
+        for (Transaction transaction : transactions) {
+            System.out.println(count + ". " + transaction.getDescription()
+                    + " - " + transaction.getDate().format(df));
+            count++;
+        }
+        printLine();
+    }
 
-
+    //@@author
     public void printSavingOverview(FinancialGoal goal) {
         printCenteredTitle("Saving Overview");
 
@@ -454,18 +624,16 @@ public class Ui {
         int filled = (int) (percent * barLength);
         int empty = barLength - filled;
 
-        StringBuilder bar = new StringBuilder("[");
-        bar.append("█".repeat(filled));
-        bar.append(" ".repeat(empty));
-        bar.append("]");
+        String bar = "[" + "█".repeat(filled) +
+                " ".repeat(empty) +
+                "]";
 
         printLeftAlignedLine("Goal:         \"" + goal.getGoal() + "\"");
         printLeftAlignedLine("Description:  " + goal.getDescription());
         printLeftAlignedLine("");
 
-        printLeftAlignedLine("Status:       You're currently at:"+String.format("  %s  %.1f%% complete",
-                bar.toString(), percent * 100, current, target));
-
+        printLeftAlignedLine("Status:       You're currently at:" + String.format("  %s  %.1f%% complete",
+                bar, percent * 100, current, target));
         if (percent >= 1.0) {
             printLeftAlignedLine("Analysis:     Amazing! You've achieved your savings goal. Time to celebrate!");
         } else if (percent >= 0.75) {
@@ -477,168 +645,7 @@ public class Ui {
         } else {
             printLeftAlignedLine("Analysis:     You haven't started saving yet. Let's begin today!");
         }
-
         printLine();
-    }
-
-    public void viewTransactionDetail(Transaction t) {
-        printCenteredTitle("Transaction Details");
-
-        printLeftAlignedLine("ID:            " + t.getId());
-        printLeftAlignedLine("Description:   " + t.getDescription());
-
-        String typeLabel = t.getAmount() < 0 ? "Expense" : "Income";
-        String amountStr = String.format("%.2f %s (%s)", t.getAmount(), t.getCurrency(), typeLabel);
-        printLeftAlignedLine("Amount:        " + amountStr);
-
-        printLeftAlignedLine("Category:      " + t.getCategory());
-        printLeftAlignedLine("Date:          " + (t.getDate() == null ? "N/A" : t.getDate().toString()));
-        printLeftAlignedLine("Priority:      " + t.getPriority());
-
-        printLeftAlignedLine("Completed:     " + (t.isCompleted() ? "[ YES ]" : "[ NO ]"));
-
-        printLine(); // 底部边框
-    }
-
-    public void printCurrencyRates() {
-        printCenteredTitle("Currency Rates (Base: SGD)");
-
-        for (Currency currency : Currency.values()) {
-            if (!currency.equals(Currency.SGD)) {
-                printLeftAlignedLine("1 SGD = " + currency.getRate() + " " + currency);
-            }
-        }
-
-        printLine();
-    }
-
-    public void showMessage(String message) {
-        printLine();
-        printLeftAlignedLine(message);
-        printLine();
-    }
-
-    public void printBalanceOverview(double balance) {
-        printCenteredTitle("Account Balance Overview");
-
-        printLeftAlignedLine("Net Completed Balance:    " + String.format("%.2f SGD", balance));
-        printLeftAlignedLine("");
-
-        if (balance > 0) {
-            printLeftAlignedLine("Analysis: Positive net savings. Keep up the good work!");
-        } else if (balance == 0) {
-            printLeftAlignedLine("Analysis: Net balance is zero. Consider reviewing your expenses.");
-        } else {
-            printLeftAlignedLine("Analysis: You've spent more than your earnings. Be cautious!");
-        }
-
-        printLine();
-    }
-
-    public void printStatisticsOverview(TransactionManager tm) {
-        printCenteredTitle("Transaction Statistics");
-
-        // Completion Stats
-        int[] stats = tm.getCompletionStats();
-        printLeftAlignedLine("Completed:     " + stats[0]);
-        printLeftAlignedLine("Incomplete:    " + stats[1]);
-
-        // Per-category
-        printLeftAlignedLine("Completed Amount per Category (in SGD):");
-        Map<Category, Double> categoryMap = tm.getCompletedAmountPerCategory();
-
-        double total = 0;
-        if (categoryMap.isEmpty()) {
-            printLeftAlignedLine("  (empty)");
-        } else {
-            for (Map.Entry<Category, Double> entry : categoryMap.entrySet()) {
-                printLeftAlignedLine("  - " + entry.getKey() + ": " + String.format("%.2f", entry.getValue()));
-                total += entry.getValue();
-            }
-        }
-
-        printLeftAlignedLine("");
-        printLeftAlignedLine("Total Completed Amount (in SGD): " + String.format("%.2f", total));
-        printLine();
-    }
-
-    /**
-     * Prints the result of a currency conversion from one currency to another.
-     *
-     * @param originalAmount  The original amount before conversion.
-     * @param from            The original currency.
-     * @param convertedAmount The amount after conversion.
-     * @param to              The target currency.
-     */
-    public void printConversion(double originalAmount, Currency from, double convertedAmount, Currency to) {
-        printLine();
-        System.out.printf("Converted %.2f %s to %.2f %s%n",
-                originalAmount, from.name(), convertedAmount, to.name());
-        printLine();
-    }
-
-    /**
-     * Prints the priority setting for a specified transaction.
-     *
-     * @param transactions The list of transactions.
-     * @param index        The index of the transaction whose priority is being set.
-     */
-    public void printPriority(ArrayList<Transaction> transactions, int index) {
-        printLine();
-        if (transactions.isEmpty()) {
-            System.out.println("Please add a transaction first before you set the priority!");
-        } else {
-            System.out.println("Priority is set to " +
-                    transactions.get(index).getPriority() + " for current transaction.");
-        }
-        printLine();
-    }
-
-    /**
-     * Prints a summary of transactions between a given date range, including total
-     * expenses.
-     *
-     * @param transactions A list of transactions to summarize.
-     * @param total        The total sum of all transaction amounts.
-     * @param start        The start date of the summary period.
-     * @param end          The end date of the summary period.
-     */
-    public void printSummary(List<Transaction> transactions, double total, LocalDate start, LocalDate end) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        System.out.println("Expense Summary from " + start.format(formatter) + " to " + end.format(formatter));
-        System.out.println("--------------------------------------------------");
-        for (Transaction t : transactions) {
-            System.out.printf("%s | %s | %.2f\n", t.getDate(), t.getDescription(), t.getAmount());
-        }
-        System.out.println("--------------------------------------------------");
-        System.out.printf("Total Expenses: %.2f\n", total);
-    }
-
-//@@author HalFentise
-    public void printClear() {
-        System.out.println("All transactions have been cleared!");
-        printCenteredTitle("Cleared");
-    }
-
-    public void printCategoryChoice() {
-        ConsoleFormatter.printLine();
-        System.out.println("You can enter exit to quit choose progress");
-        System.out.println("Please choose a valid category from the list below:");
-        int index = 1;
-        for (Category category : Category.values()) {
-            System.out.println(index + ". " + category.name());
-            index++;
-        }
-        ConsoleFormatter.printLine();
-    }
-
-    public void printCategoryHint() {
-        System.out.print("Enter category number (1-" + Category.values().length + "): ");
-    }
-
-    public void printCategoryChoose() {
-        System.out.println("Choose category successfully!");
-        ConsoleFormatter.printLine();
     }
 
     public void printCurrencyChoice() {
@@ -662,5 +669,25 @@ public class Ui {
         System.out.println("Set your default currency successfully!");
         ConsoleFormatter.printLine();
     }
-//@@author
+
+    public void printCategoryChoice() {
+        ConsoleFormatter.printLine();
+        System.out.println("You can enter exit to quit choose progress");
+        System.out.println("Please choose a valid category from the list below:");
+        int index = 1;
+        for (Category category : Category.values()) {
+            System.out.println(index + ". " + category.name());
+            index++;
+        }
+        ConsoleFormatter.printLine();
+    }
+
+    public void printCategoryHint() {
+        System.out.print("Enter category number (1-" + Category.values().length + "): ");
+    }
+
+    public void printCategoryChoose() {
+        System.out.println("Choose category successfully!");
+        ConsoleFormatter.printLine();
+    }
 }
