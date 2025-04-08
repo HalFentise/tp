@@ -14,7 +14,7 @@ import enums.Category;
 import enums.Currency;
 import enums.Status;
 import exceptions.InvalidCommand;
-import ui.ConsoleFormatter;
+
 import seedu.duke.budget.Budget;
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
@@ -145,6 +145,16 @@ public class TransactionManager {
             transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
         }
 
+        transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
+
+        if (isBudgetSet) {
+            double projectedTotal = getTotalTransactionAmount() + transaction.getAmount();
+            if (projectedTotal > budgetLimit) {
+                System.out.println("Cannot add new transaction! Budget limit exceeded!\n");
+                return false;
+            }
+        }
+
         transactions.add(transaction);
 
         if (id > currentMaxId) {
@@ -238,12 +248,20 @@ public class TransactionManager {
      * @param budgetLimit The budget limit to set.
      */
     public void checkBudgetLimit(double budgetLimit) {
-        setBudgetLimit(budgetLimit);
-        setBudgetSet(true);
+        double totalAmount = getTotalTransactionAmount();
+
+        if (totalAmount > budgetLimit) {
+            double exceedingAmount = totalAmount - budgetLimit;
+            System.out.println("Warning: You have exceeded your budget limit!\n");
+            System.out.println("Current amount that exceed the budget are: " + exceedingAmount);
+        } else {
+            setBudgetLimit(budgetLimit);
+            setBudgetSet(true);
+            System.out.println("Budget limit set to " + budgetLimit + " " + defaultCurrency);
+        }
         if (storage != null) {
             storage.saveBudgetLimit(budgetLimit);
         }
-        System.out.println("Budget limit set to " + budgetLimit + " " + defaultCurrency);
     }
 
 
