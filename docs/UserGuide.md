@@ -47,7 +47,35 @@ Examples:
 `add d/Dinner a/15.50 c/Food`  
 `add d/Netflix Subscription a/12.99 c/Entertainment t/04-06-2025`
 
+#### Wizard Mode
+
+To enter step-by-step mode, simply type: `add`
+
+You will be guided to input: 
+
+- Description
+- Amount
+- Currency
+- Category
+- Date
+- Priority (LOW / MEDIUM / HIGH)
+- Completion status (YES / NO)
+
+> Budget checks and warnings are **only triggered if the transaction is marked as completed**.
+
+> If the transaction exceeds the allocated budget or falls before the budget end date, warnings will be shown. However, the transaction is still recorded.
+
+#### Completion Logic
+
+- Only **completed** transactions are considered for:
+  - Account balance calculation
+  - Savings tracking
+  - Budget spending evaluation
+
+- **Incomplete** transactions are treated as drafts or pending, and excluded from all calculations.
+
 ---
+
 
 ### Listing all expenses: `list`
 
@@ -75,6 +103,35 @@ Examples:
 * `edit cat 2 OTHER` (Sets category of expense `2` to `OTHER`)
 * `edit am 3 25` (Sets amount to pay of expense `3` to `25`)
 * `edit curr 4 JPY` (Sets currency of expense `4` to Japanese Yen)
+
+#### Wizard Mode
+
+To start editing interactively: `edit`
+
+You will be guided to:
+
+- Select a transaction ID
+- Choose the field you want to update
+- Enter the new value
+
+**Editable Fields in Wizard Mode:**
+
+1. Description  
+2. Amount  
+3. Currency  
+4. Category  
+5. Date (`yyyy-mm-dd`)  
+6. Priority (`LOW`, `MEDIUM`, `HIGH`)
+
+> You can type `cancel` at any step to exit the wizard.
+
+---
+
+#### Important Notes
+
+- Editing the amount, category, or status of a transaction may affect balance, budget limits, and savings.
+- Budgets only apply to **completed** transactions.
+- Changing the transaction date may also impact budget rules if it falls within an active budget range.
 
 ---
 
@@ -242,17 +299,6 @@ Example: <br>
 
 ---
 
-### Support Multi-Currency conversion: `convert`
-
-Converts an amount between different currencies.
-
-Format: `convert id/TRANSACTION_ID to/CURRENCY` <br><br>
-Example:
-
-* `convert id/1 to/USD` (Converts the first transcation to USD based on pre-fixed exchange rates)
-
----
-
 ### Exiting the program: `exit`
 
 Closes the application.
@@ -260,6 +306,89 @@ Closes the application.
 Format: `exit`
 
 ---
+
+### Managing a Savings Goal: `saving`
+
+The `saving` command lets you manage your personal savings goal within a dedicated interactive mode. You can set a target, contribute funds, withdraw funds, and check your savings progress.
+
+#### Entering Saving Mode
+
+To enter Saving Mode: `saving`
+
+You will see a prompt like this: `saving>`
+
+Type `exit` at any time to return to the main menu.
+
+#### Available Saving Mode Commands
+
+| Command | Format | Description |
+|--------|--------|-------------|
+| `set` | `set` | Create a new savings goal interactively |
+| `list` | `list` | View your current savings goal, progress, and target |
+| `contribute` | `contribute a/AMOUNT` | Add funds from your account balance into savings |
+| `save` | `save a/AMOUNT` | Alias for `contribute` |
+| `deduct` | `deduct a/AMOUNT` | Withdraw funds from savings back to your account |
+| `help` | `help` | View all saving commands |
+| `exit` | `exit` | Return to main menu |
+
+#### Rules and Logic
+
+- You **must set a savings goal** before you can contribute or deduct.
+- Contributions will **reduce your current balance** by the given amount.
+- Deductions will **return the amount to your balance**.
+- Only completed transactions are recorded as savings actions.
+- Savings are stored as transactions with the `SAVING` category and are visible in your full transaction list.
+
+#### Notes
+
+- If your balance is insufficient during `contribute`, the action will be rejected.
+- If your savings are insufficient during `deduct`, the action will also be rejected.
+- All saving operations are recorded as transactions and affect your balance and goal progress.
+
+---
+
+### Managing Budgets: `budget`
+
+The `budget` command lets you manage per-category spending limits through an interactive mode. You can create, view, and modify budgets for different expense categories. Each category can only have **one active budget**, which limits the total **completed expenses** before a specified end date.
+
+
+#### Entering Budget Mode
+
+To enter Budget Mode: `budget`
+
+You will enter a dedicated mode: `budget>`
+
+Type `exit` at any time to return to the main menu.
+
+
+#### Budget Mode Commands
+
+| Command | Format | Description |
+|--------|--------|-------------|
+| `set` | `set` | Create a new budget interactively |
+| `list` | `list` | View all budgets and their remaining amount |
+| `check` | `check i/INDEX` | View details of a specific budget |
+| `add` | `add i/INDEX a/AMOUNT` | Increase the budget amount |
+| `modify` | `modify i/INDEX [n/NAME] [a/AMOUNT] [e/DATE] [c/CATEGORY]` | Edit fields of a budget |
+| `delete` | `delete i/INDEX` | Remove a budget |
+| `help` | `help` | View all budget commands |
+| `exit` | `exit` | Return to the main menu |
+
+
+#### Budget Rules and Enforcement
+
+- A **budget applies only to one category**. If you create a new budget for the same category, it will overwrite the previous one.
+- **Only completed transactions** are counted toward budget spending.
+- **Transactions dated before or on the budget's end date** will be blocked if they cause the budget to be exceeded.
+- Transactions dated **after the end date** are not restricted by that budget.
+- Budget usage is updated in real time. Overspending warnings are shown when a transaction is marked as complete.
+
+#### Notes
+
+- Budget limits are enforced only when a transaction is marked as **completed**.
+- A real-time "remaining" amount is calculated by subtracting the completed spending from the total.
+- When you exceed your budget, a warning will be printed during `tick` or when completing a transaction via wizard.
+
 
 ## FAQ
 
@@ -294,7 +423,6 @@ Transfer everything in this directory and to another computer and all data shoul
 | `currency`  | `currency`                                       | Changes the default currency.                                                                       | `currency`                                                                                        |
 | `notify`    | `notify d/DESCRIPTION c/CATEGORY t/DATE`         | Sets a notification for future payment.                                                             | `notify d/Dinner c/Food t/2025-03-01`                                                             |
 | `priority`  | `priority INDEX priority_level`                  | Sets priority level of an expense. Levels: `low`, `medium`, `high`.                                 | `priority 1 high`                                                                                 |
-| `convert`   | `priority id/TRANSACTION_ID to/CURRENCY`         | Converts the first transaction to the currency user wants to convert based on fixed exchange rates. | `convert id/1 to/USD`                                                                             |
 | `summary`   | `summary`                                        | Shows all the list for the given time frame.                                                        | `summary`                                                                                         |
 | `exit`      | `exit`                                           | Exits the program.                                                                                  | `exit`                                                                                            |
 | `alert`     | `alert`                                          | Triggers a warning for higher spending.                                                             | `alert`                                                                                           |
