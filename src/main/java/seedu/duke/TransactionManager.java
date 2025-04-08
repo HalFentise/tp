@@ -471,7 +471,7 @@ public class TransactionManager {
      */
     public void editInfo(int id, String value, int type) throws Exception {
         if (checkIdEmpty(id)) {
-            return;
+            throw new InvalidCommand(Constant.INVALID_TRANSACTION_ID);
         }
         Transaction t = searchTransaction(id);
 
@@ -505,7 +505,6 @@ public class TransactionManager {
      */
     public boolean checkIdEmpty(int id) {
         if (searchTransaction(id) == null) {
-            System.out.println(Constant.INVALID_TRANSACTION_ID);
             return true;
         }
         return false;
