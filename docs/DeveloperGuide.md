@@ -597,4 +597,33 @@ platform that promotes better money management without overwhelming users with c
 
 ## Instructions for manual testing
 
-{Give instructions on how to do a manual product testing e.g., how to load sample data to be used for testing}
+### Preparation
+* Initialize Application: Start the application and ensure all files are wokring well.
+
+### Test Case
+
+1. Add Transaction Using Wizard
+   * Steps: 
+      1. Input the command add with no additional parameters (e.g., add).
+      2. Follow the prompts provided by the AddWizardCommand to input transaction details (e.g., description, amount, category, date).
+   * Expected Results:
+     1. The transaction should be successfully added to the transactions list.
+     2. The UI should display the newly added transaction.
+     3. The storage should update with the new transaction.
+   * Edge Case: Input invalid or blank data during the wizard process and verify error handling.
+
+2. Add Transaction Using Inline Parameters
+    * Steps:
+      1. Input the command with inline parameters (e.g., add d/Lunch a/15.50 c/Food t/2023-04-07).
+      2. Verify that the parameters are parsed correctly.
+    * Expected Results:
+      1. A transaction with the specified details is added to the transactions list.
+      2. The UI displays the added transaction.
+      3. The storage is updated with the new transaction.
+    * Edge Cases:
+      1. Missing optional t/ field: Verify that the current date is used if date is not provided.
+      2. Incorrect or malformed parameters (e.g., add d/Lunch a/abc c/Food): Ensure appropriate error messages are displayed.
+      3. Empty or blank parameter values: Verify that missing non-optional fields throw an InvalidCommand exception.
+      
+
+

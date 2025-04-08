@@ -27,17 +27,12 @@ public class SummaryCommand extends Command {
      */
     public SummaryCommand(LocalDate start, LocalDate end, TransactionManager transactions, Ui ui) {
         List<Transaction> filteredTransactions = transactions.getTransactionsBetween(start, end);
-        double total = filteredTransactions.stream()
-                .mapToDouble(Transaction::getAmount)
-                .sum();
-        ui.printSummary(filteredTransactions, total, start, end);
-
+        ui.printSummary(filteredTransactions, start, end);
     }
 
     /**
      * Executes the command.
      * This method is intentionally left empty as the summary is printed in the constructor.
-     *
      * @param transactions The TransactionManager object (not used in this implementation).
      * @param ui           The Ui object (not used in this implementation).
      */

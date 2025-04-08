@@ -12,7 +12,6 @@ import java.util.*;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
-import static constant.Constant.*;
 import enums.Currency;
 import enums.Category;
 
@@ -599,11 +598,10 @@ public class Ui {
      * expenses.
      *
      * @param transactions A list of transactions to summarize.
-     * @param total        The total sum of all transaction amounts.
      * @param start        The start date of the summary period.
      * @param end          The end date of the summary period.
      */
-    public void printSummary(List<Transaction> transactions, double total, LocalDate start, LocalDate end) {
+    public void printSummary(List<Transaction> transactions, LocalDate start, LocalDate end) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         System.out.println("Expense Summary from " + start.format(formatter) + " to " + end.format(formatter));
         System.out.println("--------------------------------------------------");
@@ -611,7 +609,6 @@ public class Ui {
             System.out.printf("%s | %s | %.2f\n", t.getDate(), t.getDescription(), t.getAmount());
         }
         System.out.println("--------------------------------------------------");
-        System.out.printf("Total Expenses: %.2f\n", total);
     }
 
 //@@author HalFentise
