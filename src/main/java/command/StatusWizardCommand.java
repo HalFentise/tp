@@ -3,6 +3,7 @@ package command;
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
 import seedu.duke.Storage;
+import ui.ConsoleFormatter;
 import ui.Ui;
 
 import java.util.Scanner;

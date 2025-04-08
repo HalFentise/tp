@@ -56,7 +56,7 @@ public class BudgetList {
         ConsoleFormatter.printLeftAlignedLine("🔍 Budget Details:");
         ConsoleFormatter.printLeftAlignedLine("Name: " + b.getName());
         ConsoleFormatter.printLeftAlignedLine("Target Amount: $" + b.getTotalAmount());
-        ConsoleFormatter.printLeftAlignedLine("Remaining: $" + b.getRemainingAmount());
+        ConsoleFormatter.printLeftAlignedLine("Remaining: $" + String.format("%.2f", remaining));
         ConsoleFormatter.printLeftAlignedLine("End Date: " + b.getEndDate());
         ConsoleFormatter.printLeftAlignedLine("Category: " + b.getCategory());
 
