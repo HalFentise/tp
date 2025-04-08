@@ -236,11 +236,10 @@ public class Ui {
      * Prints a summary of transactions between a given date range, including total expenses.
      *
      * @param transactions A list of transactions to summarize.
-     * @param total        The total sum of all transaction amounts.
      * @param start        The start date of the summary period.
      * @param end          The end date of the summary period.
      */
-    public void printSummary(List<Transaction> transactions, double total, LocalDate start, LocalDate end) {
+    public void printSummary(List<Transaction> transactions, LocalDate start, LocalDate end) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         System.out.println("Expense Summary from " + start.format(formatter) + " to " + end.format(formatter));
         System.out.println("--------------------------------------------------");
@@ -248,7 +247,6 @@ public class Ui {
             System.out.printf("%s | %s | %.2f\n", t.getDate(), t.getDescription(), t.getAmount());
         }
         System.out.println("--------------------------------------------------");
-        System.out.printf("Total Expenses: %.2f\n", total);
     }
     //@@author
 
@@ -360,6 +358,7 @@ public class Ui {
     }
 
     //@@author yangyi-zhu
+
     /**
      * Prints a message based on whether the search was by index or by keyword.
      *
@@ -376,8 +375,8 @@ public class Ui {
     /**
      * Sets the recurring period for a given transaction and prints confirmation.
      *
-     * @param transaction      The transaction to modify.
-     * @param recurringPeriod  The number of days for recurrence; set to 0 or less to disable.
+     * @param transaction     The transaction to modify.
+     * @param recurringPeriod The number of days for recurrence; set to 0 or less to disable.
      */
     public void setPeriod(Transaction transaction, int recurringPeriod) {
         printLine();
@@ -490,8 +489,8 @@ public class Ui {
     /**
      * Subtracts a specified amount from savings and displays a warning if the balance is negative.
      *
-     * @param amount         The amount to subtract.
-     * @param currentAmount  The resulting balance after subtraction.
+     * @param amount        The amount to subtract.
+     * @param currentAmount The resulting balance after subtraction.
      */
     public static void subFromSavings(double amount, double currentAmount) {
         printLine();
@@ -505,8 +504,8 @@ public class Ui {
     /**
      * Checks and prints the goal status based on current savings and target.
      *
-     * @param currentAmount  The current balance saved.
-     * @param targetAmount   The savings target to reach.
+     * @param currentAmount The current balance saved.
+     * @param targetAmount  The savings target to reach.
      * @return True if the goal is achieved; false otherwise.
      */
     public static boolean printGoalStatus(double currentAmount, double targetAmount) {
@@ -523,8 +522,8 @@ public class Ui {
     /**
      * Prints a confirmation message after editing a transaction.
      *
-     * @param value   The new value of the attribute.
-     * @param typeId  The type of attribute edited: 0=desc, 1=category, 2=amount, 3=currency.
+     * @param value  The new value of the attribute.
+     * @param typeId The type of attribute edited: 0=desc, 1=category, 2=amount, 3=currency.
      */
     public void printEdited(String value, int typeId) {
         String type;
