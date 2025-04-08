@@ -151,6 +151,8 @@ public class Parser {
                             parseEditCommands(parts[1], ui, transactions);
                         }
                         storage.saveTransactions(transactions.getTransactions());
+                    } catch (InvalidCommand ic) {
+                        throw new InvalidCommand(ic.getMessage());
                     } catch (Exception e) {
                         throw new InvalidCommand("Format invalid, try again! (edit [attribute] [id] [value])");
                     }

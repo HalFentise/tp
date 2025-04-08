@@ -224,7 +224,8 @@ public class Ui {
         printTableLine("-".repeat(tableWidth), sidePadding);
 
         for (Transaction t : transactions) {
-            String completedMark = t.isCompleted() ? " [ YES ] " : " [ NO ] ";
+            String completedMark = t.getRecurringPeriod() > 0 ? " [" + t.getRecurringPeriod() + " (R)] "
+                    : t.isCompleted() ? " [ YES ] " : " [ NO ] ";
 
             // ✨ 内容字段超长截断
             String desc = trimToFit(t.getDescription(), 12);
@@ -302,7 +303,8 @@ public class Ui {
         printTransaction(transaction);
         printLine();
     }
-//@@author
+
+    //@@author yangyi-zhu
     public void search(boolean isIndex) {
         if (isIndex) {
             System.out.println("I have searched the transaction with the given index.");
@@ -402,12 +404,20 @@ public class Ui {
     }
 
     public void printEdited(String value, int typeId) {
-        String type = switch (typeId) {
-            case 0 -> "description";
-            case 1 -> "category";
-            case 2 -> "amount";
-            case 3 -> "currency";
-            default -> "";
+        String type = "";
+        switch (typeId) {
+        case 0:
+            type = "description";
+            break;
+        case 1:
+            type = "category";
+            break;
+        case 2:
+            type = "amount";
+            break;
+        case 3:
+            type = "currency";
+            break;
         };
 
         printLine();
@@ -419,22 +429,19 @@ public class Ui {
     public void printRecurringTransactions(ArrayList<Transaction> transactions) {
         printLine();
 
-        List<Transaction> filtered = transactions.stream()
-                .filter(t -> t.getRecurringPeriod() > 0)
-                .collect(Collectors.toList());
+        System.out.println("Here is a list of your upcoming recurring payments:");
 
-        if (filtered.isEmpty()) {
+        if (transactions.isEmpty()) {
             printCenteredLine("No upcoming recurring payments found.");
         } else {
             printCenteredTitle("Upcoming Recurring Transactions");
-            printTransactionsTable(filtered);
+            printTransactionsTable(transactions);
         }
 
         printLine();
     }
 
-
-
+    //@@author
     public void printSavingOverview(FinancialGoal goal) {
         printCenteredTitle("Saving Overview");
 
@@ -495,7 +502,11 @@ public class Ui {
         printLeftAlignedLine("Date:          " + (t.getDate() == null ? "N/A" : t.getDate().toString()));
         printLeftAlignedLine("Priority:      " + t.getPriority());
 
-        printLeftAlignedLine("Completed:     " + (t.isCompleted() ? "[ YES ]" : "[ NO ]"));
+        if (t.getRecurringPeriod() > 0) {
+            printLeftAlignedLine("Recurring every " + t.getRecurringPeriod() + " days");
+        } else {
+            printLeftAlignedLine("Completed:     " + (t.isCompleted() ? "[ YES ]" : "[ NO ]"));
+        }
 
         printLine(); // 底部边框
     }
