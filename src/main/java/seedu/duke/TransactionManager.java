@@ -104,6 +104,13 @@ public class TransactionManager {
     }
     //@@author
 
+    //@@author HalFentise
+    /**
+     * Adds a new transaction to the system.
+     *
+     * @param transaction the {@code Transaction} object to be added
+     * @return This method does not return any value.
+     */
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
         int id = transaction.getId();
@@ -115,7 +122,15 @@ public class TransactionManager {
         }
     }
 
-
+    /**
+     * Adds a new transaction with the specified details.
+     *
+     * @param description the description of the transaction
+     * @param amount the amount of the transaction
+     * @param category the category of the transaction
+     * @param date the date of the transaction; if {@code null}, the current date is used
+     * @return {@code true} if the transaction was successfully added
+     */
     public boolean addTransaction(String description, double amount, Category category, LocalDate date) {
         int id = getNextAvailableId();
         LocalDate now = LocalDate.now();
@@ -125,10 +140,6 @@ public class TransactionManager {
         } else {
             transaction = new Transaction(id, description, amount, defaultCurrency, category, date, Status.PENDING);
         }
-
-//        if (isBudgetSet && (getTotalTransactionAmount() + amount > budgetLimit)) {
-//            return false;
-//        }
 
         transactions.add(transaction);
 
@@ -140,6 +151,8 @@ public class TransactionManager {
         }
         return true;
     }
+
+    //@@author
 
     public boolean isTransactionAllowedByBudget(Transaction t) {
         if (t.getAmount() >= 0) {
@@ -197,40 +210,25 @@ public class TransactionManager {
         }
     }
 
-    public void checkBudgetLimit() {
-        if (budgetList == null || budgetList.isEmpty()) {
-            System.out.println("No budgets found. Use 'budget > set' to create a budget.");
-            return;
+    public void checkBudgetLimit(double budgetLimit) {
+        double totalTransactionAmount = getTotalTransactionAmount();
+        setBudgetLimit(budgetLimit);
+        setBudgetSet(true);
+        if (storage != null) {
+            storage.saveBudgetLimit(budgetLimit);
         }
-
-        System.out.println(" Budget Category Report:");
-        for (seedu.duke.budget.Budget b : budgetList.getAll()) {
-            Category cat = b.getCategory();
-            double limit = b.getTotalAmount();
-            double spent = 0;
-
-            for (Transaction t : getTransactions()) {
-                if (t.isCompleted()
-                        && !t.isDeleted()
-                        && t.getCategory() == cat
-                        && t.getAmount() < 0
-                        && !t.getDate().isAfter(b.getEndDate())) {
-                    spent += t.getCurrency().convertTo(-t.getAmount(), Currency.SGD);
-                }
-            }
-
-            double remaining = limit - spent;
-
-            System.out.printf("- %s: Limit = $%.2f, Spent = $%.2f, Remaining = $%.2f %s%n",
-                    cat, limit, spent, remaining,
-                    (remaining < 0 ? "OVERSPENT" : ""));
-        }
-
-        System.out.println(); // newline for spacing
+        System.out.println("Budget limit set to " + budgetLimit + " " + defaultCurrency);
+        System.out.println("The remaining Budget amount is " +
+                (budgetLimit - totalTransactionAmount) + " " + defaultCurrency + "\n");
     }
 
 
     //@@author
+    /**
+     * Clears all transactions and budgets from the system.
+     *
+     * @return This method does not return any value.
+     */
     public void clear() {
         transactions.clear();
         currentMaxId = 0;
@@ -238,6 +236,13 @@ public class TransactionManager {
         budgetList.clear();
     }
 
+    /**
+     * Searches for a transaction by its unique ID.
+     *
+     * @param id the unique ID of the transaction to search for
+     * @return the {@code Transaction} object matching the specified ID and not marked as deleted,
+     *         or {@code null} if no such transaction is found
+     */
     public Transaction searchTransaction(int id) {
         for (Transaction transaction : transactions) {
             if (transaction.getId() == id && !transaction.isDeleted()) {
@@ -246,6 +251,8 @@ public class TransactionManager {
         }
         return null;
     }
+
+
 
     //@@author yangyi-zhu
     /**
@@ -348,6 +355,7 @@ public class TransactionManager {
     }
     //@@author
 
+    //@@author HalFentise
     public void tickTransaction(int id) throws Exception {
         Transaction transaction = searchTransaction(id);
         if (transaction != null) {
@@ -371,6 +379,8 @@ public class TransactionManager {
             throw new InvalidCommand("Transaction not found! Please type in a valid id");
         }
     }
+
+    //@@author
 
     //@@author yangyi-zhu
     /**
