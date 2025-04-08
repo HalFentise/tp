@@ -5,11 +5,7 @@ import command.*;
 import enums.Currency;
 import exceptions.NullException;
 import exceptions.InvalidCommand;
-import seedu.duke.FinancialGoal;
-import seedu.duke.TransactionManager;
-import seedu.duke.Transaction;
-import seedu.duke.Storage;
-import seedu.duke.SavingMode;
+import seedu.duke.*;
 import seedu.duke.budget.BudgetMode;
 import enums.Category;
 import ui.ConsoleFormatter;
@@ -39,255 +35,299 @@ public class Parser {
         int index;
         int id;
         LocalDate date;
+        String[] fields;
+
         try {
             switch (commandType) {
-            case COMMAND_HELP:
-                ui.help();
-                break;
-            case COMMAND_ADD:
-                    new AddWizardCommand().execute(transactions, ui);
+                case COMMAND_HELP:
+                    ui.help();
+                    break;
+                case COMMAND_ADD:
+                    if (parts.length == 1 || parts[1].isBlank()) {
+                        Command addWizard = new AddWizardCommand();
+                        addWizard.execute(transactions, ui, storage);
+
+                        break;
+                    }
+
+                    fields = new String[]{"description", "amount", "category", "date"};
+                    String[] patterns = {
+                            "d/(.*?)(?:\\s+[act]/|$)", // description
+                            "a/(.*?)(?:\\s+[dct]/|$)", // amount
+                            "c/(.*?)(?:\\s+[dat]/|$)", // category
+                            "t/(.*?)(?:\\s+[dac]/|$)", // date (optional)
+                    };
+
+                    String[] results = new String[fields.length];
+
+                    for (int i = 0; i < fields.length; i++) {
+                        Pattern pattern = Pattern.compile(patterns[i]);
+                        Matcher matcher = pattern.matcher(parts[1]);
+
+                        if (matcher.find()) {
+                            results[i] = matcher.group(1).trim();
+                        } else if (!fields[i].equals("date")) {
+                            throw new InvalidCommand("No " + fields[i] + " found");
+                        } else {
+                            results[i] = null; // date is optional
+                        }
+                    }
+
+                    amount = Double.parseDouble(results[1]);
+                    Category category = parseCategory(results[2], ui);
+                    date = parseToLocalDate(results[3]);
+
+                    boolean success = transactions.addTransaction(results[0], amount, category, date);
+
+                    if (success) {
+                        ui.add(transactions.searchTransaction(transactions.getNum()));
+                        storage.saveTransactions(transactions.getTransactions());
+                    } else {
+                        throw new InvalidCommand("Cannot add new transaction! Budget limit exceeded!");
+                    }
+                    break;
+
+                case COMMAND_LIST:
+                    if (parts.length > 1) {
+                        throw new InvalidCommand("Invalid command");
+                    }
+                    ui.printTransactions(transactions.getTransactions());
+                    break;
+                case COMMAND_TICK:
+                    id = Integer.parseInt(parts[1]);
+                    transactions.tickTransaction(id);
+                    ui.tickTransaction(transactions.searchTransaction(id));
                     storage.saveTransactions(transactions.getTransactions());
                     break;
-            case COMMAND_LIST:
-                if (parts.length > 1) {
-                    throw new InvalidCommand("Invalid command");
-                }
-                ui.printTransactions(transactions.getTransactions());
-                break;
-            case COMMAND_TICK:
-                id = Integer.parseInt(parts[1]);
-                transactions.tickTransaction(id);
-                ui.tickTransaction(transactions.searchTransaction(id));
-                storage.saveTransactions(transactions.getTransactions());
-                break;
-            case COMMAND_UNTICK:
-                id = Integer.parseInt(parts[1]);
-                transactions.unTickTransaction(id);
-                ui.unTickTransaction(transactions.searchTransaction(id));
-                storage.saveTransactions(transactions.getTransactions());
-                break;
-            //@@author yangyi-zhu
-            case COMMAND_SEARCH:
-                boolean isIndex = parts[1].startsWith("id-");
-                String keyWord = isIndex ? parts[1].substring(3) : parts[1];
-                ui.search(isIndex);
-                ui.printTransactions(transactions.searchTransactionList(isIndex, keyWord));
-                break;
-            case COMMAND_EDIT:
-                new EditWizardCommand().execute(transactions, ui);
-                storage.saveTransactions(transactions.getTransactions());
-                break;
-
-            case COMMAND_STATUS:
-                new StatusWizardCommand().execute(transactions, ui);
-                storage.saveTransactions(transactions.getTransactions());
-                break;
-
-            case COMMAND_DELETE:
-                    index = Integer.parseInt(parts[1]);
-                    new DeleteCommand(index, transactions);
+                case COMMAND_UNTICK:
+                    id = Integer.parseInt(parts[1]);
+                    transactions.unTickTransaction(id);
+                    ui.unTickTransaction(transactions.searchTransaction(id));
                     storage.saveTransactions(transactions.getTransactions());
                     break;
+                case COMMAND_STATUS:
+                    try {
+                        if (parts.length == 1 || parts[1].isBlank()) {
+                            Command statusWizard = new StatusWizardCommand();
+                            statusWizard.execute(transactions, ui, storage);
+                        } else {
+                            id = Integer.parseInt(parts[1]);
+                            Transaction t = transactions.searchTransaction(id);
+                            if (t == null) {
+                                throw new InvalidCommand("Transaction not found.");
+                            }
 
-            // case COMMAND_CURRENCY:
-            //     if (parts.length == 1) {
-            //         ui.printCurrencyRates(); // 展示
-            //     } else {
-            //         String[] currencyParts = parts[1].split(" ");
-            //         if (currencyParts.length != 2)
-            //             throw new InvalidCommand("Usage: currency <CURRENCY_CODE> <RATE>");
+                            if (t.isCompleted()) {
+                                t.notComplete();
+                                ui.unTickTransaction(t);
+                            } else {
+                                t.complete();
+                                ui.tickTransaction(t);
+                            }
 
-            //         String targetCurrency = currencyParts[0].toUpperCase();
-            //         double newRate = Double.parseDouble(currencyParts[1]);
-
-            //         try {
-            //             Currency.valueOf(targetCurrency).setRate(newRate);
-            //             ui.showMessage("Updated " + targetCurrency + " rate to SGD: " + newRate);
-            //         } catch (IllegalArgumentException e) {
-            //             throw new InvalidCommand("Unsupported currency.");
-            //         }
-            //     }
-            //     break;
-
-            // case "balance":
-            //     double bal = transactions.getCurrentBalanceInSGD();
-            //     ui.printBalanceOverview(bal);
-            //     break;
-
-            // case "stats":
-            //     ui.printStatisticsOverview(transactions);
-            //     break;
-
-            case COMMAND_CLEAR:
-                transactions.clear();
-                storage.saveTransactions(transactions.getTransactions());
-                ui.printClear();
-                break;
-
-            case COMMAND_SET_BUDGET:
-                details = parts[1].split(IDENTIFIER_AMOUNT, 2);
-                amount = Double.parseDouble(details[1]);
-                //@@author
-                if (Double.isInfinite(amount) || Double.isNaN(amount)) {
-                    ConsoleFormatter.printLeftAlignedLine("Invalid input:" +
-                            " amount is too large, too small, or not a number.");
-                }
-                new SetBudgetCommand(amount, transactions);
-                storage.saveTransactions(transactions.getTransactions());
-                break;
-            case FIND_DATE:
-                String time = parts[1];
-                transactions.getUpcomingTransactions(time);
-                break;
-            case COMMAND_CURRENCY:
-                Currency currency = parseCurrency(ui);
-                transactions.setDefaultCurrency(currency);
-                storage.saveDefaultCurrency(currency);
-                break;
-            //@@author Lukapeng77
-            case COMMAND_NOTIFY:
-                String[] detail = {"description", "category", "date"};
-                String[] notifyPatterns = {
-                        "d/(.*?)(?:\\s+[ac]/|$)", // d/
-                        "c/(.*?)(?:\\s+[at]/|$)",  // c/
-                        "t/(.*?)(?:\\s+[da]/|$)"  // t/
-                };
-
-                String[] result = new String[detail.length];
-                //match pattern
-                for (int i = 0; i < detail.length; i++) {
-                    Pattern pattern = Pattern.compile(notifyPatterns[i]);
-                    Matcher matcher = pattern.matcher(parts[1]);
-
-                    if (matcher.find()) {
-                        result[i] = matcher.group(1).trim();
-                    } else {
-                        throw new InvalidCommand("No " + detail[i] + " found");
+                            storage.saveTransactions(transactions.getTransactions());
+                        }
+                    } catch (NumberFormatException e) {
+                        throw new InvalidCommand("Invalid transaction ID format.");
+                    } catch (Exception e) {
+                        throw new InvalidCommand("Failed to update status: " + e.getMessage());
                     }
-                }
-
-                String categoryString = result[1].toUpperCase();
-                date = parseToLocalDate(result[2]);
-
-                new NotifyCommand(result[0], categoryString, date, transactions, ui);
-                storage.saveTransactions(transactions.getTransactions());
-                break;
-            case COMMAND_ALERT:
-                if (parts.length > 1 && !parts[1].trim().isEmpty()) {
-                    throw new InvalidCommand("Invalid command");
-                }
-                new AlertCommand(transactions, ui);
-                storage.saveTransactions(transactions.getTransactions());
-                break;
-
-            case COMMAND_SET_PRIORITY:
-                try {
-                    details = parts[1].split(" ", 2);
-                    index = Integer.parseInt(details[0]);
-
-                    new SetPriorityCommand(index - 1, details[1], transactions, ui);
-                } catch (NullException e) {
-                    throw new InvalidCommand("Invalid input format, should be (priority [id] [priority_level])");
-                }
-                storage.saveTransactions(transactions.getTransactions());
-                break;
-            case COMMAND_SUMMARY:
-                try {
-                    if (parts.length < 2) {
-                        throw new InvalidCommand("Missing date range. Use: summary from/YYYY-MM-DD to/YYYY-MM-DD");
-                    }
-
-                    Pattern pattern = Pattern.compile("from/(\\d{4}-\\d{2}-\\d{2})\\s+to/(\\d{4}-\\d{2}-\\d{2})");
-                    Matcher matcher = pattern.matcher(parts[1]);
-
-                    if (matcher.matches()) {
-                        LocalDate start = LocalDate.parse(matcher.group(1));
-                        LocalDate end = LocalDate.parse(matcher.group(2));
-                        new SummaryCommand(start, end, transactions, ui);
-                    } else {
-                        throw new InvalidCommand("Invalid summary command format. " +
-                                "Follow this input format: summary from/YYYY-MM-DD to/YYYY-MM-DD");
-                    }
-                } catch (DateTimeParseException e) {
-                    throw new InvalidCommand("Invalid date format. Follow this format: YYYY-MM-DD.");
-                }
-                break;
-            //@@author Lukapeng77
-            // case COMMAND_CONVERT:
-            //     try {
-            //         Pattern pattern = Pattern.compile("id/(\\d+)\\s+to/(\\w+)", Pattern.CASE_INSENSITIVE);
-            //         Matcher matcher = pattern.matcher(parts[1]);
-
-            //         if (!matcher.find()) {
-            //             throw new InvalidCommand("Invalid convert format. Use: convert id/TRANSACTION_ID to/CURRENCY");
-            //         }
-
-            //         int transactionId = Integer.parseInt(matcher.group(1).trim());
-            //         Currency targetCurrency = Currency.valueOf(matcher.group(2).trim().toUpperCase());
-
-            //         new ConvertCommand(transactionId, targetCurrency, transactions, ui);
-            //         storage.saveTransactions(transactions.getTransactions());
-
-            //     } catch (IllegalArgumentException e) {
-            //         throw new InvalidCommand("Invalid currency code provided.");
-            //     } catch (Exception e) {
-            //         throw new InvalidCommand("Error processing convert command.");
-            //     }
-            //     break;
+                    break;
 
                 //@@author yangyi-zhu
-            case COMMAND_RECUR:
-                int slashIndex = parts[1].indexOf("/");
-                try {
-                    int transactionId = Integer.parseInt(parts[1].substring(0, slashIndex).trim());
-                    int recurringPeriod = Integer.parseInt(parts[1].substring(slashIndex + 1).trim());
-                    transactions.setRecur(transactionId, recurringPeriod);
-                    ui.setPeriod(transactions.searchTransaction(transactionId), recurringPeriod);
-                } catch (StringIndexOutOfBoundsException | NumberFormatException fe) {
-                    throw new InvalidCommand("Format invalid, try again! (recur [id]/[period])");
-                } catch (Exception e) {
-                    throw new InvalidCommand("Transaction not found!");
-                }
-                storage.saveTransactions(transactions.getTransactions());
-                break;
-
-             
-
-                case "view":
+                case COMMAND_SEARCH:
+                    boolean isIndex = parts[1].startsWith("id-");
+                    String keyWord = isIndex ? parts[1].substring(3) : parts[1];
+                    ui.search(isIndex);
+                    ui.printTransactions(transactions.searchTransactionList(isIndex, keyWord));
+                    break;
+                case COMMAND_EDIT:
                     try {
-                        id = Integer.parseInt(parts[1].trim());
-                        Transaction t = transactions.searchTransaction(id);
-                        if (t == null) throw new InvalidCommand("Transaction not found.");
-                        ui.viewTransactionDetail(t);
+                        if (parts.length == 1 || parts[1].isBlank()) {
+                            Command editWizard = new EditWizardCommand();
+                            editWizard.execute(transactions, ui, storage);
+                        } else {
+                            parseEditCommands(parts[1], ui, transactions);
+                        }
+                        storage.saveTransactions(transactions.getTransactions());
                     } catch (Exception e) {
-                        throw new InvalidCommand("Usage: view <id>");
+                        throw new InvalidCommand("Format invalid, try again! (edit [attribute] [id] [value])");
                     }
                     break;
 
+                //@@author
+
+                //@@author Lukapeng77
+                case COMMAND_DELETE:
+                    id = Integer.parseInt(parts[1]);
+                    new DeleteCommand(id, transactions);
+                    storage.saveTransactions(transactions.getTransactions());
+                    break;
+                case COMMAND_CLEAR:
+                    transactions.clear();
+                    storage.saveTransactions(transactions.getTransactions());
+                    ui.printClear();
+                    break;
+                case COMMAND_SET_BUDGET:
+                    details = parts[1].split(IDENTIFIER_AMOUNT, 2);
+                    amount = Double.parseDouble(details[1]);
+                    //@@author
+
+                    if (Double.isInfinite(amount) || Double.isNaN(amount)) {
+                        System.out.println("Invalid input: amount is too large, too small, or not a number.");
+                    }
+
+                    new SetBudgetCommand(amount, transactions);
+                    storage.saveTransactions(transactions.getTransactions());
+                    break;
+                case FIND_DATE:
+                    String time = parts[1];
+                    transactions.getUpcomingTransactions(time);
+                    break;
+                case COMMAND_CURRENCY:
+                    Currency currency = parseCurrency(ui);
+                    transactions.setDefaultCurrency(currency);
+                    storage.saveDefaultCurrency(currency);
+                    break;
+                //@@author Lukapeng77
+                case COMMAND_NOTIFY:
+                    String[] detail = {"description", "category", "date"};
+                    String[] notifyPatterns = {
+                            "d/(.*?)(?:\\s+[ac]/|$)", // d/
+                            "c/(.*?)(?:\\s+[at]/|$)",  // c/
+                            "t/(.*?)(?:\\s+[da]/|$)"  // t/
+                    };
+
+                    String[] result = new String[detail.length];
+                    //match pattern
+                    for (int i = 0; i < detail.length; i++) {
+                        Pattern pattern = Pattern.compile(notifyPatterns[i]);
+                        Matcher matcher = pattern.matcher(parts[1]);
+
+                        if (matcher.find()) {
+                            result[i] = matcher.group(1).trim();
+                        } else {
+                            throw new InvalidCommand("No " + detail[i] + " found");
+                        }
+                    }
+
+                    String categoryString = result[1].toUpperCase();
+                    date = parseToLocalDate(result[2]);
+
+                    new NotifyCommand(result[0], categoryString, date, transactions, ui);
+                    storage.saveTransactions(transactions.getTransactions());
+                    break;
+                case COMMAND_ALERT:
+                    if (parts.length > 1 && !parts[1].trim().isEmpty()) {
+                        throw new InvalidCommand("Invalid command");
+                    }
+                    new AlertCommand(transactions, ui);
+                    storage.saveTransactions(transactions.getTransactions());
+                    break;
+
+                case COMMAND_SET_PRIORITY:
+                    try {
+                        details = parts[1].split(" ", 2);
+                        index = Integer.parseInt(details[0]);
+
+                        new SetPriorityCommand(index - 1, details[1], transactions, ui);
+                    } catch (NullException e) {
+                        throw new InvalidCommand("Invalid input format, should be (priority [id] [priority_level])");
+                    }
+                    storage.saveTransactions(transactions.getTransactions());
+                    break;
+                case COMMAND_SUMMARY:
+                    try {
+                        if (parts.length < 2) {
+                            throw new InvalidCommand("Missing date range. Use: summary from/YYYY-MM-DD to/YYYY-MM-DD");
+                        }
+
+                        Pattern pattern = Pattern.compile("from/(\\d{4}-\\d{2}-\\d{2})\\s+to/(\\d{4}-\\d{2}-\\d{2})");
+                        Matcher matcher = pattern.matcher(parts[1]);
+
+                        if (matcher.matches()) {
+                            LocalDate start = LocalDate.parse(matcher.group(1));
+                            LocalDate end = LocalDate.parse(matcher.group(2));
+                            new SummaryCommand(start, end, transactions, ui);
+                        } else {
+                            throw new InvalidCommand("Invalid summary command format. " +
+                                    "Follow this input format: summary from/YYYY-MM-DD to/YYYY-MM-DD");
+                        }
+                    } catch (DateTimeParseException e) {
+                        throw new InvalidCommand("Invalid date format. Follow this format: YYYY-MM-DD.");
+                    }
+                    break;
+                //@@author Lukapeng77
+                case COMMAND_CONVERT:
+                    try {
+                        Pattern pattern = Pattern.compile("id/(\\d+)\\s+to/(\\w+)", Pattern.CASE_INSENSITIVE);
+                        Matcher matcher = pattern.matcher(parts[1]);
+
+                        if (!matcher.find()) {
+                            throw new InvalidCommand("Invalid convert format. Use: convert id/TRANSACTION_ID to/CURRENCY");
+                        }
+
+                        int transactionId = Integer.parseInt(matcher.group(1).trim());
+                        Currency targetCurrency = Currency.valueOf(matcher.group(2).trim().toUpperCase());
+
+                        new ConvertCommand(transactionId, targetCurrency, transactions, ui);
+                        storage.saveTransactions(transactions.getTransactions());
+
+                    } catch (IllegalArgumentException e) {
+                        throw new InvalidCommand("Invalid currency code provided.");
+                    } catch (Exception e) {
+                        throw new InvalidCommand("Error processing convert command.");
+                    }
+                    break;
+
+                //@@author yangyi-zhu
+                case COMMAND_RECUR:
+                    int slashIndex = parts[1].indexOf("/");
+                    try {
+                        int transactionId = Integer.parseInt(parts[1].substring(0, slashIndex).trim());
+                        int recurringPeriod = Integer.parseInt(parts[1].substring(slashIndex + 1).trim());
+                        transactions.setRecur(transactionId, recurringPeriod);
+                        ui.setPeriod(transactions.searchTransaction(transactionId), recurringPeriod);
+                    } catch (StringIndexOutOfBoundsException | NumberFormatException fe) {
+                        throw new InvalidCommand("Format invalid, try again! (recur [id]/[period])");
+                    } catch (Exception e) {
+                        throw new InvalidCommand("Transaction not found!");
+                    }
+                    storage.saveTransactions(transactions.getTransactions());
+                    break;
+                //@@author
                 case COMMAND_EXIT:
-                ui.printExit();
-                storage.saveTransactions(transactions.getTransactions());
-                System.exit(0);
-                break;
-            case "saving":
-                SavingMode.enter(ui, goal, transactions, storage);
-                break;
-            case "budget":
-                BudgetMode.enter(ui, transactions.getBudgetList(), storage);
-                break;
-            //@@author yangyi-zhu
-            case COMMAND_GOAL:
-                goal.updateExpenses(transactions);
-                try {
-                    String goalTag = parts.length < 2 ? "placeholder" : parts[1];
-                    parseGoalCommands(goalTag, ui, goal);
-                } catch (Exception e) {
-                    throw new InvalidCommand("Format invalid, try again!");
-                }
-                break;
-            //@@author
-            default:
-                throw new InvalidCommand(INVALID_INPUT);
+                    ui.printExit();
+                    storage.saveTransactions(transactions.getTransactions());
+                    System.exit(0);
+                    break;
+                case "saving":
+                    SavingMode.enter(ui, goal, transactions, storage);
+                    break;
+                case "budget":
+                    BudgetMode.enter(ui, transactions.getBudgetList(), transactions, storage);
+                    break;
+                case "balance":
+                    double bal = transactions.getCurrentBalanceInSGD();
+                    ui.printBalanceOverview(bal);
+                    break;
+
+                case "stats":
+                    ui.printStatisticsOverview(transactions);
+                    break;
+                //@@author yangyi-zhu
+                case COMMAND_GOAL:
+                    goal.updateExpenses(transactions);
+                    try {
+                        String goalTag = parts.length < 2 ? "placeholder" : parts[1];
+                        parseGoalCommands(goalTag, ui, goal);
+                    } catch (Exception e) {
+                        throw new InvalidCommand("Format invalid, try again!");
+                    }
+                    break;
+                //@@author
+                default:
+                    throw new InvalidCommand(INVALID_INPUT);
             }
         } catch (Exception e) {
             ui.showError(e.getMessage());
@@ -311,34 +351,34 @@ public class Parser {
         assert goal != null : "Goal must not be null";
 
         switch (parts[0]) {
-        case GOAL_TARGET:
-            goal.setTargetAmount(Integer.parseInt(parts[1]));
-            ui.setGoalTarget(goal);
-            break;
-        case GOAL_DESC:
-            goal.setDescription(parts[1]);
-            ui.setGoalDescription(goal);
-            break;
-        case GOAL_TITLE:
-            goal.setGoal(parts[1]);
-            ui.setGoalTitle(goal);
-            break;
-        case GOAL_STATUS:
-            if (goal.isBlank()) {
-                throw new InvalidCommand("Empty goal.");
-            } else {
-                goal.checkGoalStatus();
-            }
-            break;
-        case GOAL_NEW:
-            goal.createNewGoal(ui);
-            break;
-        default:
-            if (goal.isBlank()) {
+            case GOAL_TARGET:
+                goal.setTargetAmount(Integer.parseInt(parts[1]));
+                ui.setGoalTarget(goal);
+                break;
+            case GOAL_DESC:
+                goal.setDescription(parts[1]);
+                ui.setGoalDescription(goal);
+                break;
+            case GOAL_TITLE:
+                goal.setGoal(parts[1]);
+                ui.setGoalTitle(goal);
+                break;
+            case GOAL_STATUS:
+                if (goal.isBlank()) {
+                    throw new InvalidCommand("Empty goal.");
+                } else {
+                    goal.checkGoalStatus();
+                }
+                break;
+            case GOAL_NEW:
                 goal.createNewGoal(ui);
-            } else {
-                ui.printGoal(goal);
-            }
+                break;
+            default:
+                if (goal.isBlank()) {
+                    goal.createNewGoal(ui);
+                } else {
+                    ui.printGoal(goal);
+                }
         }
     }
 
@@ -363,33 +403,33 @@ public class Parser {
         String value = fields[2];
 
         switch (attribute) {
-        case EDIT_DESC:
-            transactions.editInfo(id, value, 0);
-            ui.printEdited(value, 0);
-            break;
-        case EDIT_CAT:
-            value = value.toUpperCase();
-            try {
-                transactions.editInfo(id, value, 1);
-            } catch (Exception e) {
-                throw new InvalidCommand("Unknown category, try again!");
-            }
-            ui.printEdited(value, 1);
-            break;
-        case EDIT_AM:
-            transactions.editInfo(id, value, 2);
-            ui.printEdited(value, 2);
-            break;
-        case EDIT_CURR:
-            try {
-                transactions.editInfo(id, value, 3);
-            } catch (Exception e) {
-                throw new InvalidCommand("Unknown currency, try again!");
-            }
-            ui.printEdited(value.toUpperCase(), 3);
-            break;
-        default:
-            throw new InvalidCommand("Unknown attribute!");
+            case EDIT_DESC:
+                transactions.editInfo(id, value, 0);
+                ui.printEdited(value, 0);
+                break;
+            case EDIT_CAT:
+                value = value.toUpperCase();
+                try {
+                    transactions.editInfo(id, value, 1);
+                } catch (Exception e) {
+                    throw new InvalidCommand("Unknown category, try again!");
+                }
+                ui.printEdited(value, 1);
+                break;
+            case EDIT_AM:
+                transactions.editInfo(id, value, 2);
+                ui.printEdited(value, 2);
+                break;
+            case EDIT_CURR:
+                try {
+                    transactions.editInfo(id, value, 3);
+                } catch (Exception e) {
+                    throw new InvalidCommand("Unknown currency, try again!");
+                }
+                ui.printEdited(value.toUpperCase(), 3);
+                break;
+            default:
+                throw new InvalidCommand("Unknown attribute!");
         }
     }
 

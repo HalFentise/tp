@@ -13,11 +13,11 @@ public class AlertCommand extends Command{
     public AlertCommand(TransactionManager transactions, Ui ui) throws NullException {
 
         try {
-            transactions.checkBudgetLimit(transactions.getBudgetLimit());
+            transactions.checkBudgetLimit();
             ui.listNotifications(transactions.getTransactions());
             printLine();
             ui.listPriorities(transactions.getTransactions());
-            Ui.printRecurringTransactions(transactions.getRecurringTransactions());
+            ui.printRecurringTransactions(transactions.getRecurringTransactions());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

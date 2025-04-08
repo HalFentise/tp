@@ -18,7 +18,7 @@ public class SetBudgetCommand extends Command {
 
         try {
             if (amount >= 0) {
-                transactions.checkBudgetLimit(amount);
+                transactions.checkBudgetLimit();
             } else {
                 throw new NullException("Invalid input amount, amount can not be negative!");
             }

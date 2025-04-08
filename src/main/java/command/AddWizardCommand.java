@@ -1,6 +1,7 @@
 package command;
 
 import seedu.duke.TransactionManager;
+import seedu.duke.Storage;
 import seedu.duke.Transaction;
 import enums.Category;
 import enums.Currency;
@@ -17,6 +18,11 @@ public class AddWizardCommand extends Command {
 
     @Override
     public void execute(TransactionManager transactions, Ui ui) {
+        throw new UnsupportedOperationException("AddWizardCommand requires storage. Use the 3-argument version.");
+    }
+
+
+    public void execute(TransactionManager transactions, Ui ui, Storage storage) {
         Scanner scanner = new Scanner(System.in);
         printCenteredTitle("Add Wizard");
         printCenteredLine("Create a new transaction step by step");
@@ -131,11 +137,20 @@ public class AddWizardCommand extends Command {
                 String completedInput = scanner.nextLine().trim().toLowerCase();
 
                 if (completedInput.equals("cancel")) return;
+
                 if (completedInput.isEmpty() || completedInput.equals("yes") || completedInput.equals("y")) {
                     transaction.complete();
+
+                    if (!transactions.isTransactionAllowedByBudget(transaction)) {
+                        System.out.println("Warning: After completing this transaction, it may exceed your budget limit.");
+                    }
+                    transactions.checkBudgetOverspending(transaction);
+
                     break;
+
                 } else if (completedInput.equals("no") || completedInput.equals("n")) {
                     break;
+
                 } else {
                     printCenteredTitle("ERROR: Add Wizard");
                     printLeftAlignedLine("Please enter 'yes', 'no', or press Enter to default to yes.");
@@ -148,7 +163,7 @@ public class AddWizardCommand extends Command {
             ui.add(transaction);
 
         } catch (Exception e) {
-            ui.showError("Failed to add transaction: " + e.getMessage());
+            ui.showError("❌ Failed to add transaction: " + e.getMessage());
         }
     }
 }

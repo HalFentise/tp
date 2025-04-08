@@ -5,12 +5,12 @@ package enums;
  * Provides methods for currency conversion and lookup by full name.
  */
 public enum Currency {
-    USD("United State Dollar", 0.74),
-    SGD("Singapore Dollar", 1),
-    CNY("Chinese Yuan", 5.41),
-    EUR("Euro", 0.69),
-    JPY("Japanese Yen", 111.14),
-    GBP("British Pound", 0.58);
+    USD("USD", 0.74),
+    SGD("SGD", 1),
+    CNY("CNY", 5.41),
+    EUR("EUR", 0.69),
+    JPY("JPY", 111.14),
+    GBP("GBP", 0.58);
 
     private final String fullName;
     private final double rate;

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import constant.Constant;
@@ -13,10 +15,9 @@ import enums.Currency;
 import enums.Status;
 import exceptions.InvalidCommand;
 import ui.ConsoleFormatter;
+import seedu.duke.budget.Budget;
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
-import java.util.Map;
-import java.util.HashMap;
 
 public class TransactionManager {
     private ArrayList<Transaction> transactions;
@@ -38,7 +39,7 @@ public class TransactionManager {
         this.currentMaxId = storage.loadMaxTransactionId();
     }
 
-    // @@author Lukapeng77
+    //@@author Lukapeng77
     public void loadBudgetFromStorage() {
         if (storage != null) {
             double savedBudget = storage.loadBudgetLimit();
@@ -48,7 +49,7 @@ public class TransactionManager {
             }
         }
     }
-    // @@author
+    //@@author
 
     public int getNextAvailableId() {
         currentMaxId += 1;
@@ -80,7 +81,7 @@ public class TransactionManager {
         return count;
     }
 
-    // @@author Lukapeng77
+    //@@author Lukapeng77
     public double getBudgetLimit() {
         return budgetLimit;
     }
@@ -102,7 +103,7 @@ public class TransactionManager {
         }
         return totalAmount;
     }
-    // @@author
+    //@@author
 
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
@@ -114,6 +115,7 @@ public class TransactionManager {
             }
         }
     }
+
 
     public boolean addTransaction(String description, double amount, Category category, LocalDate date) {
         int id = getNextAvailableId();
@@ -133,9 +135,15 @@ public class TransactionManager {
             if (isBudgetSet && (getTotalTransactionAmount() + amount > budgetLimit)) {
                 return false;
             }
+
         }
 
+//        if (isBudgetSet && (getTotalTransactionAmount() + amount > budgetLimit)) {
+//            return false;
+//        }
+
         transactions.add(transaction);
+
         if (id > currentMaxId) {
             currentMaxId = id;
             if (storage != null) {
@@ -144,6 +152,36 @@ public class TransactionManager {
         }
         return true;
     }
+
+    public boolean isTransactionAllowedByBudget(Transaction t) {
+        if (t.getAmount() >= 0) {
+            return true;
+        }
+
+        for (seedu.duke.budget.Budget b : budgetList.getAll()) {
+            if (b.getCategory() == t.getCategory()) {
+                if (t.getDate().isAfter(b.getEndDate())) {
+                    return true;
+                }
+
+                double spent = 0;
+                for (Transaction existing : getTransactions()) {
+                    if (!existing.isDeleted() && existing.getCategory() == t.getCategory() && existing.getAmount() < 0
+                            && !existing.getDate().isAfter(b.getEndDate())) {
+                        spent += existing.getCurrency().convertTo(-existing.getAmount(), Currency.SGD);
+                    }
+                }
+
+                double newAmountSGD = t.getCurrency().convertTo(-t.getAmount(), Currency.SGD);
+
+                return spent + newAmountSGD <= b.getTotalAmount();
+            }
+        }
+
+        return true;
+    }
+
+
 
 
     public ArrayList<Transaction> getTransactions() {
@@ -157,7 +195,7 @@ public class TransactionManager {
         return existTransactions;
     }
 
-    // @@author Lukapeng77
+    //@@author Lukapeng77
     public ArrayList<Transaction> getTransactionsBetween(LocalDate start, LocalDate end) {
         return (ArrayList<Transaction>) transactions.stream()
                 .filter(t -> !t.getDate().isBefore(start) && !t.getDate().isAfter(end))
@@ -171,21 +209,40 @@ public class TransactionManager {
         }
     }
 
-    public void checkBudgetLimit(double budgetLimit) {
-        double totalTransactionAmount = getTotalTransactionAmount();
-        setBudgetLimit(budgetLimit);
-        setBudgetSet(true);
-
-        if (storage != null) {
-            storage.saveBudgetLimit(budgetLimit);
+    public void checkBudgetLimit() {
+        if (budgetList == null || budgetList.isEmpty()) {
+            System.out.println("No budgets found. Use 'budget > set' to create a budget.");
+            return;
         }
 
-        System.out.println("Budget limit set to " + budgetLimit + " " + defaultCurrency);
-        System.out.println("The remaining Budget amount is " +
-                (budgetLimit - totalTransactionAmount) + " " + defaultCurrency + "\n");
+        System.out.println(" Budget Category Report:");
+        for (seedu.duke.budget.Budget b : budgetList.getAll()) {
+            Category cat = b.getCategory();
+            double limit = b.getTotalAmount();
+            double spent = 0;
+
+            for (Transaction t : getTransactions()) {
+                if (t.isCompleted()
+                        && !t.isDeleted()
+                        && t.getCategory() == cat
+                        && t.getAmount() < 0
+                        && !t.getDate().isAfter(b.getEndDate())) {
+                    spent += t.getCurrency().convertTo(-t.getAmount(), Currency.SGD);
+                }
+            }
+
+            double remaining = limit - spent;
+
+            System.out.printf("- %s: Limit = $%.2f, Spent = $%.2f, Remaining = $%.2f %s%n",
+                    cat, limit, spent, remaining,
+                    (remaining < 0 ? "OVERSPENT" : ""));
+        }
+
+        System.out.println(); // newline for spacing
     }
 
-    // @@author
+
+    //@@author
     public void clear() {
         transactions.clear();
         currentMaxId = 0;
@@ -202,11 +259,11 @@ public class TransactionManager {
         return null;
     }
 
-    // @@author yangyi-zhu
+    //@@author yangyi-zhu
     /**
      * Searches the transaction list based on index or keyword.
      *
-     * @param isIndex    True if searching by index; false if searching by keyword.
+     * @param isIndex True if searching by index; false if searching by keyword.
      * @param searchTerm The search term or index string.
      * @return A list of transactions matching the search.
      * @throws Exception If the index is invalid or another error occurs.
@@ -258,13 +315,13 @@ public class TransactionManager {
     public void remindRecurringTransactions() {
         ArrayList<Transaction> upcoming = getRecurringTransactions();
         if (!upcoming.isEmpty()) {
-            Ui.printRecurringTransactions(upcoming);
+            Ui ui = new Ui();
+            ui.printRecurringTransactions(upcoming);
         }
     }
 
     /**
-     * Adjusts transaction dates to reflect upcoming instances and sorts them
-     * chronologically.
+     * Adjusts transaction dates to reflect upcoming instances and sorts them chronologically.
      *
      * @param list The list of recurring transactions to sort.
      * @return A chronologically sorted list of adjusted transactions.
@@ -280,7 +337,8 @@ public class TransactionManager {
         return list;
     }
 
-    // @@author Lukapeng77
+
+    //@@author Lukapeng77
     public void notify(String description, String category, LocalDate date) {
         try {
 
@@ -300,12 +358,18 @@ public class TransactionManager {
             throw new IllegalArgumentException("Invalid date format. Please use YYYY-MM-DD format", e);
         }
     }
-    // @@author
+    //@@author
 
     public void tickTransaction(int id) throws Exception {
         Transaction transaction = searchTransaction(id);
         if (transaction != null) {
             transaction.complete();
+
+            if (!isTransactionAllowedByBudget(transaction)) {
+                System.out.println("Warning: After completing this transaction, it may exceed your budget limit.");
+            }
+
+            checkBudgetOverspending(transaction);
         } else {
             throw new InvalidCommand("Transaction not found! Please type in a valid id");
         }
@@ -320,15 +384,15 @@ public class TransactionManager {
         }
     }
 
-    // @@author yangyi-zhu
+    //@@author yangyi-zhu
     /**
      * Sets the recurrence period of a transaction by its ID.
      *
-     * @param id     The ID of the transaction.
+     * @param id The ID of the transaction.
      * @param period The new recurring period in days.
      * @throws Exception If the transaction is not found.
      */
-    public void setRecur(int id, int period) throws Exception {
+    public void setRecur(int id, int period) throws Exception{
         Transaction t = searchTransaction(id);
         if (t != null) {
             t.setRecurringPeriod(period);
@@ -337,7 +401,7 @@ public class TransactionManager {
         }
     }
 
-    // @@author
+    //@@author
     public void sortTransactions(ArrayList<Transaction> list) {
         list.sort(Comparator.comparing(Transaction::getDate, Comparator.nullsLast(Comparator.naturalOrder())));
     }
@@ -381,28 +445,27 @@ public class TransactionManager {
 
     public void getUpcomingTransactions(String period) {
         switch (period.toLowerCase()) {
-            case "today" -> System.out.println(getTransactionsOnDate(LocalDate.now()));
-            case "week" -> System.out.println(getTransactionsThisWeek());
-            case "month" -> System.out.println(getTransactionsThisMonth());
-            default -> {
-                try {
-                    LocalDate date = LocalDate.parse(period);
-                    System.out.println(getTransactionsOnDate(date));
-                } catch (Exception e) {
-                    System.out.println("Invalid period. Use 'today', 'week', 'month', or a date (yyyy-mm-dd)");
-                }
+        case "today" -> System.out.println(getTransactionsOnDate(LocalDate.now()));
+        case "week" -> System.out.println(getTransactionsThisWeek());
+        case "month" -> System.out.println(getTransactionsThisMonth());
+        default -> {
+            try {
+                LocalDate date = LocalDate.parse(period);
+                System.out.println(getTransactionsOnDate(date));
+            } catch (Exception e) {
+                System.out.println("Invalid period. Use 'today', 'week', 'month', or a date (yyyy-mm-dd)");
             }
+        }
         }
     }
 
-    // @@author yangyi-zhu
+    //@@author yangyi-zhu
     /**
      * Edits a specific field of a transaction.
      *
-     * @param id    The transaction ID.
+     * @param id The transaction ID.
      * @param value The new value to set.
-     * @param type  The attribute to edit (0=description, 1=category, 2=amount,
-     *              3=currency).
+     * @param type The attribute to edit (0=description, 1=category, 2=amount, 3=currency).
      * @throws Exception If the value is invalid or ID is not found.
      */
     public void editInfo(int id, String value, int type) throws Exception {
@@ -415,24 +478,24 @@ public class TransactionManager {
         }
 
         switch (type) {
-            case 0:
-                t.setDescription(value);
-                break;
-            case 1:
-                t.setCategory(Category.valueOf(value));
-                break;
-            case 2:
-                double val = Double.parseDouble(value);
-                if (val < 0) {
-                    throw new InvalidCommand("Expense cannot be negative!");
-                }
-                t.setAmount(val);
-                break;
-            case 3:
-                t.setCurrency(Currency.valueOf(value.toUpperCase()));
-                break;
-            default:
-                break;
+        case 0:
+            t.setDescription(value);
+            break;
+        case 1:
+            t.setCategory(Category.valueOf(value));
+            break;
+        case 2:
+            double val = Double.parseDouble(value);
+            if (val < 0) {
+                throw new InvalidCommand("Expense cannot be negative!");
+            }
+            t.setAmount(val);
+            break;
+        case 3:
+            t.setCurrency(Currency.valueOf(value.toUpperCase()));
+            break;
+        default:
+            break;
         }
     }
 
@@ -451,8 +514,7 @@ public class TransactionManager {
     }
 
     /**
-     * Calculates the total amount of all transactions, including recurring and
-     * non-recurring ones.
+     * Calculates the total amount of all transactions, including recurring and non-recurring ones.
      *
      * @return The total amount of all transactions.
      */
@@ -491,30 +553,9 @@ public class TransactionManager {
         return sum;
     }
 
-    // @@author
+    //@@author
     public BudgetList getBudgetList() {
         return budgetList;
-    }
-
-    public double getTotalSpending() {
-        double sum = 0;
-        for (Transaction t : transactions) {
-            if (!t.isDeleted() && t.getAmount() < 0) {
-                sum += -t.getAmount(); // 支出按正值累加
-            }
-        }
-        return sum;
-    }
-
-    public double getCurrentBalanceInSGD() {
-        double balance = 0;
-        for (Transaction t : transactions) {
-            if (!t.isDeleted() && t.isCompleted()) {
-                double amountInSGD = t.getCurrency().convertTo(t.getAmount(), Currency.SGD);
-                balance += amountInSGD;
-            }
-        }
-        return balance;
     }
 
     public Map<Category, Double> getCompletedAmountPerCategory() {
@@ -532,13 +573,50 @@ public class TransactionManager {
         int complete = 0, incomplete = 0;
         for (Transaction t : transactions) {
             if (!t.isDeleted()) {
-                if (t.isCompleted())
-                    complete++;
-                else
-                    incomplete++;
+                if (t.isCompleted()) complete++;
+                else incomplete++;
             }
         }
-        return new int[] { complete, incomplete };
+        return new int[]{complete, incomplete};
     }
+
+    public double getCurrentBalanceInSGD() {
+        double balance = 0;
+        for (Transaction t : transactions) {
+            if (!t.isDeleted() && t.isCompleted()) {
+                double amountInSGD = t.getCurrency().convertTo(t.getAmount(), Currency.SGD);
+                balance += amountInSGD;
+            }
+        }
+        return balance;
+    }
+
+    public void checkBudgetOverspending(Transaction t) {
+        if (!t.isCompleted()) return;
+        if (t.getAmount() >= 0) return;
+
+        for (Budget budget : budgetList.getAll()) {
+            if (budget.getCategory() != t.getCategory()) {
+                continue;
+            }
+
+            if (t.getDate() != null && !t.getDate().isBefore(budget.getEndDate())) {
+                return;
+            }
+
+            double totalSpent = budget.calculateSpentAmount(getTransactions());
+
+            double remaining = budget.getTotalAmount() - totalSpent;
+
+            if (Math.abs(t.getAmount()) > remaining) {
+                double overspent = Math.abs(t.getAmount()) - remaining;
+                System.out.printf("Warning: You have overspent your budget '%s' by $%.2f%n",
+                        budget.getName(), overspent);
+            }
+
+            return;
+        }
+    }
+
 
 }

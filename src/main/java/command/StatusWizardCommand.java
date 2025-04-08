@@ -2,7 +2,7 @@ package command;
 
 import seedu.duke.Transaction;
 import seedu.duke.TransactionManager;
-import ui.ConsoleFormatter;
+import seedu.duke.Storage;
 import ui.Ui;
 
 import java.util.Scanner;
@@ -10,8 +10,13 @@ import java.util.Scanner;
 import static ui.ConsoleFormatter.*;
 
 public class StatusWizardCommand extends Command {
+
     @Override
     public void execute(TransactionManager transactions, Ui ui) {
+        throw new UnsupportedOperationException("Use the StatusWizardCommand with storage parameter.");
+    }
+
+    public void execute(TransactionManager transactions, Ui ui, Storage storage) {
         Scanner scanner = new Scanner(System.in);
 
         printCenteredTitle("Status Wizard");

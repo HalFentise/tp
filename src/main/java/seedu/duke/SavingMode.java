@@ -98,13 +98,13 @@ public class SavingMode {
         transactions.addTransaction(t);
 
         goal.addToSavings(addAmount);
-        ui.showMessage("✅ Added $" + String.format("%.2f", addAmount) + " to savings.");
+        ui.showMessage("Added $" + String.format("%.2f", addAmount) + " to savings.");
         storage.saveGoal(goal);
         storage.saveTransactions(transactions.getTransactions());
     }
 
     private static void handleSubtractFromSavings(String[] parts, FinancialGoal goal,
-    TransactionManager transactions, Storage storage, Ui ui) throws Exception {
+                                                  TransactionManager transactions, Storage storage, Ui ui) throws Exception {
         if (parts.length < 2 || !parts[1].startsWith("a/")) {
             throw new Exception("Usage: deduct a/AMOUNT");
         }
@@ -116,7 +116,7 @@ public class SavingMode {
 
         double currentSavings = goal.getBalance();
         if (subAmount > currentSavings) {
-            throw new Exception(" Cannot deduct more than current savings. You only have $"
+            throw new Exception("Cannot deduct more than current savings. You only have $"
                     + String.format("%.2f", currentSavings));
         }
 
@@ -127,7 +127,7 @@ public class SavingMode {
         transactions.addTransaction(t);
 
         goal.subFromSavings(subAmount);
-        ui.showMessage("✅ Deducted $" + String.format("%.2f", subAmount) + " from savings.");
+        ui.showMessage("Deducted $" + String.format("%.2f", subAmount) + " from savings.");
         storage.saveGoal(goal);
         storage.saveTransactions(transactions.getTransactions());
     }
