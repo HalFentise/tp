@@ -155,9 +155,13 @@ public class TransactionManager {
         }
         return true;
     }
-
     //@@author
-
+    /**
+     * Determines whether a given transaction is allowed under the current budget constraints.
+     *
+     * @param t The transaction to be evaluated.
+     * @return {@code true} if the transaction does not violate any applicable budget constraints, {@code false} otherwise.
+     */
     public boolean isTransactionAllowedByBudget(Transaction t) {
         if (t.getAmount() >= 0) {
             return true;
@@ -186,7 +190,15 @@ public class TransactionManager {
         return true;
     }
 
+<<<<<<< HEAD
 
+=======
+    /**
+     * Returns a list of transactions that are not marked as deleted.
+     *
+     * @return A sorted list of non-deleted transactions.
+     */
+>>>>>>> AnotherSACEDocs
     public ArrayList<Transaction> getTransactions() {
         ArrayList<Transaction> existTransactions = new ArrayList<>();
         for (Transaction transaction : transactions) {
@@ -199,12 +211,24 @@ public class TransactionManager {
     }
 
     //@@author Lukapeng77
+    /**
+     * Returns a list of transactions that occur between the given start and end dates (inclusive).
+     *
+     * @param start The start date.
+     * @param end The end date.
+     * @return A list of transactions within the specified date range.
+     */
     public ArrayList<Transaction> getTransactionsBetween(LocalDate start, LocalDate end) {
         return (ArrayList<Transaction>) transactions.stream()
                 .filter(t -> !t.getDate().isBefore(start) && !t.getDate().isAfter(end))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Marks the expense with the given ID as deleted.
+     *
+     * @param id The ID of the transaction to delete.
+     */
     public void deleteExpense(int id) {
         Transaction transaction = searchTransaction(id);
         if (transaction != null) {
@@ -212,6 +236,11 @@ public class TransactionManager {
         }
     }
 
+    /**
+     * Sets the budget limit and displays the remaining budget based on total expenses.
+     *
+     * @param budgetLimit The budget limit to set.
+     */
     public void checkBudgetLimit(double budgetLimit) {
         setBudgetLimit(budgetLimit);
         setBudgetSet(true);
@@ -226,8 +255,6 @@ public class TransactionManager {
 
     /**
      * Clears all transactions and budgets from the system.
-     *
-     * @return This method does not return any value.
      */
     public void clear() {
         transactions.clear();
@@ -334,6 +361,15 @@ public class TransactionManager {
 
 
     //@@author Lukapeng77
+    /**
+     * Updates the date of transactions matching the given description and category.
+     * Throws an exception if the date is before January 1, 2020 or has an invalid format.
+     *
+     * @param description The transaction description to match.
+     * @param category The category of the transaction.
+     * @param date The new date to set.
+     * @throws IllegalArgumentException If the date is before 2020-01-01 or has an invalid format.
+     */
     public void notify(String description, String category, LocalDate date) {
         try {
 
@@ -356,6 +392,12 @@ public class TransactionManager {
     //@@author
 
     //@@author HalFentise
+    /**
+     * Marks the transaction with the given ID as completed and checks for budget issues.
+     *
+     * @param id The ID of the transaction to complete.
+     * @throws Exception If the transaction is not found.
+     */
     public void tickTransaction(int id) throws Exception {
         Transaction transaction = searchTransaction(id);
         if (transaction != null) {
@@ -371,6 +413,12 @@ public class TransactionManager {
         }
     }
 
+    /**
+     * Marks the transaction with the given ID as not completed.
+     *
+     * @param id The ID of the transaction to update.
+     * @throws Exception If the transaction is not found.
+     */
     public void unTickTransaction(int id) throws Exception {
         Transaction transaction = searchTransaction(id);
         if (transaction != null) {
@@ -400,11 +448,22 @@ public class TransactionManager {
         }
     }
 
-    //@@author
+    //@@author AnotherSACE
+    /**
+     * Sorts the given list of transactions by date, with empty dates placed at the end.
+     *
+     * @param list The list of transactions to sort.
+     */
     public void sortTransactions(ArrayList<Transaction> list) {
         list.sort(Comparator.comparing(Transaction::getDate, Comparator.nullsLast(Comparator.naturalOrder())));
     }
 
+    /**
+     * Returns a list of transactions that occur on the specified date.
+     *
+     * @param date The date to filter transactions by.
+     * @return A list of transactions that match the given date.
+     */
     public ArrayList<Transaction> getTransactionsOnDate(LocalDate date) {
         ArrayList<Transaction> result = new ArrayList<>();
         for (Transaction t : getTransactions()) {
@@ -415,6 +474,11 @@ public class TransactionManager {
         return result;
     }
 
+    /**
+     * Returns a list of transactions that occurred in the current month.
+     *
+     * @return A list of transactions from the current month.
+     */
     public ArrayList<Transaction> getTransactionsThisMonth() {
         ArrayList<Transaction> result = new ArrayList<>();
         LocalDate now = LocalDate.now();
@@ -428,6 +492,11 @@ public class TransactionManager {
         return result;
     }
 
+    /**
+     * Returns a list of transactions that occurred within the current week.
+     *
+     * @return A list of transactions from the current week.
+     */
     public ArrayList<Transaction> getTransactionsThisWeek() {
         LocalDate today = LocalDate.now();
         LocalDate nextWeek = today.plusDays(7);
@@ -442,6 +511,12 @@ public class TransactionManager {
         return result;
     }
 
+    /**
+     * Prints a list of upcoming transactions based on the specified period.
+     * The time period can be "today", "week", "month", or a specific date in "yyyy-mm-dd" format.
+     *
+     * @param period The period to filter transactions by. Can be "today", "week", "month", or a date.
+     */
     public void getUpcomingTransactions(String period) {
         switch (period.toLowerCase()) {
         case "today" -> System.out.println(getTransactionsOnDate(LocalDate.now()));
