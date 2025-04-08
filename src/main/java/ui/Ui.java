@@ -74,7 +74,7 @@ public class Ui {
         printLeftAlignedLine("    - exit             - Return to main menu");
 
         printLine();
-        printLeftAlignedLine("Budget Mode:");
+        printLeftAlignedLine(" Mode:");
         printLeftAlignedLine("  budget              - Enter interactive Budget Mode (not detailed here)");
 
         printLine();

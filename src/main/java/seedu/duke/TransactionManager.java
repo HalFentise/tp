@@ -98,7 +98,9 @@ public class TransactionManager {
         double totalAmount = 0;
         for (Transaction transaction : transactions) {
             if (!transaction.isDeleted()) {
-                totalAmount += transaction.getAmount() * 1 / transaction.getCurrency().getRate();
+                double convertedAmount = transaction.getAmount() * 1 / transaction.getCurrency().getRate();
+                convertedAmount = Math.round(convertedAmount * 100.0) / 100.0;
+                totalAmount += convertedAmount;
             }
         }
         return totalAmount;
