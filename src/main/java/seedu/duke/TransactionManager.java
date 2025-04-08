@@ -108,6 +108,7 @@ public class TransactionManager {
     //@@author
 
     //@@author HalFentise
+
     /**
      * Adds a new transaction to the system.
      *
@@ -129,9 +130,9 @@ public class TransactionManager {
      * Adds a new transaction with the specified details.
      *
      * @param description the description of the transaction
-     * @param amount the amount of the transaction
-     * @param category the category of the transaction
-     * @param date the date of the transaction; if {@code null}, the current date is used
+     * @param amount      the amount of the transaction
+     * @param category    the category of the transaction
+     * @param date        the date of the transaction; if {@code null}, the current date is used
      * @return {@code true} if the transaction was successfully added
      */
     public boolean addTransaction(String description, double amount, Category category, LocalDate date) {
@@ -186,8 +187,6 @@ public class TransactionManager {
     }
 
 
-
-
     public ArrayList<Transaction> getTransactions() {
         ArrayList<Transaction> existTransactions = new ArrayList<>();
         for (Transaction transaction : transactions) {
@@ -214,19 +213,17 @@ public class TransactionManager {
     }
 
     public void checkBudgetLimit(double budgetLimit) {
-        double totalTransactionAmount = getTotalTransactionAmount();
         setBudgetLimit(budgetLimit);
         setBudgetSet(true);
         if (storage != null) {
             storage.saveBudgetLimit(budgetLimit);
         }
         System.out.println("Budget limit set to " + budgetLimit + " " + defaultCurrency);
-        System.out.println("The remaining Budget amount is " +
-                (budgetLimit - totalTransactionAmount) + " " + defaultCurrency + "\n");
     }
 
 
     //@@author
+
     /**
      * Clears all transactions and budgets from the system.
      *
@@ -244,7 +241,7 @@ public class TransactionManager {
      *
      * @param id the unique ID of the transaction to search for
      * @return the {@code Transaction} object matching the specified ID and not marked as deleted,
-     *         or {@code null} if no such transaction is found
+     * or {@code null} if no such transaction is found
      */
     public Transaction searchTransaction(int id) {
         for (Transaction transaction : transactions) {
@@ -256,12 +253,12 @@ public class TransactionManager {
     }
 
 
-
     //@@author yangyi-zhu
+
     /**
      * Searches the transaction list based on index or keyword.
      *
-     * @param isIndex True if searching by index; false if searching by keyword.
+     * @param isIndex    True if searching by index; false if searching by keyword.
      * @param searchTerm The search term or index string.
      * @return A list of transactions matching the search.
      * @throws Exception If the index is invalid or another error occurs.
@@ -386,14 +383,15 @@ public class TransactionManager {
     //@@author
 
     //@@author yangyi-zhu
+
     /**
      * Sets the recurrence period of a transaction by its ID.
      *
-     * @param id The ID of the transaction.
+     * @param id     The ID of the transaction.
      * @param period The new recurring period in days.
      * @throws Exception If the transaction is not found.
      */
-    public void setRecur(int id, int period) throws Exception{
+    public void setRecur(int id, int period) throws Exception {
         Transaction t = searchTransaction(id);
         if (t != null) {
             t.setRecurringPeriod(period);
@@ -461,12 +459,13 @@ public class TransactionManager {
     }
 
     //@@author yangyi-zhu
+
     /**
      * Edits a specific field of a transaction.
      *
-     * @param id The transaction ID.
+     * @param id    The transaction ID.
      * @param value The new value to set.
-     * @param type The attribute to edit (0=description, 1=category, 2=amount, 3=currency).
+     * @param type  The attribute to edit (0=description, 1=category, 2=amount, 3=currency).
      * @throws Exception If the value is invalid or ID is not found.
      */
     public void editInfo(int id, String value, int type) throws Exception {
