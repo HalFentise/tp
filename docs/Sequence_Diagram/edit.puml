@@ -1,0 +1,82 @@
+@startuml
+
+actor User
+participant NoteUrSavings
+participant Transaction
+participant Ui
+participant TransactionManager
+participant Storage
+participant Parser
+
+== Edit ==
+User -> NoteUrSavings : Enter "edit" command
+activate NoteUrSavings
+NoteUrSavings -> Parser : parser(command)
+activate Parser
+Parser -> Parser : parseEditCommands(command, ui, transactions)
+alt attribute == desc
+    Parser -> TransactionManager : editInfo(id, value, 0)
+    activate TransactionManager
+    TransactionManager -> Transaction : setDescription(value)
+    activate Transaction
+    Transaction -> TransactionManager : Description updated
+    deactivate Transaction
+    TransactionManager -> Parser : Information updated
+    deactivate TransactionManager
+    Parser -> Ui : printEdited(value, 0)
+    activate Ui
+    Ui -> Parser : Edit success message printed
+    deactivate Ui
+else attribute == cat
+    Parser -> TransactionManager : editInfo(id, value, 1)
+    activate TransactionManager
+    TransactionManager -> Transaction : setCategory(value)
+    activate Transaction
+    Transaction -> TransactionManager : Category updated
+    deactivate Transaction
+    TransactionManager -> Parser : Information updated
+    deactivate TransactionManager
+    Parser -> Ui : printEdited(value, 1)
+    activate Ui
+    Ui -> Parser : Edit success message printed
+    deactivate Ui
+else attribute == am
+    Parser -> TransactionManager : editInfo(id, value, 2)
+    activate TransactionManager
+    TransactionManager -> Transaction : setAmount(value)
+    activate Transaction
+    Transaction -> TransactionManager : Amount updated
+    deactivate Transaction
+    TransactionManager -> Parser : Information updated
+    deactivate TransactionManager
+    Parser -> Ui : printEdited(value, 2)
+    activate Ui
+    Ui -> Parser : Edit success message printed
+    deactivate Ui
+else attribute == curr
+    Parser -> TransactionManager : editInfo(id, value, 3)
+    activate TransactionManager
+    TransactionManager -> Transaction : setCurrency(value)
+    activate Transaction
+    Transaction -> TransactionManager : Description updated
+    deactivate Transaction
+    TransactionManager -> Parser : Information updated
+    deactivate TransactionManager
+    Parser -> Ui : printEdited(value, 3)
+    activate Ui
+    Ui -> Parser : Edit success message printed
+    deactivate Ui
+end
+Parser -> Storage : saveTransactions(transaction)
+activate Storage
+Storage -> Storage : Create data folder if needed
+Storage -> Parser : Updated transactions stored
+deactivate Storage
+Parser -> NoteUrSavings : Command complete
+deactivate Parser
+NoteUrSavings -> User : Logic cycle end, await next input
+deactivate NoteUrSavings
+
+
+@enduml
+

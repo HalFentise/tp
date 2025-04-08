@@ -1,36 +1,71 @@
 @startuml
-    class FinancialGoal {
-        - String currentGoal
-        - int targetAmount
-        - String description
-        - boolean isAchieved
-        - int deposits
-        - boolean isBlank
-        - int expenses
+hide circle
+skinparam classAttributeIconSize 0
 
-        + FinancialGoal(String name, int targetAmount, String description)
+package "seedu.duke" {
+    class FinancialGoal {
+        - double deposits
+        - String currentGoal
+        - double targetAmount
+        - String description
+        - Currency currency
+        - boolean isAchieved
+        - boolean isBlank
+        - double expenses
+
         + FinancialGoal()
+        + FinancialGoal(String, double, String)
+        + FinancialGoal(String, double, String, Currency)
 
         + boolean isAchieved()
-        + String getDescription()
-        + int getTargetAmount()
-        + int getDeposits()
-        + String getGoal()
         + boolean isBlank()
-        + int getExpenses()
-        + int getBalance()
+        + String getDescription()
+        + double getTargetAmount()
+        + String getGoal()
+        + double getBalance()
+        + double getDeposits()
 
-        + void setDescription(String description)
-        + void setTargetAmount(int targetAmount)
-        + void setGoal(String goal)
+        + void setDescription(String)
+        + void setTargetAmount(double)
+        + void setGoal(String)
 
-        + void addToSavings(int amount)
-        + void subFromSavings(int amount)
+        + void addToSavings(double)
+        + void subFromSavings(double)
         + void checkGoalStatus()
-        + void updateExpenses(TransactionManager transactions)
+        + void updateExpenses(TransactionManager)
+        + void createNewGoal(Ui)
 
-        + FinancialGoal createNewGoal()
-
+        + void forceSetDeposits(double)
+        + void forceSetAchieved(boolean)
         + String toString()
     }
+
+    class "transactions:TransactionManager" {
+        + getTotalAmount()
+    }
+    class "ui:Ui" {
+        + <u>subFromSavings(double, double)
+        + <u>printGoalStatus(double, double)
+        + <u>createGoalConfirm()
+        + <u>createGoalAborted()
+        + <u>createGoalName()
+        + <u>createGoalTarget()
+        + <u>createGoalDescription()
+        + <u>createGoalSuccess()
+        + showError(String)
+    }
+
+    enum "<<enumeration>>\nCurrency" {
+        CNY
+        EUR
+        GBP
+        JPY
+        SGD
+        USD
+    }
+
+    FinancialGoal "1" --> "1" "<<enumeration>>\nCurrency" : uses
+    FinancialGoal --> "transactions:TransactionManager"
+    FinancialGoal --> "ui:Ui"
+}
 @enduml

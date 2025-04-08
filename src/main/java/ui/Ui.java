@@ -302,7 +302,7 @@ public class Ui {
         printTransaction(transaction);
         printLine();
     }
-    //@@author
+//@@author
     public void search(boolean isIndex) {
         if (isIndex) {
             System.out.println("I have searched the transaction with the given index.");
@@ -612,7 +612,7 @@ public class Ui {
         System.out.println("--------------------------------------------------");
     }
 
-    //@@author HalFentise
+//@@author HalFentise
     public void printClear() {
         System.out.println("All transactions have been cleared!");
         printCenteredTitle("Cleared");

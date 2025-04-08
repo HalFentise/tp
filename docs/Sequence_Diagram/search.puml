@@ -1,0 +1,58 @@
+@startuml
+
+actor User
+participant NoteUrSavings
+participant Parser
+participant Transaction
+participant TransactionManager
+participant Ui
+
+== Search ==
+User -> NoteUrSavings : Enter "search" command
+activate NoteUrSavings
+NoteUrSavings -> Parser : parser(command)
+activate Parser
+Parser -> Ui : Print searching message
+activate Ui
+Ui -> Parser: Message printed
+Parser -> TransactionManager : searchTransactionList(isIndex, keyword)
+activate TransactionManager
+alt isIndex
+    loop for each transaction
+        TransactionManager -> Transaction : getId()
+        activate Transaction
+        Transaction --> TransactionManager : id
+        TransactionManager -> Transaction : isDeleted()
+        Transaction --> TransactionManager : isDeleted
+        deactivate Transaction
+    end
+else !isIndex
+    loop for each transaction
+            TransactionManager -> Transaction : isDeleted()
+            activate Transaction
+            Transaction --> TransactionManager : isDeleted
+            TransactionManager -> Transaction : getDescription()
+            Transaction --> TransactionManager : description
+            deactivate Transaction
+        end
+end
+TransactionManager --> Parser : Return result
+deactivate TransactionManager
+Parser -> Ui : printTransactions(result)
+Ui -> Ui : printLine()
+alt result is empty
+    Ui -> Ui : printLine()
+    Ui -> Parser : Indicate empty result and return
+end
+Ui -> Ui : printTransactionsTable(result)
+Ui -> Parser : Table printed
+deactivate Ui
+
+Parser -> NoteUrSavings : Command complete
+deactivate Parser
+NoteUrSavings -> User : Logic cycle end, await next input
+deactivate NoteUrSavings
+
+
+@enduml
+
