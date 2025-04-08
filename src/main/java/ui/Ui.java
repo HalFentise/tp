@@ -12,7 +12,6 @@ import java.util.*;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
-import static constant.Constant.*;
 import enums.Currency;
 import enums.Category;
 
@@ -75,7 +74,7 @@ public class Ui {
         printLeftAlignedLine("    - exit             - Return to main menu");
 
         printLine();
-        printLeftAlignedLine("Budget Mode:");
+        printLeftAlignedLine(" Mode:");
         printLeftAlignedLine("  budget              - Enter interactive Budget Mode (not detailed here)");
 
         printLine();
@@ -185,7 +184,7 @@ public class Ui {
         printLine();
     }
 
-//@@author HalFentise
+    //@@author HalFentise
     public void printTransactions(ArrayList<Transaction> transactions) {
         if (transactions.isEmpty()) {
             printCenteredTitle("View Transaction");
@@ -199,7 +198,7 @@ public class Ui {
     public void printTransaction(Transaction transaction) {
         viewTransactionDetail(transaction);
     }
-//@@author
+    //@@author
     public void printTransactionsTable(List<Transaction> transactions) {
         final int TOTAL_WIDTH = 121;
         final String INNER_HEADER_FORMAT = "| %-2s | %-12s | %9s | %-8s | %-9s | %-10s | %-11s | %-8s |";
@@ -351,43 +350,46 @@ public class Ui {
 
     public static void createGoalConfirm() {
         printLine();
-        System.out.println("Want to set a new goal (Y/N)? ");
+        ConsoleFormatter.printLeftAlignedLine("Want to set a new goal (Y/N)? ");
         printLine();
     }
 
     public static void createGoalName() {
-        System.out.println("Name of new goal:");
+        printLine();
+        ConsoleFormatter.printLeftAlignedLine("Name of new goal:");
         printLine();
     }
 
     public static void createGoalTarget() {
-        System.out.println("Target amount of new goal:");
+        printLine();
+        ConsoleFormatter.printLeftAlignedLine("Target amount of new goal:");
         printLine();
     }
 
     public static void createGoalDescription() {
         printLine();
-        System.out.println("Description of new goal:");
+        ConsoleFormatter.printLeftAlignedLine("Description of new goal:");
         printLine();
     }
 
     public static void createGoalSuccess() {
         printLine();
-        System.out.println("Goal successfully created\nRun 'goal' to see it!");
+        ConsoleFormatter.printLeftAlignedLine("Goal successfully created");
+        ConsoleFormatter.printLeftAlignedLine("Run 'goal' in the main menu to see it!");
         printLine();
     }
 
     public static void createGoalAborted() {
         printLine();
-        System.out.println("Goal creation cancelled by user.");
+        ConsoleFormatter.printLeftAlignedLine("Goal creation cancelled by user.");
         printLine();
     }
 
     public static void subFromSavings(double amount, double currentAmount) {
         printLine();
-        System.out.println("Subtracted " + amount + " from your savings.");
+        ConsoleFormatter.printLeftAlignedLine("Subtracted " + amount + " from your savings.");
         if (currentAmount < 0) {
-            System.out.println("Warning. You currently have a negative balance.");
+            ConsoleFormatter.printLeftAlignedLine("Warning. You currently have a negative balance.");
         }
         printLine();
     }
@@ -395,10 +397,11 @@ public class Ui {
     public static boolean printGoalStatus(double currentAmount, double targetAmount) {
         printLine();
         if (currentAmount >= targetAmount) {
-            System.out.println("You have achieved the goal! Congratulations!");
+            ConsoleFormatter.printLeftAlignedLine("You have achieved the goal! Congratulations!");
             return true;
         }
-        System.out.println("You're " + currentAmount + " out of " + targetAmount + ". Good luck!");
+        ConsoleFormatter.printLeftAlignedLine("You're " + currentAmount +
+                " out of " + targetAmount + ". Good luck!");
         printLine();
         return false;
     }
@@ -421,8 +424,10 @@ public class Ui {
         };
 
         printLine();
-        System.out.println("Done! The " + type
-                + " of the target transaction has been updated to:\n" + value);
+        ConsoleFormatter.printLeftAlignedLine("Done! The " + type
+                + " of the target transaction has been updated to:");
+        ConsoleFormatter.printLeftAlignedLine((typeId == 3 ? Currency.valueOf(value).toString()
+                        : (typeId == 2) ? Double.parseDouble(value) : value).toString());
         printLine();
     }
 
@@ -469,10 +474,8 @@ public class Ui {
         printLeftAlignedLine("Goal:         \"" + goal.getGoal() + "\"");
         printLeftAlignedLine("Description:  " + goal.getDescription());
         printLeftAlignedLine("");
-
-        printLeftAlignedLine("Status:       You're currently at:"+String.format("  %s  %.1f%% complete",
-                bar.toString(), percent * 100, current, target));
-
+        printLeftAlignedLine("Status:       You're currently at:" + String.format("  %s  %.1f%% complete",
+                bar, percent * 100));
         if (percent >= 1.0) {
             printLeftAlignedLine("Analysis:     Amazing! You've achieved your savings goal. Time to celebrate!");
         } else if (percent >= 0.75) {
@@ -610,11 +613,10 @@ public class Ui {
      * expenses.
      *
      * @param transactions A list of transactions to summarize.
-     * @param total        The total sum of all transaction amounts.
      * @param start        The start date of the summary period.
      * @param end          The end date of the summary period.
      */
-    public void printSummary(List<Transaction> transactions, double total, LocalDate start, LocalDate end) {
+    public void printSummary(List<Transaction> transactions, LocalDate start, LocalDate end) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         System.out.println("Expense Summary from " + start.format(formatter) + " to " + end.format(formatter));
         System.out.println("--------------------------------------------------");
@@ -622,7 +624,6 @@ public class Ui {
             System.out.printf("%s | %s | %.2f\n", t.getDate(), t.getDescription(), t.getAmount());
         }
         System.out.println("--------------------------------------------------");
-        System.out.printf("Total Expenses: %.2f\n", total);
     }
 
 //@@author HalFentise
