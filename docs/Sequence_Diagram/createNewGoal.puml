@@ -1,0 +1,32 @@
+@startuml
+
+participant Parser
+actor User
+participant FinancialGoal
+participant Transaction
+participant Ui
+
+== Create New Goal ==
+activate Parser
+Parser -> FinancialGoal : createNewGoal(ui)
+activate FinancialGoal
+FinancialGoal -> User : Print confirmation message and await user input
+User --> FinancialGoal : input
+alt input != Y
+    FinancialGoal -> Parser : Abort
+end
+FinancialGoal -> User : Prompt user to input targetAmount
+User --> FinancialGoal : targetAmount
+alt targetAmount invalid
+    FinancialGoal -> Ui : showError(error)
+    activate Ui
+    Ui -> FinancialGoal : Error printed
+    deactivate Ui
+    FinancialGoal -> Parser : Abort
+end
+FinancialGoal -> User : Prompt user to input description
+User --> FinancialGoal : description
+FinancialGoal -> FinancialGoal : Update goal
+FinancialGoal -> Parser : New goal created
+
+@enduml

@@ -45,13 +45,13 @@ This developer guide outlines the architecture, design principles, and implement
 1. **Fork this project to your own GitHub, and clone it to your computer**
 2. **Ensure Intellij JDK 17 is defined as an SDK**, as described [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk) -- this step is not needed if you have used JDK 17 in a previous Intellij project.
 3. **Import the project _as a Gradle project_**, as described [here](https://se-education.org/guides/tutorials/intellijImportGradleProject.html).
-4. **Verify the setup**: After the importing is complete, locate the `src/main/java/seedu/duke/Duke.java` file, right-click it, and choose `Run Duke.main()`. If the setup is correct, you should see something like the below:
+4. **Verify the setup**: After the importing is complete, locate the `src/main/java/seedu/noteursavings/NoteUrSavings.java` file, right-click it, and choose `Run NoteUrSavings.main()`. If the setup is correct, you should see something like the below:
    ```
    > Task :compileJava
    > Task :processResources NO-SOURCE
    > Task :classes
    
-   > Task :Duke.main()
+   > Task :NoteUrSavings.main()
    ```
 <div style="background-color: #FFA500; border-left: 6px solid #FF0000; padding: 10px; color: #000000;">
   <strong> Important: </strong> Please import this project as a Gradle project
@@ -264,47 +264,96 @@ The conversion is performed using the transaction's stored data and is integrate
 
 ---
 
-### Transaction Management Features: Set Recurring Period, Search, and Edit
+### Transaction Management Features: Set Recurring Period
 
-`Zhu Yangyi` added the following functionalities to manage transactions:
+**Feature Description:** <br>
+Allows users to set transactions to recur every `recurringPeriod` days. <br>
+![Set Recur Sequence Diagram](Images/setRecur.png)
 
-* Set Recurring Period: Allows users to set transactions to recur every `recurringPeriod` days. <br>
-![Set Recur Sequence Diagram](./Images/setRecur.png)
-* Search Transaction: Allows users to search through list of transactions by either description (default) or id.
-* Edit Transaction: Allows users to edit the description, category, amount, or currency of a transaction.
+**Design Consideration:**  
+The ability to set recurring period allows users to manage subscriptions or bills without having to add them
+repeatedly. The user is given the freedom to set `recurringPeriod` to any positive integer of their choice instead of 
+being limited to a handful of options (e.g. Daily, Weekly, Monthly) to account for unconventional billing cycles.
+
+---
+
+### Transaction Management Features: Search
+
+**Feature Description:** <br>
+Allows users to search through list of transactions by either description (default) or id. <br>\
+![Search Sequence Diagram](Images/search.png)
 
 ```java
-public void setRecurringPeriod(int recurringPeriod) {
-    this.recurringPeriod = recurringPeriod;
-}
-
-public ArrayList<Transaction> searchTransactionList(boolean isIndex, String searchTerm, Ui ui) {
+public ArrayList<Transaction> searchTransactionList(boolean isIndex, String searchTerm) throws Exception {
     try {
-        ArrayList<Transaction> printTransactions = new ArrayList<>();
+        ArrayList<Transaction> result = new ArrayList<>();
         if (isIndex) {
-            // Searches for transaction with given index and adds to printTransactions
+            // Searches for transaction with given index and adds to result
         } else {
-            // Searches for all transactions whose description contain the search term and adds to printTransactions
+            // Searches for all transactions whose description contain the search term and adds to result
         }
-        return printTransactions;
+        return result;
     } catch (Exception e) {
         // Error handling
     }
 }
+```
 
-public void editInfo(int id, String info, int type) {
+**Design Consideration:**  
+
+This feature allows for flexible search input, where users may search by either description or id. Transactions marked
+as deleted are ignored by this method, to avoid cluttering of potentially unwanted results whilst avoiding full 
+deletion. <br> <br>
+Unlike in the skeleton shown above, the actual implementation actually catches two types of errors, a 
+`NumberFormatException` and a general `Exception`, and throws their respective `InvalidCommand()` accordingly. 
+This is due to the need to parse the searchTerm into an integer when it is a search by index, while accounting for the 
+possibility of other errors that may occur in the process.
+
+---
+
+### Transaction Management Features: Edit
+
+**Feature Description:** <br>
+Allows users to edit the description, category, amount, or currency of a transaction. <br>
+![Edit Sequence Diagram](Images/edit.png)
+
+```java
+public void editInfo(int id, String value, int type) throws Exception {
     if (checkIdEmpty(id)) {
+        return;
     }
+    Transaction t = searchTransaction(id);
     
     // switch-case to update transaction
 }
 ```
 
 **Design Consideration:**  
-The ability to set recurring period allows users to manage subscriptions or bills without having to add them
-repeatedly. <br>
-`searchTransactionList(boolean, String, Ui)` and `editInfo(int, T)` enable users to browse and make changes to their log
-with ease.
+This method checks whether the specified transaction exists before proceeding, preventing potential null pointer 
+exceptions. A single unified method is used for ease of further development. Exceptions are thrown when an invalid 
+attribute is read given the field to edit.
+
+---
+
+### Transaction Management Features: Remind Recurring Transactions
+
+**Feature Description:** <br>
+Reminds user about recurring transactions upon startup. <br>
+![Remind Recurring Transactions Sequence Diagram](Images/remindRecurring.png)
+
+```java
+public ArrayList<Transaction> getRecurringTransactions() {
+    ArrayList<Transaction> upcoming = new ArrayList<>();
+    for (Transaction t : transactions) {
+        // Add recurring transactions to upcoming
+    }
+    // Sort upcoming and return sorted list
+}
+```
+
+**Design Consideration:**  
+This feature is split across three methods that are responsible for data filtration, data transformation, and UI 
+interaction respectively. Drawing clear boundaries between parts of this feature eases debugging and future development.
 
 ---
 
@@ -386,38 +435,40 @@ This allows for users to effectively convert between different common currencies
 
 ### Financial Goal Basic Data Structure
 
-![Goal Class Diagram](./Images/GoalDiagram.png)
+![Goal Class Diagram](./Images/classFinancialGoal.png)
 
-`Faheem Akram` implemented the `FinancialGoal` class with data structure and methods for financial goals. It includes the following fields:
+The `FinancialGoal` class represents a financial goal with a target amount, description, and current savings balance.
+It allows the user to set and update goal properties, track savings and expenses, and interact with the user. It 
+includes the following fields:
 
+- `deposits` (Total savings deposited)
 - `currentGoal` (Goal name)
 - `targetAmount` (Goal target)
 - `description` (Goal description)
-- `isAchieved` (Goal achieved status)
 - `currency` (Goal currency type)
-- `currentAmount` (Transaction date)
-- `status` (Transaction status) <br>
-
-`Zhu Yangyi` added the `expenses` field which stores the total amount paid, in order to synchronize expenditure with savings.
+- `isAchieved` (Goal achieved status)
+- `isBlank` (Whether the goal has been initialized)
+- `status` (Total expenditure in transactions) <br>
   
 ```Java
-  public class FinancialGoal {
+public class FinancialGoal {
+    private double deposits;
+    private String currentGoal;
+    private double targetAmount;
+    private String description;
+    private Currency currency;
 
-  private String currentGoal;
-  private double targetAmount;
-  private String description;
-  private Currency currency;
+    // Changeable fields
 
-  // Changeable fields
-
-  private boolean isAchieved;
-  private double currentAmount;
-  private boolean isBlank;
-  private int expenses;
-  }
+    private boolean isAchieved;
+    private boolean isBlank;
+    private double expenses;
+  
+    // Methods
+}
 ```
 
-`Zhu Yangyi` integrated the `Goal` class into the program through the `Parser` class.
+Commands for the `FinancialGoal` class were integrated into the program through the `Parser` class.
 
 ```java
 public static void parseGoalCommands(String command, Ui ui, FinancialGoal goal) throws Exception {
@@ -438,45 +489,55 @@ public static void parseGoalCommands(String command, Ui ui, FinancialGoal goal) 
 }
 ```
 
-**Design Consideration:**  
-This implementation allows users to update individual parts of the goal, allowing for a more modular approach when only minor modifications are required to having to set a new goal each time.
+![Goal Command Sequence Diagram](Images/goal.png)
 
 ---
 
-### Goal Management Features: Create and Check
+### Goal Management Features: Create
 
-Feature Description:  
-`Faheem Akram` added 2 main functions to Create goals and check them
-* Create goal (`createNewGoal`): Lets users create a new goal by prompting them for each field required.
-* Check Goal (`checkGoalStatus`):
+**Feature Description:** <br>
+Creates a new `FinancialGoal` object. <br>
+![Create New Goal](Images/createNewGoal.png)
 
 ```Java
-public FinancialGoal createNewGoal() {
-Scanner sc = new Scanner(System.in);
-int amount;
-Ui.createGoalConfirm();
+public void createNewGoal(Ui ui) {
+    // Read confirmation
 
-    if (!sc.nextLine().equals("Y")) {
-        Ui.createGoalAborted();
-        return this;
+    if (!sc.nextLine().equalsIgnoreCase("Y")) {
+        // Aborted
     }
-    Ui.createGoalName();
-    setGoal(sc.nextLine());
-    Ui.createGoalTarget();
-    amount = Integer.parseInt(sc.nextLine());
-    setTargetAmount(amount);
-    Ui.createGoalDescription();
-    setDescription(sc.nextLine());
-    Ui.createGoalSuccess();
-    return this;
+
+    // Read name
+  
+    try {
+        // Read amount
+        if (amount <= 0) {
+            // Aborted due to invalid input
+        }
+    } catch (NumberFormatException e) {
+        // Error handling
+    }
+
+    // Assign to goal
 }
 ```
 
+**Design Consideration:**
+
+This method enables creation of a goal based on user input at runtime, created a very linear and guided experience for 
+users. The numeric input is checked for validity before being logged, ensuring integrity of the object by catching 
+number format errors early. Informative messages are printed through the UI class, guiding the user throughout and 
+informing them of any errors they make.
+
 ---
 
-### Goal Status Check: Integration with Transactions to Reflect Balance
+### Goal Implementation: Integration with Transactions to Reflect Balance
 
-`Zhu Yangyi` integrated expenses with deposits made to calculate balance to better reflect progress made towards the set goal. `goal.updateExpenses(transactions);` is run each time a goal command is sent to ensure that the progress shown is accurate.
+**Description:** <br>
+Originally, `FinancialGoal` and `TransactionManager` operated asynchronously. At a later stage, expenses were 
+integrated with deposits made to calculate balance to better reflect progress made towards the set goal. 
+`goal.updateExpenses(transactions)` is run each time a goal command is sent to ensure that the progress shown 
+is accurate.
 <br> <br>
 The total expenditure is calculated through adding `getRecurringAmount()` and `getNormalAmount`.
 
@@ -506,9 +567,11 @@ public int getNormalAmount() {
 **Design Consideration:**  
 `getRecurringAmount` returns the sum of all past cycles of the transaction up until the current date. <br>
 `getNormalAmount` returns all completed one-time transactions. <br>
-Both ignore deleted records. 
+Both ignore transactions labeled as deleted to avoid factoring in unwanted records.
 <br> <br>
-The total expenditure is calculated before `goal` commands are executed instead of every time `transactions` is updated. This saves both time in processing and lines of code as this implementation only requires a singular instance of this command being called each time the user wishes to check their progress.
+The total expenditure is calculated before `goal` commands are executed instead of every time `transactions` is 
+updated. This saves both time in processing and lines of code as this implementation only requires a singular instance 
+of this command being called each time the user wishes to check their progress.
 
 ---
 
