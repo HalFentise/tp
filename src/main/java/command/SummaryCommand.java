@@ -27,7 +27,10 @@ public class SummaryCommand extends Command {
      */
     public SummaryCommand(LocalDate start, LocalDate end, TransactionManager transactions, Ui ui) {
         List<Transaction> filteredTransactions = transactions.getTransactionsBetween(start, end);
-        ui.printSummary(filteredTransactions, start, end);
+        double total = filteredTransactions.stream()
+                .mapToDouble(Transaction::getAmount)
+                .sum();
+        ui.printSummary(filteredTransactions, total, start, end);
 
     }
 
