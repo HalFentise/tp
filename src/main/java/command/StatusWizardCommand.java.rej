@@ -1,0 +1,16 @@
+diff a/src/main/java/command/StatusWizardCommand.java b/src/main/java/command/StatusWizardCommand.java	(rejected hunks)
+@@ -44,10 +44,10 @@
+             }
+         }
+ 
+-        ConsoleFormatter.printLeftAlignedLine("Transaction/Status> Choose status:");
+-        ConsoleFormatter.printLeftAlignedLine("1. Mark as Completed");
+-        ConsoleFormatter.printLeftAlignedLine("2. Mark as Not Completed");
+-        ConsoleFormatter.printLeftAlignedLine("Transaction/Status> Enter choice: ");
++        System.out.println("Transaction/Status> Choose status:");
++        System.out.println("1. Mark as Completed");
++        System.out.println("2. Mark as Not Completed");
++        System.out.print("Transaction/Status> Enter choice: ");
+         String choice = scanner.nextLine().trim();
+         if (choice.equalsIgnoreCase("cancel")) return;
+ 

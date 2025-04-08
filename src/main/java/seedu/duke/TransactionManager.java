@@ -14,6 +14,7 @@ import enums.Category;
 import enums.Currency;
 import enums.Status;
 import exceptions.InvalidCommand;
+import ui.ConsoleFormatter;
 import seedu.duke.budget.Budget;
 import ui.Ui;
 import seedu.duke.budget.BudgetList;
