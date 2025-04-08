@@ -190,15 +190,11 @@ public class TransactionManager {
         return true;
     }
 
-<<<<<<< HEAD
-
-=======
     /**
      * Returns a list of transactions that are not marked as deleted.
      *
      * @return A sorted list of non-deleted transactions.
      */
->>>>>>> AnotherSACEDocs
     public ArrayList<Transaction> getTransactions() {
         ArrayList<Transaction> existTransactions = new ArrayList<>();
         for (Transaction transaction : transactions) {
